@@ -1,0 +1,27 @@
+.technology-ticker-section-left {
+  animation: technologyTickerScrollLeft 30s linear infinite;
+}
+
+.technology-ticker-section-right {
+  animation: technologyTickerScrollRight 30s linear infinite;
+}
+
+@keyframes technologyTickerScrollLeft {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(calc(-100% - calc(var(--spacing) * 7)));
+  }
+}
+
+@keyframes technologyTickerScrollRight {
+  0% {
+    transform: translateX(calc(-100% - calc(var(--spacing) * 7)));
+  }
+
+  100% {
+    transform: translateX(0);
+  }
+}
