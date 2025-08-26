@@ -1,16 +1,19 @@
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { serverDetails } from '@/config';
 
-const token = localStorage.getItem('token');
+let socket: Socket | null = null;
 
-const socket = io(serverDetails.socketPath, {
-  transports: ['websocket'],
-  withCredentials: true,
-  autoConnect: true,
-  auth: {
-    token: `Bearer ${token}` || "",
-  },
-});
-
+if (typeof window !== 'undefined') {
+  const token = localStorage.getItem('token');
+  
+  socket = io(serverDetails.socketPath, {
+    transports: ['websocket'],
+    withCredentials: true,
+    autoConnect: true,
+    auth: {
+      token: `Bearer ${token}` || "",
+    },
+  });
+}
 
 export default socket;

@@ -18,15 +18,18 @@ import ConfirmDialog from '@/components/ui/confirm-dialog';
 import Breadcrumb from '@/components/ui/breadcrumb';
 
 export default function DashboardLayout({ children }) {
-  const token = localStorage.getItem('token');
   const router = useRouter();
   const pathname = usePathname();
+  const [token, setToken] = useState(null);
   
   useEffect(() => {
-    if (!token) {
+    const storedToken = localStorage.getItem('token');
+    setToken(storedToken);
+    
+    if (!storedToken) {
       router.push('/login');
     }
-  }, [token, router]);
+  }, [router]);
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -35,13 +38,13 @@ export default function DashboardLayout({ children }) {
 
   useEffect(() => {
     try {
-      const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+      const storedUser = localStorage.getItem('user');
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
         const c = parsed?.customer ?? parsed;
         setCustomer(c ?? null);
       } else {
-        const storedCustomer = typeof window !== 'undefined' ? localStorage.getItem('customer') : null;
+        const storedCustomer = localStorage.getItem('customer');
         if (storedCustomer) {
           setCustomer(JSON.parse(storedCustomer));
         }

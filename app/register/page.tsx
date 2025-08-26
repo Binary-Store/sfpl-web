@@ -8,7 +8,7 @@ import { Input } from '../../components/ui/input';
 import { Textarea } from '../../components/ui/textarea';
 import { Select } from '../../components/ui/select';
 import { Button } from '../../components/ui/button';
-import { Shield, Flame, Zap, Wrench, Building2, CheckCircle, Star } from 'lucide-react';
+import { Shield, Zap, Wrench, Building2, CheckCircle, Star } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 

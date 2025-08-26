@@ -64,7 +64,7 @@ export default function TermsPage() {
                 <div className="text-gray-700 space-y-3">
                   <p>
                     Permission is granted to temporarily download one copy of the materials 
-                    (information or software) on SFPL's website for personal, non-commercial 
+                    (information or software) on SFPL&apos;s website for personal, non-commercial 
                     transitory viewing only.
                   </p>
                   <p>This is the grant of a license, not a transfer of title, and under this license you may not:</p>
@@ -126,7 +126,7 @@ export default function TermsPage() {
                     In no event shall SFPL or its suppliers be liable for any damages 
                     (including, without limitation, damages for loss of data or profit, 
                     or due to business interruption) arising out of the use or inability 
-                    to use the materials on SFPL's website.
+                    to use the materials on SFPL&apos;s website.
                   </p>
                   <p>
                     Even if SFPL or a SFPL authorized representative has been notified 

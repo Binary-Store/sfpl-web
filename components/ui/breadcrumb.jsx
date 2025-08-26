@@ -53,25 +53,23 @@ export default function Breadcrumb({ pathname }) {
 
   const breadcrumbs = getBreadcrumbs();
 
-  return (
+    return (
     <div className="hidden lg:flex items-center space-x-2 text-sm">
-        {breadcrumbs.map((breadcrumb, index) =>{ 
-        console.log(breadcrumb.label, "this is breadcrumb");
-        return (
+      {breadcrumbs.map((breadcrumb, index) => (
         <div key={index} className="flex items-center space-x-2">
           {index > 0 && <ChevronRight className="w-4 h-4 text-gray-400" />}
           {breadcrumb.isCurrent ? (
-            <span className="text-gray-900 font-medium">{  breadcrumb.label}</span>
+            <span className="text-gray-900 font-medium">{breadcrumb.label}</span>
           ) : (
             <Link 
               href={breadcrumb.href}
               className="text-gray-600 hover:text-gray-900 transition-colors"
             >
-              {lastId ? lastId.id === breadcrumb.label ? lastId.name : breadcrumb.label :breadcrumb.label}
+              {breadcrumb.label}
             </Link>
           )}
         </div>
-      )})}
+      ))}
     </div>
   );
 }
