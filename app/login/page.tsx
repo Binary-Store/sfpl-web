@@ -8,6 +8,9 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Shield, Zap, Wrench, Building2, CheckCircle, Star, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 
 // Login schema
 const loginSchema = z.object({
@@ -19,6 +22,15 @@ type LoginFormData = z.infer<typeof loginSchema>;
 
 export default function LoginPage() {
   const { login: loginUser, isLoggingIn, loginError } = useAuth();
+  const token = localStorage.getItem('token');
+  const router = useRouter();
+  useEffect(() => {
+    if (token) {
+     router.push('/');
+    }
+  }, [token, router]);
+
+  
   
   const {
     register,
@@ -29,7 +41,8 @@ export default function LoginPage() {
   });
 
   const onSubmit = (data: LoginFormData) => {
-    loginUser(data);
+    loginUser(data)
+    
   };
 
   return (
@@ -44,13 +57,17 @@ export default function LoginPage() {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-br from-green-500 to-teal-500 rounded-full blur-3xl"></div>
           </div>
 
+        
+
+
           <div className="relative z-10 text-center mb-8">
-            <div className="flex items-center justify-center mb-4">
-              <Shield className="h-16 w-16 text-red-600 mr-4" />
-            </div>
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">SFPL</h1>
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Specific Fire Protection Limited</h2>
-            <p className="text-gray-600 text-base font-medium">Your Safety, Our Priority</p>
+            <Link href="/" className='cursor-pointer'>
+            <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} className="mx-auto" />  
+            </Link>
+         
+            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">SFPL</h1> */}
+            {/* <h2 className="text-lg font-semibold text-gray-700 mb-2">Specific Fire Protection Limited</h2> */}
+            <p className="text-gray-600 text-base font-medium mt-6">Your Safety, Our Priority</p>
             <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-3 rounded-full"></div>
           </div>
           
@@ -176,11 +193,6 @@ export default function LoginPage() {
               </div>
 
               {/* Error Display */}
-              {loginError && (
-                <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
-                  Login failed. Please check your credentials and try again.
-                </div>
-              )}
 
               {/* Submit Button */}
               <div className="pt-4">

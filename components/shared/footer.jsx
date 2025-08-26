@@ -76,16 +76,7 @@ export default function Footer() {
               >
                 Home
               </Link>
-              <Link 
-                href="/about" 
-                className={`block text-sm transition-colors ${
-                  isActive('/about') 
-                    ? 'text-primary font-semibold' 
-                    : 'text-gray-600 hover:text-red-600'
-                }`}
-              >
-                About Us
-              </Link>
+              
               <Link 
                 href="/products" 
                 className={`block text-sm transition-colors ${
@@ -95,6 +86,16 @@ export default function Footer() {
                 }`}
               >
                 Products
+              </Link>
+              <Link 
+                href="/about" 
+                className={`block text-sm transition-colors ${
+                  isActive('/about') 
+                    ? 'text-primary font-semibold' 
+                    : 'text-gray-600 hover:text-red-600'
+                }`}
+              >
+                About Us
               </Link>
               <Link 
                 href="/contact" 
@@ -166,7 +167,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-gray-100">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-500">
-              © 2024 Specific Fire Protection Limited. All rights reserved.
+              © 2025 Specific Fire Protection Limited. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm text-gray-500">
               <Link 
@@ -180,9 +181,9 @@ export default function Footer() {
                 Privacy Policy
               </Link>
               <Link 
-                href="/terms" 
+                href="/terms-conditions" 
                 className={`transition-colors ${
-                  isActive('/terms') 
+                  isActive('/terms-conditions') 
                     ? 'text-primary font-semibold' 
                     : 'hover:text-red-600'
                 }`}

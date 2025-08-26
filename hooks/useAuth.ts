@@ -2,6 +2,7 @@ import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 import { register, verifyAccount, login } from '../services/api/auth';
 import { RegisterFormData, VerifyAccountData, LoginFormData } from '../types/auth';
+import { toast } from 'react-hot-toast';
 
 export const useAuth = () => {
   const router = useRouter();
@@ -25,19 +26,22 @@ export const useAuth = () => {
       }
     },
     onError: (error: unknown) => {
-      console.error('Registration failed:', error);
+      toast.error((error as Error).message);
+      console.error('Registration failed:', (error as Error).message);
     },
   });
 
   const loginMutation = useMutation({
     mutationFn: async (data: LoginFormData) => {
       const response = await login(data);
+      console.log(response);
       return response;
     },
     onSuccess: (response: unknown) => {
-      const data = response as { token?: string; message?: string };
+      const data = response as { token?: string; message?: string; customer?:any };
       if (data?.token) {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('user', JSON.stringify(data.customer));
         console.log('Login successful, token stored');
         router.push('/'); // Redirect to home page after successful login
       } else if (data?.message) {
@@ -49,7 +53,8 @@ export const useAuth = () => {
       }
     },
     onError: (error: unknown) => {
-      console.error('Login failed:', error);
+      console.error('Login failed:', (error as Error).message);
+      toast.error((error as Error).message);
     },
   });
 
@@ -70,7 +75,8 @@ export const useAuth = () => {
       localStorage.removeItem('token');
     },
     onError: (error: unknown) => {
-      console.error('Verification failed:', error);
+      toast.error((error as Error).message);
+      console.error('Verification failed:', (error as Error).message);
     },
   });
 

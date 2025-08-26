@@ -44,10 +44,11 @@ export default function RegisterPage() {
           </div>
 
           <div className="relative z-10 text-center mb-8">
+            <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} />  
          
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">SFPL</h1>
-            <h2 className="text-lg font-semibold text-gray-700 mb-2">Specific Fire Protection Limited</h2>
-            <p className="text-gray-600 text-base font-medium">Your Safety, Our Priority</p>
+            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">SFPL</h1> */}
+            {/* <h2 className="text-lg font-semibold text-gray-700 mb-2">Specific Fire Protection Limited</h2> */}
+            <p className="text-gray-600 text-base font-medium mt-6">Your Safety, Our Priority</p>
             <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-3 rounded-full"></div>
           </div>
           
@@ -307,9 +308,9 @@ export default function RegisterPage() {
               {/* Terms */}
               <p className="text-xs text-gray-500 text-center">
                 By creating an account, you agree to our{' '}
-                <a href="#" className="text-red-600 hover:underline">Terms of Service</a>
+                <a href="/terms-conditions" className="text-red-600 hover:underline">Terms of Service</a>
                 {' '}and{' '}
-                <a href="#" className="text-red-600 hover:underline">Privacy Policy</a>
+                <a href="/privacy" className="text-red-600 hover:underline">Privacy Policy</a>
               </p>
             </form>
           </div>

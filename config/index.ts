@@ -3,4 +3,5 @@ export const serverDetails = {
     socketPath: process.env.NEXT_PUBLIC_SOCKET_SERVER_URL,
     fileProxyURL: process.env.NEXT_PUBLIC_FILE_PROXY_URL,
     staging: process.env.NEXT_PUBLIC_STAGING,
+    socketPath: process.env.NEXT_PUBLIC_SOCKET_SERVER_URL,
   };
