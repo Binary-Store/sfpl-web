@@ -1,10 +1,11 @@
 import Image from "next/image";
+import { Shield, Target, Users, Building2, Flame, CheckCircle, Award, Star } from "lucide-react";
 
 export default function About() {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative w-full min-h-[400px] flex items-center justify-center overflow-hidden">
+      <section className="relative w-full min-h-[500px] flex items-center justify-center overflow-hidden">
         <Image
           src="https://kaarwan.s3.amazonaws.com/public/blog/media/fire_protection_systems_c63098698.jpeg"
           alt="About SFPL Fire Safety"
@@ -14,96 +15,234 @@ export default function About() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-black/40 z-10" />
         <div className="relative z-20 container mx-auto px-4 py-20 flex flex-col items-center justify-center gap-6 text-center text-white">
-          <h1 className="text-5xl md:text-6xl font-extrabold drop-shadow">About Us</h1>
-          <p className="text-2xl md:text-3xl text-white/90 max-w-2xl drop-shadow">
-            Protecting lives and property with innovative fire safety solutions.
+          <div className="flex items-center justify-center mb-4">
+            <Shield className="h-16 w-16 text-red-500 mr-4" />
+            <h1 className="text-5xl md:text-6xl font-extrabold drop-shadow">About SFPL</h1>
+          </div>
+          <p className="text-2xl md:text-3xl text-white/90 max-w-3xl drop-shadow">
+            Leading the way in fire safety innovation and protection across India
           </p>
         </div>
       </section>
 
-      {/* Company Story & Mission */}
-      <section className="w-full bg-white py-16 md:py-24">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
-          {/* Left: Text */}
-          <div className="flex-1 max-w-xl">
-            <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 mb-4 relative inline-block">
-              <span className="text-red-600">Our Story</span>
-              <span className="text-gray-800 ml-2">& Values</span>
-              <span className="block h-1 w-16 bg-red-600 mt-2 rounded"></span>
+      {/* About Us Section */}
+      <section className="w-full bg-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              <span className="text-red-600">About</span> Us
             </h2>
-            <p className="text-lg text-gray-700 mb-4">
-              Founded with a vision to make India fire safe, Specific Fire Protection Limited (SFPL) has been at the forefront of fire safety innovation. Our journey began with a simple belief: safety is a right, not a privilege. Over the years, we have grown into a trusted partner for businesses and homes, delivering reliable, advanced, and accessible fire protection solutions.
-            </p>
-            <ul className="list-disc pl-5 text-gray-700 space-y-2 mb-4">
-              <li>Expertise in designing and maintaining fire safety systems for diverse industries.</li>
-              <li>Commitment to continuous innovation and customer-centric solutions.</li>
-              <li>Driven by integrity, responsibility, and a passion for safety.</li>
-            </ul>
-            <p className="text-gray-700">
-              Our mission is to empower communities with the knowledge and tools to prevent and respond to fire emergencies, building a safer future for all.
-            </p>
+            <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
           </div>
-          {/* Right: Image */}
-          <div className="flex-1 flex justify-center relative min-w-[320px]">
-            <Image src="/images/home/vision-image.png" alt="SFPL Team" width={320} height={340} className="relative w-2/3" />
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className="w-full bg-primary text-primary-foreground py-16 md:py-24">
-        <div className="container mx-auto px-4 flex flex-col items-center gap-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">Our Core Values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl">
-            <div className="bg-white/10 rounded-lg p-8 flex flex-col items-center text-center shadow">
-              <span className="text-4xl mb-4">🔥</span>
-              <h3 className="font-semibold text-xl mb-2">Safety First</h3>
-              <p className="text-primary-foreground/90">We prioritize the safety of our clients, employees, and communities in everything we do.</p>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-6">
+              <p className="text-lg text-gray-700 leading-relaxed">
+                Founded with a vision to make India fire safe, <strong>Specific Fire Protection Limited (SFPL)</strong> has been at the forefront of fire safety innovation for over a decade. Our journey began with a simple belief: safety is a right, not a privilege.
+              </p>
+              <p className="text-lg text-gray-700 leading-relaxed">
+                We have grown into a trusted partner for businesses, industries, and homes, delivering reliable, advanced, and accessible fire protection solutions that meet international standards.
+              </p>
+              <div className="grid grid-cols-2 gap-6 pt-6">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">500+</div>
+                  <div className="text-sm text-gray-600">Projects Completed</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-red-600 mb-2">50+</div>
+                  <div className="text-sm text-gray-600">Cities Served</div>
+                </div>
+              </div>
             </div>
-            <div className="bg-white/10 rounded-lg p-8 flex flex-col items-center text-center shadow">
-              <span className="text-4xl mb-4">💡</span>
-              <h3 className="font-semibold text-xl mb-2">Innovation</h3>
-              <p className="text-primary-foreground/90">We embrace new technologies and ideas to deliver the best fire protection solutions.</p>
-            </div>
-            <div className="bg-white/10 rounded-lg p-8 flex flex-col items-center text-center shadow">
-              <span className="text-4xl mb-4">🤝</span>
-              <h3 className="font-semibold text-xl mb-2">Integrity</h3>
-              <p className="text-primary-foreground/90">We act with honesty, transparency, and responsibility in all our relationships.</p>
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-br from-red-500/20 to-orange-500/20 rounded-3xl transform rotate-3"></div>
+              <Image 
+                src="/images/home/vision-image.png" 
+                alt="SFPL Fire Safety Solutions" 
+                width={500} 
+                height={400} 
+                className="relative rounded-3xl shadow-2xl" 
+              />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Directors Section */}
-      <section className="w-full bg-white py-16 md:py-24">
-        <div className="container mx-auto px-4 flex flex-col items-center gap-10">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center">Meet Our Directors</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-            {/* Director 1 */}
-            <div className="bg-gray-100 rounded-lg p-8 flex flex-col items-center text-center shadow">
-              <Image
-                src="https://via.placeholder.com/160x160.png?text=Director+1"
-                alt="Director 1"
-                width={160}
-                height={160}
-                className="rounded-full mb-4 object-cover"
-              />
-              <h3 className="font-semibold text-xl mb-1">Mr. Rajesh Sharma</h3>
-              <p className="text-red-600 font-medium mb-2">Managing Director</p>
-              <p className="text-gray-700">With over 20 years of experience in the fire safety industry, Mr. Sharma leads SFPL with a vision for innovation and excellence. His commitment to safety and quality has been instrumental in the company's growth.</p>
+      {/* Mission & Vision Section */}
+      <section className="w-full bg-gradient-to-br from-gray-50 to-gray-100 py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Mission & <span className="text-red-600">Vision</span>
+            </h2>
+            <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-6xl mx-auto">
+            {/* Mission */}
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="h-8 w-8 text-red-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Mission</h3>
+              </div>
+              <p className="text-gray-700 text-center leading-relaxed">
+                To provide innovative, reliable, and accessible fire safety solutions that protect lives, 
+                property, and assets. We are committed to excellence in every project, ensuring the highest 
+                standards of safety and customer satisfaction.
+              </p>
             </div>
-            {/* Director 2 */}
-            <div className="bg-gray-100 rounded-lg p-8 flex flex-col items-center text-center shadow">
-              <Image
-                src="https://via.placeholder.com/160x160.png?text=Director+2"
-                alt="Director 2"
-                width={160}
-                height={160}
-                className="rounded-full mb-4 object-cover"
-              />
-              <h3 className="font-semibold text-xl mb-1">Ms. Priya Patel</h3>
-              <p className="text-red-600 font-medium mb-2">Director of Operations</p>
-              <p className="text-gray-700">Ms. Patel brings a wealth of operational expertise and a passion for customer service. She ensures that SFPL delivers on its promise of reliability and customer satisfaction every day.</p>
+            
+            {/* Vision */}
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Star className="h-8 w-8 text-red-600" />
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Vision</h3>
+              </div>
+              <p className="text-gray-700 text-center leading-relaxed">
+                To be the leading fire safety company in India, recognized for innovation, reliability, 
+                and commitment to safety. We envision a future where every building and facility is 
+                equipped with world-class fire protection systems.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Our Team Section */}
+      <section className="w-full bg-white py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Our <span className="text-red-600">Team</span>
+            </h2>
+            <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Meet the dedicated professionals who make SFPL a leader in fire safety solutions
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Team Member 1 */}
+            <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-32 h-32 mx-auto mb-4 relative">
+                  <Image
+                    src="https://via.placeholder.com/320x320.png?text=MD"
+                    alt="Managing Director"
+                    width={128}
+                    height={128}
+                    className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Mr. Rajesh Sharma</h3>
+                <p className="text-red-600 font-semibold mb-3">Managing Director</p>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  With over 20 years of experience in fire safety, Mr. Sharma leads SFPL with vision and innovation.
+                </p>
+              </div>
+            </div>
+
+            {/* Team Member 2 */}
+            <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-32 h-32 mx-auto mb-4 relative">
+                  <Image
+                    src="https://via.placeholder.com/320x320.png?text=DO"
+                    alt="Director of Operations"
+                    width={128}
+                    height={128}
+                    className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Ms. Priya Patel</h3>
+                <p className="text-red-600 font-semibold mb-3">Director of Operations</p>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Ms. Patel ensures operational excellence and customer satisfaction across all projects.
+                </p>
+              </div>
+            </div>
+
+            {/* Team Member 3 */}
+            <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-32 h-32 mx-auto mb-4 relative">
+                  <Image
+                    src="https://via.placeholder.com/320x320.png?text=CT"
+                    alt="Chief Technical Officer"
+                    width={128}
+                    height={128}
+                    className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Mr. Amit Kumar</h3>
+                <p className="text-red-600 font-semibold mb-3">Chief Technical Officer</p>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  Mr. Kumar drives technical innovation and ensures cutting-edge fire safety solutions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Group of Companies Section */}
+      <section className="w-full bg-gradient-to-br from-red-50 to-orange-50 py-20">
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+              Group of <span className="text-red-600">Companies</span>
+            </h2>
+            <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              SFPL is part of a larger ecosystem of companies dedicated to safety and protection
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Company 1 */}
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
+                  <Building2 className="h-10 w-10 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Anupam Fire Protection</h3>
+                <p className="text-gray-600 text-sm">
+                  Manufacturing division specializing in fire safety equipment and systems
+                </p>
+              </div>
+            </div>
+
+            {/* Company 2 */}
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
+                  <Flame className="h-10 w-10 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">FireLiynk</h3>
+                <p className="text-gray-600 text-sm">
+                  Installation, maintenance, and consulting services for fire protection
+                </p>
+              </div>
+            </div>
+
+            {/* Company 3 */}
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
+                  <Award className="h-10 w-10 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">SFPL Academy</h3>
+                <p className="text-gray-600 text-sm">
+                  Training and certification programs for fire safety professionals
+                </p>
+              </div>
             </div>
           </div>
         </div>
