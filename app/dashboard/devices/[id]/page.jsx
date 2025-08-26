@@ -110,7 +110,7 @@ export default function DeviceDetailPage() {
               <span className="text-gray-600">
                 {currentData?.timestamp 
                   ? new Date(currentData.timestamp).toLocaleDateString('en-GB') + ', ' + 
-                    new Date(currentData.timestamp).toLocaleTimeString('en-GB')
+                    new Date(currentData.timestamp).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true })
                   : 'No data'
                 }
               </span>
