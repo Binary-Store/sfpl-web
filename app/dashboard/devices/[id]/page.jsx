@@ -161,7 +161,7 @@ export default function DeviceDetailPage() {
           </div>
           <h3 className={`text-lg font-bold ${currentData?.io_elements?.zone_1 === 0 ? 'text-green-800' : 'text-red-800'} mb-2`}>Zone Status</h3>
           <p className={`text-xl font-semibold ${currentData?.io_elements?.zone_1 === 0 ? 'text-green-600' : 'text-red-600'}`}>
-            {currentData?.io_elements?.zone_1 === 0 ? 'Alert' : 'Healthy'}
+            {currentData?.io_elements?.zone_1 === 1 ? 'Alert' : 'Healthy'}
           </p>
         </div>
       </div>
