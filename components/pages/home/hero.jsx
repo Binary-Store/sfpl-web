@@ -26,9 +26,7 @@ export default function Hero() {
           <p className="text-2xl md:text-3xl text-white/90 max-w-md drop-shadow">
             Providing Fire Safety Solutions for Your Business & Home
           </p>
-          <Link href="/contact" className="inline-block bg-primary text-white font-semibold px-8 py-3 rounded-md shadow hover:bg-primary/80 transition-colors mt-2">
-            Contact Us
-          </Link>
+         
         </div>
       </div>
     </section>

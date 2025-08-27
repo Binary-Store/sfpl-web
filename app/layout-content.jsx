@@ -9,7 +9,7 @@ export default function LayoutContent({ children }) {
   const pathname = usePathname();
   
   // Check if current path is an authentication page or dashboard page
-  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/verify';
+  const isAuthPage = pathname === '/login' || pathname === '/register' || pathname === '/verify' || pathname ==='/forgot-password';
   const isDashboardPage = pathname.startsWith('/dashboard');
   
   if (isAuthPage || isDashboardPage) {

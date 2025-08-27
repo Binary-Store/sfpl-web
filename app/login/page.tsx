@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { Shield, Zap, Wrench, Building2, CheckCircle, Star, Lock, Mail } from 'lucide-react';
+import { Shield, Zap, Wrench, Building2, CheckCircle, Lock, Mail } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect } from 'react';
@@ -83,15 +83,7 @@ export default function LoginPage() {
               </div>
             </div>
             
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Building2 className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Certified Equipment</h3>
-                <p className="text-xs text-gray-600">ISO certified products with global standards</p>
-              </div>
-            </div>
+         
             
             <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
               <div className="p-2 bg-yellow-100 rounded-lg">
@@ -112,14 +104,21 @@ export default function LoginPage() {
                 <p className="text-xs text-gray-600">Installation, maintenance & system upgrades</p>
               </div>
             </div>
+
+            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
+              <div className="p-2 bg-blue-100 rounded-lg">
+                <Building2 className="h-5 w-5 text-blue-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Certified Equipment</h3>
+                <p className="text-xs text-gray-600">ISO certified products with standards</p>
+              </div>
+            </div>
           </div>
 
           {/* Trust Indicators */}
           <div className="mt-6 flex items-center space-x-4 text-xs text-gray-500 relative z-10">
-            <div className="flex items-center space-x-1">
-              <Star className="h-3 w-3 text-yellow-400 fill-current" />
-              <span>4.9/5 Rating</span>
-            </div>
+           
             <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
             <div className="flex items-center space-x-1">
               <CheckCircle className="h-3 w-3 text-green-500" />
@@ -158,7 +157,7 @@ export default function LoginPage() {
               {/* Email Field */}
               <div>
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email Address *
+                  Email Address <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -177,7 +176,7 @@ export default function LoginPage() {
               {/* Password Field */}
               <div>
                 <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Password *
+                  Password <span className="text-red-500">*</span>
                 </label>
                 <div className="relative">
                   <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
@@ -223,7 +222,7 @@ export default function LoginPage() {
                    </Link>
                  </p>
                 <p className="text-sm text-gray-600">
-                  <Link href="#" className="text-red-600 hover:text-red-700 hover:underline">
+                  <Link href="/forgot-password" className="text-red-600 hover:text-red-700 hover:underline">
                     Forgot your password?
                   </Link>
                 </p>

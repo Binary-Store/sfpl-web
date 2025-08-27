@@ -45,7 +45,7 @@ export default function About() {
               </p>
               <div className="grid grid-cols-2 gap-6 pt-6">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-red-600 mb-2">500+</div>
+                  <div className="text-3xl font-bold text-red-600 mb-2">1000+</div>
                   <div className="text-sm text-gray-600">Projects Completed</div>
                 </div>
                 <div className="text-center">
@@ -88,9 +88,7 @@ export default function About() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Mission</h3>
               </div>
               <p className="text-gray-700 text-center leading-relaxed">
-                To provide innovative, reliable, and accessible fire safety solutions that protect lives, 
-                property, and assets. We are committed to excellence in every project, ensuring the highest 
-                standards of safety and customer satisfaction.
+              Delivering smart, reliable, and adaptable life-safety solutions.
               </p>
             </div>
             
@@ -103,9 +101,7 @@ export default function About() {
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">Our Vision</h3>
               </div>
               <p className="text-gray-700 text-center leading-relaxed">
-                To be the leading fire safety company in India, recognized for innovation, reliability, 
-                and commitment to safety. We envision a future where every building and facility is 
-                equipped with world-class fire protection systems.
+              Safeguarding lives with intelligent safety innovations.
               </p>
             </div>
           </div>
@@ -120,7 +116,7 @@ export default function About() {
               Our <span className="text-red-600">Team</span>
             </h2>
             <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mt-4">
               Meet the dedicated professionals who make SFPL a leader in fire safety solutions
             </p>
           </div>
@@ -139,11 +135,9 @@ export default function About() {
                   />
                   <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Mr. Rajesh Sharma</h3>
-                <p className="text-red-600 font-semibold mb-3">Managing Director</p>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  With over 20 years of experience in fire safety, Mr. Sharma leads SFPL with vision and innovation.
-                </p>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Nikhil Bhalara</h3>
+                <p className="text-red-600 font-semibold mb-3">Director</p>
+              
               </div>
             </div>
 
@@ -160,11 +154,9 @@ export default function About() {
                   />
                   <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Ms. Priya Patel</h3>
-                <p className="text-red-600 font-semibold mb-3">Director of Operations</p>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Ms. Patel ensures operational excellence and customer satisfaction across all projects.
-                </p>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Mukesh Vasu</h3>
+                <p className="text-red-600 font-semibold mb-3">Director</p>
+                
               </div>
             </div>
 
@@ -181,11 +173,9 @@ export default function About() {
                   />
                   <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Mr. Amit Kumar</h3>
-                <p className="text-red-600 font-semibold mb-3">Chief Technical Officer</p>
-                <p className="text-gray-600 text-sm leading-relaxed">
-                  Mr. Kumar drives technical innovation and ensures cutting-edge fire safety solutions.
-                </p>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Manish Virani</h3>
+                <p className="text-red-600 font-semibold mb-3">Director</p>
+           
               </div>
             </div>
           </div>
@@ -200,7 +190,7 @@ export default function About() {
               Group of <span className="text-red-600">Companies</span>
             </h2>
             <div className="w-24 h-1 bg-red-600 mx-auto rounded-full"></div>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto mt-4">
               SFPL is part of a larger ecosystem of companies dedicated to safety and protection
             </p>
           </div>
@@ -212,9 +202,12 @@ export default function About() {
                 <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
                   <Building2 className="h-10 w-10 text-red-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Anupam Fire Protection</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Anupam Security</h3>
                 <p className="text-gray-600 text-sm">
-                  Manufacturing division specializing in fire safety equipment and systems
+                Integrated whole system using AI in one stop solution.
+                </p>
+                <p className="text-sm text-gray-500 font-medium">
+                  Established: January 26, 2016
                 </p>
               </div>
             </div>
@@ -225,9 +218,12 @@ export default function About() {
                 <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
                   <Flame className="h-10 w-10 text-red-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">FireLiynk</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Specific Fire Protection Limited</h3>
                 <p className="text-gray-600 text-sm">
-                  Installation, maintenance, and consulting services for fire protection
+                Deal with client in advance fire safety solution.
+                </p>
+                <p className="text-sm text-gray-500 font-medium">
+                  Established: November 29, 2023
                 </p>
               </div>
             </div>
@@ -238,9 +234,27 @@ export default function About() {
                 <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
                   <Award className="h-10 w-10 text-red-600" />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">SFPL Academy</h3>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Firelynk Protech Limited</h3>
                 <p className="text-gray-600 text-sm">
-                  Training and certification programs for fire safety professionals
+                Innovation in advance fire safety solution.
+                </p>
+                <p className="text-sm text-gray-500 font-medium">
+                  Established: February 1, 2024
+                </p>
+              </div>
+            </div>
+
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
+                  <Award className="h-10 w-10 text-red-600" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Firelynk Tech Limited</h3>
+                <p className="text-gray-600 text-sm">
+                Manufacturing in advance fire safety solution.
+                </p>
+                <p className="text-sm text-gray-500 font-medium">
+                  Established: August 1, 2025
                 </p>
               </div>
             </div>

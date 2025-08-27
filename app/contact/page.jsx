@@ -37,14 +37,14 @@ export default function Contact() {
               <h2 className="text-2xl font-bold text-primary mb-4">Get in Touch</h2>
               <div className="space-y-3 text-gray-700">
                 <div>
-                  <span className="font-semibold">Phone:</span> <a href="tel:+911234567890" className="text-primary hover:underline ml-1">+91 12345 67890</a>
+                  <span className="font-semibold">Phone:</span> <a href="tel:+911234567890" className="text-primary hover:underline ml-1">+91 9512570090</a>
                 </div>
                 <div>
-                  <span className="font-semibold">Email:</span> <a href="mailto:info@sfpl.com" className="text-primary hover:underline ml-1">info@sfpl.com</a>
+                  <span className="font-semibold">Email:</span> <a href="mailto:info@sfpl.com" className="text-primary hover:underline ml-1"> contact@specificfire.com</a>
                 </div>
                 <div>
                   <span className="font-semibold">Address:</span>
-                  <div className="ml-1">123, Fire Safety Avenue,<br />Ahmedabad, Gujarat, India</div>
+                  <a className="ml-1">105, A block,IIT resurch park, Gandhinagar</a>
                 </div>
               </div>
             </div>

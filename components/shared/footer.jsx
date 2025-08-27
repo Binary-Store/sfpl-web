@@ -24,7 +24,7 @@ export default function Footer() {
               <Image src="/logo-full-black.svg" alt="SFPL" width={100} height={100} /> 
             </div>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Specific Fire Protection Limited - Your trusted partner for comprehensive fire safety solutions.
+              Specific Fire Protection Limited - Your trusted partner for fire safety solutions.
             </p>
             <div className="flex space-x-3">
               <Link 
@@ -137,19 +137,17 @@ export default function Footer() {
             
             {/* Ahmedabad Office */}
             <div className="space-y-3">
-              <h4 className="font-semibold text-gray-900">Ahmedabad Office</h4>
+              <h4 className="font-semibold text-gray-900">Gandhinagar Office</h4>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  718, Binori B Square - III,<br />
-                  Sindhu Bhavan Road,<br />
-                  Ahmedabad - 380059
+                105, A block,IIT resurch park, Gandhinagar 
                 </p>
               </div>
             </div>
             
             {/* Rajkot Office */}
-            <div className="space-y-3">
+            {/* <div className="space-y-3">
               <h4 className="font-semibold text-gray-900">Rajkot Office</h4>
               <div className="flex items-start space-x-3">
                 <MapPin className="h-4 w-4 text-red-600 mt-0.5 flex-shrink-0" />
@@ -159,7 +157,7 @@ export default function Footer() {
                   Rajkot - 360007
                 </p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -167,7 +165,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-gray-100">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-500">
-              © 2025 Specific Fire Protection Limited. All rights reserved.
+              © 2022 Specific Fire Protection Limited. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm text-gray-500">
               <Link 

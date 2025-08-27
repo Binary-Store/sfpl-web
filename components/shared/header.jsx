@@ -75,7 +75,7 @@ export default function Header() {
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.svg" alt="SFPL Logo" width={79} height={32} priority />
+          <Image src="/logo-full-black.svg" alt="SFPL Logo" width={170} height={42} priority />
         </Link>
         {/* Navigation */}
         <nav className="hidden md:flex gap-2 lg:gap-4 xl:gap-6">
@@ -111,37 +111,47 @@ export default function Header() {
                 {getInitial(customer?.name)}
               </button>
               {menuOpen && (
-                <div className="absolute top-11 right-0 bg-white shadow-md rounded-md p-3 w-64 border border-gray-100">
-                  <div className="mb-3 pb-3 border-b">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-10 rounded-full bg-primary text-white flex items-center justify-center font-semibold">
+                <div className="absolute top-12 right-0 bg-white shadow-xl rounded-xl p-3 w-50 border border-gray-100/50 backdrop-blur-sm">
+                  {/* User Profile Section */}
+                  <div className="mb-3 pb-3 border-b border-gray-100/50">
+                    <div className="flex items-center gap-2.5">
+                      <div className="h-9 w-9 rounded-full bg-gradient-to-br from-red-500 to-orange-500 text-white flex items-center justify-center font-semibold text-sm shadow-md">
                         {getInitial(customer?.name)}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-gray-900 truncate">{customer?.name || 'Customer'}</p>
-                        <p className="text-xs text-gray-600 truncate">{customer?.email || '-'}</p>
+                        <p className="text-xs text-gray-500">Welcome back</p>
+                        <p className="text-sm font-semibold text-gray-900 truncate">{customer?.name.split(' ')[0] || 'Customer'}</p>
                       </div>
                     </div>
                   </div>
-                  <div className="space-y-2 text-sm">
-                    <Link href="/dashboard" className="flex items-center justify-between">
-                      <span className="text-gray-600">Dashboard</span>
-                      <span className="text-gray-900 font-medium">Go to Dashboard</span>
+                  
+                  {/* Navigation Links */}
+                  <div className="space-y-0.5 mb-3">
+                    <Link 
+                      href="/dashboard/profile" 
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-red-500 transition-colors duration-200"></div>
+                      <span className="text-sm font-medium">Profile</span>
                     </Link>
-                   
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-600">Phone</span>
-                      <span className="text-gray-900 font-medium">{customer?.phone_number || '-'}</span>
-                    </div>
-
+                    <Link 
+                      href="/dashboard/devices" 
+                      className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
+                    >
+                      <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-red-500 transition-colors duration-200"></div>
+                      <span className="text-sm font-medium">Dashboard</span>
+                    </Link>
                   </div>
-                  <div className="mt-3 pt-3 border-t">
+                  
+                  {/* Logout Section */}
+                  <div className="pt-2 border-t border-gray-100/50">
                     <button
                       type="button"
                       onClick={handleLogout}
-                      className="w-full text-left text-sm font-medium text-red-600 hover:text-red-700"
+                      className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700 transition-all duration-200 group"
                     >
-                      Logout
+                      <div className="w-1.5 h-1.5 rounded-full bg-red-400 group-hover:bg-red-600 transition-colors duration-200"></div>
+                      <span className="text-sm font-medium">Logout</span>
                     </button>
                   </div>
                 </div>

@@ -2,30 +2,70 @@
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { registerSchema, RegisterFormData } from '../../types/auth';
-import { useAuth } from '../../hooks/useAuth';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
-import { Shield, Zap, Wrench, Building2, CheckCircle, Star } from 'lucide-react';
-import Image from 'next/image';
+import { z } from 'zod';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Shield, Zap, Wrench, Building2, CheckCircle, Lock, Key, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 
-export default function RegisterPage() {
-  const { register: registerUser, isRegistering, registerError } = useAuth();
+// Forgot Password schema
+const forgotPasswordSchema = z.object({
+  newPassword: z.string().min(8, 'Password must be at least 8 characters'),
+  confirmPassword: z.string().min(1, 'Please confirm your password'),
+}).refine((data) => data.newPassword === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ["confirmPassword"],
+});
+
+type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
+
+export default function ForgotPasswordPage() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<RegisterFormData>({
-    resolver: zodResolver(registerSchema),
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
-
-
-  const onSubmit = (data: RegisterFormData) => {
-    registerUser(data);
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    setIsSubmitting(true);
+    // Simulate API call - in real app, you would send data to your API
+    console.log('Updating password:', { newPassword: data.newPassword });
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    setIsSuccess(true);
+    setIsSubmitting(false);
   };
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          <div className="bg-white p-8 shadow-xl border border-gray-100 rounded-2xl text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Password Updated!
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              Your password has been successfully updated. You can now sign in with your new password.
+            </p>
+            <Link href="/login">
+              <Button className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
+                Sign In
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -40,10 +80,9 @@ export default function RegisterPage() {
           </div>
 
           <div className="relative z-10 text-center mb-8">
-            <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} />  
-         
-            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">SFPL</h1> */}
-            {/* <h2 className="text-lg font-semibold text-gray-700 mb-2">Specific Fire Protection Limited</h2> */}
+            <Link href="/" className='cursor-pointer'>
+              <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} className="mx-auto" />  
+            </Link>
             <p className="text-gray-600 text-base font-medium mt-6">Your Safety, Our Priority</p>
             <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-3 rounded-full"></div>
           </div>
@@ -58,8 +97,6 @@ export default function RegisterPage() {
                 <p className="text-xs text-gray-600">Expert fire safety solutions tailored for your needs</p>
               </div>
             </div>
-            
-           
             
             <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
               <div className="p-2 bg-yellow-100 rounded-lg">
@@ -80,6 +117,7 @@ export default function RegisterPage() {
                 <p className="text-xs text-gray-600">Installation, maintenance & system upgrades</p>
               </div>
             </div>
+
             <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
               <div className="p-2 bg-blue-100 rounded-lg">
                 <Building2 className="h-5 w-5 text-blue-600" />
@@ -93,7 +131,6 @@ export default function RegisterPage() {
 
           {/* Trust Indicators */}
           <div className="mt-6 flex items-center space-x-4 text-xs text-gray-500 relative z-10">
-            
             <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
             <div className="flex items-center space-x-1">
               <CheckCircle className="h-3 w-3 text-green-500" />
@@ -103,137 +140,99 @@ export default function RegisterPage() {
         </div>
       </div>
 
-              {/* Right Side - Registration Form */}
-        <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-8">
-          <div className="w-full max-w-md">
+      {/* Right Side - Forgot Password Form */}
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-8">
+        <div className="w-full max-w-md">
           {/* Mobile Branding for small screens */}
           <div className="lg:hidden text-center mb-6">
-            
+            <div className="flex items-center justify-center mb-4">
+              <Shield className="h-12 w-12 text-red-600 mr-3" />
+            </div>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">SFPL</h1>
             <p className="text-sm text-gray-600">Specific Fire Protection Limited</p>
           </div>
           
-         
-
           <div className="bg-white p-8 shadow-xl border border-gray-100 rounded-2xl">
-            {/* Welcome Section */}
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Shield className="h-8 w-8 text-red-600" />
+                <Key className="h-8 w-8 text-red-600" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Join SFPL Today
+                Reset Password
               </h2>
               <p className="text-sm text-gray-600">
-                Create your account to access our fire safety solutions
+                Enter your new password below
               </p>
             </div>
 
             <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-              {/* Simple Single Column Layout */}
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Full Name <span className="text-red-500">*</span>
-                  </label>
+              {/* New Password Field */}
+              <div>
+                <label htmlFor="newPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+                  New Password <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
                   <Input
-                    {...register('name')}
-                    type="text"
-                    className="h-12 border-gray-200 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your full name"
-                  />
-                  {errors.name && (
-                    <p className="mt-2 text-sm text-red-600">{String(errors.name.message)}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email Address <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    {...register('email')}
-                    type="email"
-                    className="h-12 border-gray-200 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your email"
-                  />
-                  {errors.email && (
-                    <p className="mt-2 text-sm text-red-600">{String(errors.email.message)}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="phone_number" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Phone Number <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    {...register('phone_number')}
-                    type="tel"
-                    className="h-12 border-gray-200 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your phone number"
-                  />
-                  {errors.phone_number && (
-                    <p className="mt-2 text-sm text-red-600">{String(errors.phone_number.message)}</p>
-                  )}
-                </div>
-
-                <div>
-                  <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Password <span className="text-red-500">*</span>
-                  </label>
-                  <Input
-                    {...register('password')}
+                    {...register('newPassword')}
                     type="password"
-                    className="h-12 border-gray-200 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your password"
+                    className="h-12 pl-10 border-gray-200 focus:border-red-500 focus:ring-red-500"
+                    placeholder="Enter new password"
                   />
-                  {errors.password && (
-                    <p className="mt-2 text-sm text-red-600">{String(errors.password.message)}</p>
-                  )}
                 </div>
+                {errors.newPassword && (
+                  <p className="mt-2 text-sm text-red-600">{String(errors.newPassword.message)}</p>
+                )}
               </div>
 
-              {/* Error Display */}
-              {registerError && (
-                <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
-                  Registration failed. Please try again.
+              {/* Confirm Password Field */}
+              <div>
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-gray-700 mb-2">
+                  Confirm Password <span className="text-red-500">*</span>
+                </label>
+                <div className="relative">
+                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                  <Input
+                    {...register('confirmPassword')}
+                    type="password"
+                    className="h-12 pl-10 border-gray-200 focus:border-red-500 focus:ring-red-500"
+                    placeholder="Confirm new password"
+                  />
                 </div>
-              )}
+                {errors.confirmPassword && (
+                  <p className="mt-2 text-sm text-red-600">{String(errors.confirmPassword.message)}</p>
+                )}
+              </div>
 
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isRegistering}
+                  disabled={isSubmitting}
                   className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                   size="lg"
                 >
-                  {isRegistering ? (
+                  {isSubmitting ? (
                     <div className="flex items-center space-x-2">
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                      <span>Creating Account...</span>
+                      <span>Updating Password...</span>
                     </div>
                   ) : (
-                    'Create Account'
+                    'Update Password'
                   )}
                 </Button>
               </div>
-              {/* login */}
-              <div className="text-center">
-              <p className="text-sm text-gray-600">
-                Already have an account?{' '}
-                <Link href="/login" className="text-red-600 hover:text-red-700 font-semibold hover:underline">
-                  Login here
-                </Link>
-              </p>
-              </div>
 
-              {/* Terms */}
-              <p className="text-xs text-gray-500 text-center">
-                By creating an account, you agree to our{' '}
-                <a href="/terms-conditions" className="text-red-600 hover:underline">Terms of Service</a>
-                {' '}and{' '}
-                <a href="/privacy" className="text-red-600 hover:underline">Privacy Policy</a>
-              </p>
+              {/* Back to Login Link */}
+              <div className="text-center">
+                <Link 
+                  href="/login" 
+                  className="inline-flex items-center text-sm text-red-600 hover:text-red-700 hover:underline"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Sign In
+                </Link>
+              </div>
             </form>
           </div>
         </div>

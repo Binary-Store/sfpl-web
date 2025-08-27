@@ -66,11 +66,7 @@ export default function Products() {
             </div>
           ))}
         </div>
-        <div className="flex justify-center mt-7">
-          <a href="/products" className="text-primary flex items-center hover:scale-110 duration-300 gap-2">
-            View All Products <ArrowRight className="w-4 h-4" />
-          </a>
-        </div>
+       
       </div>
     </section>
   );

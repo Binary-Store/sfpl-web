@@ -80,21 +80,9 @@ export default function DeviceDetailPage() {
           {/* Left Side - Device Info */}
           <div className="space-y-2">
             <h1 className="text-2xl font-bold text-gray-900">
-              {currentDevice.name} - Alarm Panel
+              {currentDevice.name}
             </h1>
-            <div className="flex items-center space-x-4 text-sm text-gray-600">
-              <div className="flex items-center space-x-2">
-                <Smartphone className="w-4 h-4" />
-                <span>IMEI: {currentDevice.imei}</span>
-              </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4" />
-                <span>Ward: {currentDevice.ward_name}</span>
-              </div>
-            </div>
-            {currentDevice.description && (
-              <p className="text-sm text-gray-500">{currentDevice.description}</p>
-            )}
+           
           </div>
           
           {/* Right Side - Battery & Time */}
@@ -166,96 +154,6 @@ export default function DeviceDetailPage() {
         </div>
       </div>
 
-      {/* Additional Device Information */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-4">Device Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Device Name:</span>
-              <span className="font-medium text-gray-900">{currentDevice.name}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">IMEI:</span>
-              <span className="font-mono text-gray-900">{currentDevice.imei}</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Ward:</span>
-              <span className="font-medium text-gray-900">{currentDevice.ward_name}</span>
-            </div>
-            {currentDevice.description && (
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Description:</span>
-                <span className="font-medium text-gray-900">{currentDevice.description}</span>
-              </div>
-            )}
-          </div>
-          <div className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Status:</span>
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Active
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Last Updated:</span>
-              <span className="font-medium text-gray-900">
-                {currentData?.timestamp 
-                  ? new Date(currentData.timestamp).toLocaleDateString('en-GB')
-                  : 'No data'
-                }
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-gray-600">Created:</span>
-              <span className="font-medium text-gray-900">
-                {new Date(currentDevice.created_at).toLocaleDateString('en-GB')}
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* SIM Card Information */}
-      {currentDevice.sim_card && (
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">SIM Card Information</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Number:</span>
-                <span className="font-medium text-gray-900">{currentDevice.sim_card.number}</span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Activation:</span>
-                <span className="font-medium text-gray-900">
-                  {new Date(currentDevice.sim_card.activation_date).toLocaleDateString('en-GB')}
-                </span>
-              </div>
-            </div>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <span className="text-gray-600">Expiry:</span>
-                <span className="font-medium text-gray-900">
-                  {new Date(currentDevice.sim_card.expiry_date).toLocaleDateString('en-GB')}
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Live Data Indicator */}
-      {liveData && (
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-center">
-          <div className="flex items-center justify-center space-x-2 text-blue-600">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            <span className="text-sm font-medium">Live Data Active</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

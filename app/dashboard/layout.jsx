@@ -72,27 +72,27 @@ export default function DashboardLayout({ children }) {
   };
 
   const sidebarItems = [
-    {
-      href: '/dashboard',
-      label: 'Dashboard',
-      icon: LayoutDashboard,
-      isMain: true
-    },
+    // {
+    //   href: '/dashboard',
+    //   label: 'Dashboard',
+    //   icon: LayoutDashboard,
+    //   isMain: true
+    // },
     {
       href: '/dashboard/devices',
       label: 'Devices',
       icon: Smartphone
     },
-    {
-      href: '/dashboard/orders',
-      label: 'Past Orders',
-      icon: Package
-    },
-    {
-      href: '/dashboard/payments',
-      label: 'Payment History',
-      icon: CreditCard
-    }
+    // {
+    //   href: '/dashboard/orders',
+    //   label: 'Past Orders',
+    //   icon: Package
+    // },
+    // {
+    //   href: '/dashboard/payments',
+    //   label: 'Payment History',
+    //   icon: CreditCard
+    // }
   ];
 
 
