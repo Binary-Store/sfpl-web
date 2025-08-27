@@ -71,7 +71,7 @@ export const useAuth = () => {
       if (data?.message) {
         console.log('Verification successful:', data?.message);
       }
-      router.push('/login');
+      router.push('/successfull-register');
       localStorage.removeItem('token');
     },
     onError: (error: unknown) => {

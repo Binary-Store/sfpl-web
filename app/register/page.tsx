@@ -112,8 +112,6 @@ export default function RegisterPage() {
             <p className="text-sm text-gray-600">Specific Fire Protection Limited</p>
           </div>
           
-         
-
           <div className="bg-white p-8 shadow-xl border border-gray-100 rounded-2xl">
             {/* Welcome Section */}
             <div className="text-center mb-8">
