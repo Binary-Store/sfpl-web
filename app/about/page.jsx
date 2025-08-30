@@ -127,10 +127,10 @@ export default function About() {
               <div className="text-center mb-6">
                 <div className="w-32 h-32 mx-auto mb-4 relative">
                   <Image
-                    src="https://via.placeholder.com/320x320.png?text=MD"
+                    src="/images/clients/Nikhil.jpg"
                     alt="Managing Director"
                     width={128}
-                    height={128}
+                    height={60}
                     className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -165,7 +165,7 @@ export default function About() {
               <div className="text-center mb-6">
                 <div className="w-32 h-32 mx-auto mb-4 relative">
                   <Image
-                    src="https://via.placeholder.com/320x320.png?text=CT"
+                    src="/images/clients/Manish.png"
                     alt="Chief Technical Officer"
                     width={128}
                     height={128}
@@ -195,12 +195,18 @@ export default function About() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {/* Company 1 */}
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
-                  <Building2 className="h-10 w-10 text-red-600" />
+                <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <Image
+                    src="/anupam.jpeg"
+                    alt="Anupam Security"
+                    width={280}
+                    height={80}
+                    className="object-contain rounded-lg"
+                  />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Anupam Security</h3>
                 <p className="text-gray-600 text-sm">
@@ -215,8 +221,14 @@ export default function About() {
             {/* Company 2 */}
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
-                  <Flame className="h-10 w-10 text-red-600" />
+                <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <Image
+                    src="/logo.svg"
+                    alt="Specific Fire Protection Limited"
+                    width={280}
+                    height={80}
+                    className="object-contain rounded-lg"
+                  />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Specific Fire Protection Limited</h3>
                 <p className="text-gray-600 text-sm">
@@ -231,8 +243,14 @@ export default function About() {
             {/* Company 3 */}
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
-                  <Award className="h-10 w-10 text-red-600" />
+                <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <Image
+                    src="/firelynk.jpeg"
+                    alt="Firelynk Protech Limited"
+                    width={280}
+                    height={80}
+                    className="object-contain rounded-lg"
+                  />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Firelynk Protech Limited</h3>
                 <p className="text-gray-600 text-sm">
@@ -246,8 +264,14 @@ export default function About() {
 
             <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
               <div className="text-center mb-6">
-                <div className="w-20 h-20 bg-red-100 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-red-200 transition-colors duration-300">
-                  <Award className="h-10 w-10 text-red-600" />
+                <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
+                  <Image
+                    src="/firelynk_tech.jpeg"
+                    alt="Firelynk Tech Limited"
+                    width={280}
+                    height={80}
+                    className="object-contain rounded-lg"
+                  />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Firelynk Tech Limited</h3>
                 <p className="text-gray-600 text-sm">

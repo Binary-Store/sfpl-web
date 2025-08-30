@@ -28,7 +28,7 @@ export default function Footer() {
             </p>
             <div className="flex space-x-3">
               <Link 
-                href="https://www.linkedin.com/company/specificfire/" 
+                href="https://www.linkedin.com/in/specific-fire/" 
                 target="_blank" 
                 aria-label="LinkedIn"
                 className="p-2 bg-gray-100 hover:bg-primary hover:text-white text-gray-600 rounded-lg transition-all duration-200"
@@ -36,7 +36,7 @@ export default function Footer() {
                 <Linkedin className="w-4 h-4" />
               </Link>
               <Link 
-                href="https://www.instagram.com/specificfire/" 
+                href="https://www.instagram.com/specificfire" 
                 target="_blank" 
                 aria-label="Instagram"
                 className="p-2 bg-gray-100 hover:bg-primary hover:text-white text-gray-600 rounded-lg transition-all duration-200"
@@ -44,7 +44,7 @@ export default function Footer() {
                 <Instagram className="w-4 h-4" />
               </Link>
               <Link 
-                href="https://www.facebook.com/specificfire/" 
+                href="https://www.facebook.com/specific.fire" 
                 target="_blank" 
                 aria-label="Facebook"
                 className="p-2 bg-gray-100 hover:bg-primary hover:text-white text-gray-600 rounded-lg transition-all duration-200"
@@ -52,7 +52,7 @@ export default function Footer() {
                 <Facebook className="w-4 h-4" />
               </Link>
               <Link 
-                href="https://www.youtube.com/@specificfire" 
+                href="https://www.youtube.com/@SPECIFIC_FIRE" 
                 target="_blank" 
                 aria-label="YouTube"
                 className="p-2 bg-gray-100 hover:bg-primary hover:text-white text-gray-600 rounded-lg transition-all duration-200"
@@ -165,7 +165,7 @@ export default function Footer() {
         <div className="pt-8 border-t border-gray-100">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-gray-500">
-              © 2022 Specific Fire Protection Limited. All rights reserved.
+              © 2023 Specific Fire Protection Limited. All rights reserved.
             </p>
             <div className="flex space-x-6 text-sm text-gray-500">
               <Link 
