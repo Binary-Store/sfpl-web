@@ -105,7 +105,15 @@ export default function AlarmPanel() {
           <div className="flex items-center gap-2">
             <Clock className="h-4 w-4 text-gray-600" />
             <span className="text-sm font-medium">
-              {alarmData ? new Date(alarmData.timestamp).toLocaleString() : "No data"}
+              {alarmData ? new Date(alarmData.timestamp).toLocaleString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: true
+              }) : "No data"}
             </span>
           </div>
         </div>
