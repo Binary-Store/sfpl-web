@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useContact } from '@/hooks/useContact';
+import toast from 'react-hot-toast';
 
 export default function Contact() {
   const [formData, setFormData] = useState({
@@ -73,6 +74,7 @@ export default function Contact() {
       onSuccess: () => {
         localStorage.setItem('contactFormLastSubmission', Date.now().toString());
         setIsFormDisabled(true);
+        toast.success('Message sent successfully!');
         
         // Reset form
         setFormData({

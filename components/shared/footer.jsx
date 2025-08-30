@@ -85,7 +85,7 @@ export default function Footer() {
                     : 'text-gray-600 hover:text-red-600'
                 }`}
               >
-                Products
+                Services
               </Link>
               <Link 
                 href="/about" 

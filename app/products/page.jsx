@@ -3,8 +3,10 @@
 import { useProducts } from "@/hooks/useProducts";
 import { IndianRupee } from "lucide-react";
 import { serverDetails } from "@/config";
+import { useRouter } from "next/navigation";
 
 export default function Products() {
+  const router = useRouter();
   const { data: products, isLoading, error } = useProducts();
 
   if (isLoading) {
@@ -19,7 +21,7 @@ export default function Products() {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Products</h1>
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Our Services</h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Discover our comprehensive range of fire protection solutions designed to keep you safe
           </p>
@@ -27,7 +29,7 @@ export default function Products() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {products?.map((product) => (
-            <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
+            <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" onClick={() => router.push(`/products/${product.id}`)}>
               {product.photo_url && (
                 <div className="relative overflow-hidden">
                   <img 
@@ -35,11 +37,7 @@ export default function Products() {
                     alt={product.name}
                     className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute top-3 right-3">
-                    <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium">
-                      Fire Safety
-                    </span>
-                  </div>
+                 
                 </div>
               )}
               
@@ -61,7 +59,7 @@ export default function Products() {
                     </span>
                   </div>
                   
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                  <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200" onClick={() => router.push(`/products/${product.id}`)}>
                     View 
                   </button>
                 </div>
