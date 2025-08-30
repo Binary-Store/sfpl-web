@@ -16,11 +16,15 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid, isDirty },
+    formState: { errors, isValid, isDirty, touchedFields },
+    watch,
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
-    mode: 'onChange',
+    mode: 'onBlur',
   });
+
+  // Watch all fields for real-time validation
+  const watchedFields = watch();
 
 
 
@@ -205,9 +209,9 @@ export default function RegisterPage() {
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isRegistering || !isValid || !isDirty}
+                  disabled={isRegistering || !isValid || !isDirty || Object.keys(errors).length > 0}
                   className={`w-full h-12 font-semibold rounded-lg shadow-lg transition-all duration-200 ${
-                    isRegistering || !isValid || !isDirty
+                    isRegistering || !isValid || !isDirty || Object.keys(errors).length > 0
                       ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
                       : 'bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white hover:shadow-xl'
                   }`}
@@ -218,7 +222,7 @@ export default function RegisterPage() {
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                       <span>Creating Account...</span>
                     </div>
-                  ) : !isValid || !isDirty ? (
+                  ) : !isValid || !isDirty || Object.keys(errors).length > 0 ? (
                     'Please fill all required fields correctly'
                   ) : (
                     'Create Account'
