@@ -127,17 +127,35 @@ export default function About() {
               <div className="text-center mb-6">
                 <div className="w-32 h-32 mx-auto mb-4 relative">
                   <Image
-                    src="/images/clients/Nikhil.jpg"
+                    src="/Nikhil_1.jpg"
                     alt="Managing Director"
                     width={128}
-                    height={60}
+                    height={128}
                     className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">Nikhil Bhalara</h3>
                 <p className="text-red-600 font-semibold mb-3">Director</p>
               
+              </div>
+            </div>
+              {/* Team Member 3 */}
+              <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
+              <div className="text-center mb-6">
+                <div className="w-32 h-32 mx-auto mb-4 relative">
+                  <Image
+                    src="/Manish_1.JPG"
+                    alt="Chief Technical Officer"
+                    width={128}
+                    height={118}
+                    className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 mb-1">Manish Virani</h3>
+                <p className="text-red-600 font-semibold mb-3">Director</p>
+           
               </div>
             </div>
 
@@ -146,13 +164,13 @@ export default function About() {
               <div className="text-center mb-6">
                 <div className="w-32 h-32 mx-auto mb-4 relative">
                   <Image
-                    src="https://via.placeholder.com/320x320.png?text=DO"
+                    src="/mukesh_vasu.jpeg"
                     alt="Director of Operations"
                     width={128}
                     height={128}
                     className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <div className="absolute inset-0 rounded-full  opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-1">Mukesh Vasu</h3>
                 <p className="text-red-600 font-semibold mb-3">Director</p>
@@ -160,24 +178,7 @@ export default function About() {
               </div>
             </div>
 
-            {/* Team Member 3 */}
-            <div className="bg-white rounded-2xl p-6 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-center mb-6">
-                <div className="w-32 h-32 mx-auto mb-4 relative">
-                  <Image
-                    src="/images/clients/Manish.png"
-                    alt="Chief Technical Officer"
-                    width={128}
-                    height={128}
-                    className="rounded-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-t from-red-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-1">Manish Virani</h3>
-                <p className="text-red-600 font-semibold mb-3">Director</p>
-           
-              </div>
-            </div>
+          
           </div>
         </div>
       </section>
@@ -197,30 +198,31 @@ export default function About() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
             {/* Company 1 */}
-            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-center mb-6">
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
                 <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
                   <Image
-                    src="/anupam.jpeg"
+                    src="/Anupam_logo.png"
                     alt="Anupam Security"
                     width={280}
                     height={80}
                     className="object-contain rounded-lg"
                   />
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">Anupam Security</h3>
-                <p className="text-gray-600 text-sm">
+              <div className="text-center">
+
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Anupam <br/> Security</h3>
+                <p className="text-gray-600 text-sm mb-2">
                 Integrated whole system using AI in one stop solution.
                 </p>
                 <p className="text-sm text-gray-500 font-medium">
-                  Established: January 26, 2016
+                   January 26, 2016
                 </p>
+
               </div>
             </div>
 
             {/* Company 2 */}
-            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-center mb-6">
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
                 <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
                   <Image
                     src="/logo.svg"
@@ -230,19 +232,21 @@ export default function About() {
                     className="object-contain rounded-lg"
                   />
                 </div>
+              <div className="text-center">
+
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Specific Fire Protection Limited</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-sm mb-2">
                 Deal with client in advance fire safety solution.
                 </p>
                 <p className="text-sm text-gray-500 font-medium">
-                  Established: November 29, 2023
+                   November 29, 2023
                 </p>
               </div>
             </div>
 
             {/* Company 3 */}
-            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-center mb-6">
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
+              
                 <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
                   <Image
                     src="/firelynk.jpeg"
@@ -252,18 +256,19 @@ export default function About() {
                     className="object-contain rounded-lg"
                   />
                 </div>
+              <div className="text-center">
+
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Firelynk Protech Limited</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-sm mb-2">
                 Innovation in advance fire safety solution.
                 </p>
                 <p className="text-sm text-gray-500 font-medium">
-                  Established: February 1, 2024
+                   February 1, 2024
                 </p>
               </div>
             </div>
 
-            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group">
-              <div className="text-center mb-6">
+            <div className="bg-white rounded-2xl p-8 shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300 group flex flex-col justify-between">
                 <div className="w-40 h-20 mx-auto mb-4 flex items-center justify-center">
                   <Image
                     src="/firelynk_tech.jpeg"
@@ -273,12 +278,14 @@ export default function About() {
                     className="object-contain rounded-lg"
                   />
                 </div>
+              <div className="text-center">
+
                 <h3 className="text-xl font-bold text-gray-900 mb-2">Firelynk Tech Limited</h3>
-                <p className="text-gray-600 text-sm">
+                <p className="text-gray-600 text-sm mb-2">
                 Manufacturing in advance fire safety solution.
                 </p>
                 <p className="text-sm text-gray-500 font-medium">
-                  Established: August 1, 2025
+                   August 1, 2025
                 </p>
               </div>
             </div>

@@ -215,7 +215,7 @@ export default function Contact() {
             </div>
             {/* Google Maps Embed */}
             <div className="rounded-2xl overflow-hidden shadow-lg aspect-video">
-            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1938.3706073760234!2d72.6901659!3d23.2186396!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2bdd10281fa1%3A0xc3f3a36276b39c77!2sIIT%20Gandhinagar%20Research%20Park!5e1!3m2!1sen!2sin!4v1756558139347!5m2!1sen!2sin" width="600" height="450" style={{border:0}} allowFullScreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1833.3357468778154!2d72.6901659!3d23.2186396!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395c2bdd10281fa1%3A0xc3f3a36276b39c77!2sIIT%20Gandhinagar%20Research%20Park!5e0!3m2!1sen!2sin!4v1756561802865!5m2!1sen!2sin" width="600" height="450" style={{border:0}} allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
           </div>
         </div>

@@ -2,10 +2,14 @@ import { z } from 'zod';
 
 // Zod schema for registration
 export const registerSchema = z.object({
-  name: z.string().min(1, 'Name is required'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  phone_number: z.string().min(10, 'Phone number must be at least 10 digits'),
+  name: z.string().min(1, 'Name is required').max(50, 'Name must be less than 50 characters'),
+  email: z.string().min(1, 'Email is required').email('Invalid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters').max(100, 'Password must be less than 100 characters'),
+  phone_number: z.string()
+    .min(1, 'Phone number is required')
+    .min(10, 'Phone number must be at least 10 digits')
+    .max(15, 'Phone number must be less than 15 digits')
+    .regex(/^[0-9]+$/, 'Phone number must contain only digits'),
 });
 
 // TypeScript types

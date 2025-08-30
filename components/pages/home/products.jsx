@@ -4,6 +4,7 @@ import { useProducts } from "@/hooks/useProducts";
 import { IndianRupee, ArrowRight, Shield } from "lucide-react";
 import { serverDetails } from "@/config";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function Products() {
   const { data: products, isLoading, error } = useProducts();
@@ -26,8 +27,12 @@ export default function Products() {
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 max-w-5xl mx-auto">
           {products?.slice(0,2).map((product) => (
-            <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" onClick={() => router.push(`/products/${product.id}`)}>
-              <div className="relative overflow-hidden h-72 bg-gray-100">
+            <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" 
+            onClick={() => {
+              toast.success('Coming Soon');
+            }}
+            >
+              <div className="relative overflow-hidden h-72 bg-gray-100 blur-sm">
                 {product.photo_url ? (
                   <img 
                     src={`${serverDetails.socketPath}/files/${product.photo_url}`} 
@@ -48,16 +53,16 @@ export default function Products() {
               
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-3 text-gray-900 capitalize">
-                  {product.name}
+                  {product.name?.toUpperCase()}
                 </h3>
                 {product.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed blur-sm">
                     {product.description}
                   </p>
                 )}
                 
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
+                <div className="flex items-center justify-between ">
+                  <div className="flex items-center gap-2 blur-sm">
                     <IndianRupee className="w-5 h-5 text-green-600" />
                     <span className="text-2xl font-bold text-green-600">
                       {product.price?.toLocaleString()}

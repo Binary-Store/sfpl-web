@@ -6,7 +6,7 @@ import { registerSchema, RegisterFormData } from '../../types/auth';
 import { useAuth } from '../../hooks/useAuth';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { Shield, Zap, Wrench, Building2, CheckCircle, Star } from 'lucide-react';
+import { Shield, Zap, Wrench, Building2, CheckCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -16,14 +16,17 @@ export default function RegisterPage() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid, isDirty },
   } = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
+    mode: 'onChange',
   });
 
 
 
   const onSubmit = (data: RegisterFormData) => {
+    console.log('Form data:', data);
+    console.log('Form errors:', errors);
     registerUser(data);
   };
 
@@ -190,6 +193,7 @@ export default function RegisterPage() {
                 </div>
               </div>
 
+
               {/* Error Display */}
               {registerError && (
                 <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
@@ -201,8 +205,12 @@ export default function RegisterPage() {
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isRegistering}
-                  className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
+                  disabled={isRegistering || !isValid || !isDirty}
+                  className={`w-full h-12 font-semibold rounded-lg shadow-lg transition-all duration-200 ${
+                    isRegistering || !isValid || !isDirty
+                      ? 'bg-gray-400 text-gray-600 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white hover:shadow-xl'
+                  }`}
                   size="lg"
                 >
                   {isRegistering ? (
@@ -210,6 +218,8 @@ export default function RegisterPage() {
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                       <span>Creating Account...</span>
                     </div>
+                  ) : !isValid || !isDirty ? (
+                    'Please fill all required fields correctly'
                   ) : (
                     'Create Account'
                   )}
