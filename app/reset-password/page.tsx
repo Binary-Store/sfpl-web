@@ -9,7 +9,7 @@ import { Button } from '../../components/ui/button';
 import { Shield, Zap, Wrench, Building2, CheckCircle, Lock, Key, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 
 // Forgot Password schema
@@ -23,7 +23,7 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
   const [isSuccess, setIsSuccess] = useState(false);
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -275,5 +275,20 @@ export default function ResetPasswordPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading...</p>
+        </div>
+      </div>
+    }>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
