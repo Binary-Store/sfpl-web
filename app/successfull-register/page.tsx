@@ -60,7 +60,7 @@ export default function SuccessfulRegisterPage() {
                 Welcome to SFPL! 🎉
               </p>
               <p className="text-sm text-gray-500">
-                Your account has been created successfully. You can now access our comprehensive fire safety solutions and professional protection services.
+                Your account has been created successfully. You can now access our fire safety solutions .
               </p>
             </div>
 
