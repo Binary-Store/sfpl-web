@@ -25,7 +25,7 @@ export default function Products() {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 max-w-5xl mx-auto">
-          {products?.slice(1,3).map((product) => (
+          {products?.slice(0,2).map((product) => (
             <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" onClick={() => router.push(`/products/${product.id}`)}>
               <div className="relative overflow-hidden h-72 bg-gray-100">
                 {product.photo_url ? (
