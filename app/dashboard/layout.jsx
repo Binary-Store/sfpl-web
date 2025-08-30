@@ -116,7 +116,7 @@ export default function DashboardLayout({ children }) {
         {/* Sidebar Header */}
         <div className="flex items-center justify-between flex-shrink-0">
           {!isSidebarCollapsed && (
-            <div className="mx-10 py-2 rounded-lg flex items-center justify-center">
+            <div className="mx-10 py-2 rounded-lg flex items-center justify-center cursor-pointer" onClick={() => router.push('/')}>
               <Image 
                 src="/logo.svg" 
                 alt="Smart Fire System Logo" 

@@ -14,10 +14,6 @@ function VerifyPageContent() {
   const { verifyAccount, isVerifying, verifyError } = useAuth();
 
   useEffect(() => {
-    if (token) {
-      toast.error('No registration token found. Please register again.');
-
-    }
     if(!token) {
       window.location.href = '/register';
     }
@@ -35,9 +31,9 @@ function VerifyPageContent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
           Verify your account
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
@@ -45,8 +41,8 @@ function VerifyPageContent() {
         </p>
       </div>
 
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-6 shadow-xl border border-gray-100 rounded-2xl">
+      <div className="mt-6 sm:mt-8 mx-auto w-full sm:w-full sm:max-w-md">
+        <div className="bg-white py-6 px-4 sm:py-8 sm:px-6 shadow-xl border border-gray-100 rounded-2xl">
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label htmlFor="otp" className="block text-sm font-medium text-foreground mb-4">
@@ -56,11 +52,11 @@ function VerifyPageContent() {
                 value={otp}
                 onChange={setOtp}
                 length={6}
-                className="mt-2"
+                className="mt-2 w-full"
               />
             </div>
 
-             {verifyError && (
+            {Boolean(verifyError) && (
               <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
                 Verification failed. Please try again.
               </div>
@@ -74,7 +70,7 @@ function VerifyPageContent() {
                 size="lg"
               >
                 {isVerifying ? (
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center justify-center space-x-2">
                     <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                     <span>Verifying...</span>
                   </div>
@@ -93,7 +89,7 @@ function VerifyPageContent() {
 export default function VerifyPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-8 px-4 sm:py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded mb-4"></div>

@@ -5,9 +5,9 @@ import { ChevronRight } from 'lucide-react';
 import { useGlobal } from '@/contexts/GlobalContext';
 
 export default function Breadcrumb({ pathname }) {
-  const { lastId } = useGlobal();
+  const {  breadcrumbsEndPoint } = useGlobal();
 
-  console.log(lastId, "this is last id");
+  console.log(breadcrumbsEndPoint, "this is last id");
   const getBreadcrumbs = () => {
     const paths = pathname.split('/').filter(Boolean);
     const breadcrumbs = [];
@@ -24,7 +24,6 @@ export default function Breadcrumb({ pathname }) {
         };
         
         if (sectionMap[section]) {
-          // For device details pages, add the section and then the ID
           if (section === 'devices' && paths.length > 2) {
             breadcrumbs.push({ 
               label: sectionMap[section], 
@@ -33,7 +32,7 @@ export default function Breadcrumb({ pathname }) {
             });
             // Add the device ID as the final breadcrumb
             breadcrumbs.push({ 
-              label: `Device ${paths[2]}`, 
+              label: `Device ${breadcrumbsEndPoint.length > 1 ? breadcrumbsEndPoint[1]?.label : breadcrumbsEndPoint[0]?.label || ''}`, 
               href: `/dashboard/${section}/${paths[2]}`,
               isCurrent: true
             });

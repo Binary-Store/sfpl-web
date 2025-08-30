@@ -52,7 +52,7 @@ const OTPInput = React.forwardRef<HTMLDivElement, OTPInputProps>(
     return (
       <div
         ref={ref}
-        className={cn("flex items-center gap-3 justify-center", className)}
+        className={cn("flex items-center gap-2 sm:gap-3 justify-center flex-wrap w-full", className)}
         onPaste={handlePaste}
       >
         {Array.from({ length }, (_, index) => (
@@ -70,10 +70,10 @@ const OTPInput = React.forwardRef<HTMLDivElement, OTPInputProps>(
             onKeyDown={(e) => handleKeyDown(index, e)}
             onFocus={(e) => e.target.select()}
             className={cn(
-              "h-14 w-14 text-center text-2xl font-semibold",
-              "border-2 border-gray-200 rounded-2xl transition-all duration-200",
+              "h-10 w-10 text-center text-xl font-semibold sm:h-14 sm:w-14 sm:text-2xl",
+              "border-2 border-gray-200 rounded-xl sm:rounded-2xl transition-all duration-200",
               "focus:border-red-500 focus:ring-2 focus:ring-red-500/20 focus:outline-none",
-              "placeholder:text-gray-400 placeholder:text-lg",
+              "placeholder:text-gray-400 placeholder:text-base sm:placeholder:text-lg",
               "bg-white hover:border-gray-300"
             )}
             placeholder={placeholder}

@@ -6,45 +6,66 @@ import { z } from 'zod';
 import { useAuth } from '../../hooks/useAuth';
 import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
-import { Shield, Zap, Wrench, Building2, CheckCircle, Lock, Mail } from 'lucide-react';
+import { Shield, Zap, Wrench, Building2, CheckCircle, Mail, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
-// Login schema
-const loginSchema = z.object({
+// Forgot Password schema
+const forgotPasswordSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
 });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
-export default function LoginPage() {
-  const { login: loginUser, isLoggingIn } = useAuth();
-  const router = useRouter();
-  useEffect(() => {
-    const storedToken = localStorage.getItem('token');
-    
-    if (storedToken) {
-      router.push('/');
-    }
-  }, [router]);
-
-  
+export default function RequestForgotPasswordPage() {
+  const { forgotPassword, isForgotPassword, forgotPasswordError } = useAuth();
+  const [isSuccess, setIsSuccess] = useState(false);
   
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  } = useForm<ForgotPasswordFormData>({
+    resolver: zodResolver(forgotPasswordSchema),
   });
 
-  const onSubmit = (data: LoginFormData) => {
-    loginUser(data)
-    
+  const onSubmit = async (data: ForgotPasswordFormData) => {
+    try {
+      await forgotPassword({
+        email: data.email,
+        callback_url: 'http://localhost:3000/reset-password'
+      });
+      setIsSuccess(true);
+    } catch (error) {
+      console.error('Forgot password error:', error);
+    }
   };
+
+  if (isSuccess) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
+        <div className="w-full max-w-md">
+          <div className="bg-white p-8 shadow-xl border border-gray-100 rounded-2xl text-center">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              Email Sent!
+            </h2>
+            <p className="text-sm text-gray-600 mb-6">
+              We've sent a password reset link to your email address. Please check your inbox and follow the instructions to reset your password.
+            </p>
+            <Link href="/login">
+              <Button className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
+                Back to Sign In
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
@@ -58,16 +79,10 @@ export default function LoginPage() {
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-br from-green-500 to-teal-500 rounded-full blur-3xl"></div>
           </div>
 
-        
-
-
           <div className="relative z-10 text-center mb-8">
             <Link href="/" className='cursor-pointer'>
-            <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} className="mx-auto" />  
+              <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} className="mx-auto" />  
             </Link>
-         
-            {/* <h1 className="text-3xl font-bold text-gray-900 mb-2">SFPL</h1> */}
-            {/* <h2 className="text-lg font-semibold text-gray-700 mb-2">Specific Fire Protection Limited</h2> */}
             <p className="text-gray-600 text-base font-medium mt-6">Your Safety, Our Priority</p>
             <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-3 rounded-full"></div>
           </div>
@@ -82,8 +97,6 @@ export default function LoginPage() {
                 <p className="text-xs text-gray-600">Expert fire safety solutions tailored for your needs</p>
               </div>
             </div>
-            
-         
             
             <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
               <div className="p-2 bg-yellow-100 rounded-lg">
@@ -118,7 +131,6 @@ export default function LoginPage() {
 
           {/* Trust Indicators */}
           <div className="mt-6 flex items-center space-x-4 text-xs text-gray-500 relative z-10">
-           
             <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
             <div className="flex items-center space-x-1">
               <CheckCircle className="h-3 w-3 text-green-500" />
@@ -128,7 +140,7 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* Right Side - Login Form */}
+      {/* Right Side - Forgot Password Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-8">
         <div className="w-full max-w-md">
           {/* Mobile Branding for small screens */}
@@ -143,13 +155,13 @@ export default function LoginPage() {
           <div className="bg-white p-8 shadow-xl border border-gray-100 rounded-2xl">
             <div className="text-center mb-8">
               <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Lock className="h-8 w-8 text-red-600" />
+                <Mail className="h-8 w-8 text-red-600" />
               </div>
               <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                Welcome Back
+                Forgot Password?
               </h2>
               <p className="text-sm text-gray-600">
-                Sign in to your SFPL account
+                Enter your email address and we'll send you a link to reset your password
               </p>
             </div>
 
@@ -169,63 +181,45 @@ export default function LoginPage() {
                   />
                 </div>
                 {errors.email && (
-                  <p className="mt-2 text-sm text-red-600">{String(errors.email.message) || 'Email is required'}</p>
-                )}
-              </div>
-
-              {/* Password Field */}
-              <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-gray-700 mb-2">
-                  Password <span className="text-red-500">*</span>
-                </label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                  <Input
-                    {...register('password')}
-                    type="password"
-                    className="h-12 pl-10 border-gray-200 focus:border-red-500 focus:ring-red-500"
-                    placeholder="Enter your password"
-                  />
-                </div>
-                {errors.password && (
-                  <p className="mt-2 text-sm text-red-600">{String(errors.password.message) || 'Password is required'}</p>
+                  <p className="mt-2 text-sm text-red-600">{String(errors.email.message)}</p>
                 )}
               </div>
 
               {/* Error Display */}
+              {forgotPasswordError && (
+                <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
+                  Failed to send reset email. Please try again.
+                </div>
+              )}
 
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isLoggingIn}
+                  disabled={isForgotPassword}
                   className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                   size="lg"
                 >
-                  {isLoggingIn ? (
+                  {isForgotPassword ? (
                     <div className="flex items-center space-x-2">
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                      <span>Signing In...</span>
+                      <span>Sending Email...</span>
                     </div>
                   ) : (
-                    'Sign In'
+                    'Send Reset Link'
                   )}
                 </Button>
               </div>
 
-              {/* Additional Links */}
-              <div className="text-center space-y-3">
-                                 <p className="text-sm text-gray-600">
-                   Don&apos;t have an account?{' '}
-                   <Link href="/register" className="text-red-600 hover:text-red-700 font-semibold hover:underline">
-                     Sign up here
-                   </Link>
-                 </p>
-                <p className="text-sm text-gray-600">
-                  <Link href="/request-forgot-password" className="text-red-600 hover:text-red-700 hover:underline">
-                    Forgot your password?
-                  </Link>
-                </p>
+              {/* Back to Login Link */}
+              <div className="text-center">
+                <Link 
+                  href="/login" 
+                  className="inline-flex items-center text-sm text-red-600 hover:text-red-700 hover:underline"
+                >
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back to Sign In
+                </Link>
               </div>
             </form>
           </div>

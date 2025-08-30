@@ -5,7 +5,6 @@ import { Shield } from "lucide-react";
 export default function Hero() {
   return (
     <section className="relative w-full min-h-[680px] flex items-center justify-center overflow-hidden">
-      {/* Background Image */}
       <Image
         src="/images/home/hero-banner.png"
         alt="Fire Extinguisher Safety Solutions"

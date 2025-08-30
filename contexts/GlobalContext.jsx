@@ -6,10 +6,13 @@ const GlobalContext = createContext();
 
 export function GlobalProvider({ children }) {
   const [lastId, setLastId] = useState(null);
+  const [breadcrumbsEndPoint, setBreadcrumbsEndPoint] = useState([]);
 
   const value = {
     lastId,
     setLastId,
+    breadcrumbsEndPoint,
+    setBreadcrumbsEndPoint,
   };
 
   return (

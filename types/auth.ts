@@ -25,3 +25,7 @@ export type AuthResponse = {
   token: string;
   message?: string;
 };
+
+export type ForgotPasswordData = {
+  email: string;
+};

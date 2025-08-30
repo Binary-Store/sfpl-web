@@ -1,73 +1,73 @@
-import Image from "next/image";
-import { ArrowRight } from 'lucide-react';
+'use client';
 
-const products = [
-  {
-    name: "Fire Extinguisher",
-    image: "/images/products/fire-extinguisher.jpg",
-    description: "High-quality ABC powder fire extinguisher for hom",
-    price: "₹1,499",
-  },
-  {
-    name: "Fire Alarm System",
-    image: "/images/products/fire-pump.jpeg",
-    description: "Advanced smoke and heat detection system for early warning.",
-    price: "₹3,999",
-  },
-  {
-    name: "Sprinkler System",
-    image: "/images/products/fire-alarm.jpeg",
-    description: "Automatic water sprinkler system for effective fire suppression.",
-    price: "₹7,499",
-  },
-  {
-    name: "Fire Hose Reel",
-    image: "/images/products/fire-spray.jpeg",
-    description: "Durable and easy-to-use fire hose reel for emergency response.",
-    price: "₹2,299",
-  },
-
-];
+import { useProducts } from "@/hooks/useProducts";
+import { IndianRupee } from "lucide-react";
+import { serverDetails } from "@/config";
 
 export default function Products() {
+  const { data: products, isLoading, error } = useProducts();
+
+  if (isLoading) {
+    return <div className="p-6">Loading products...</div>;
+  }
+
+  if (error) {
+    return <div className="p-6 text-red-600">Error loading products</div>;
+  }
+
   return (
-    <section className="w-full bg-gray-50 py-16 md:py-24">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl md:text-4xl font-extrabold text-center text-gray-900 mb-10">
-          Popular Products
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {products.map((product, idx) => (
-            <div
-              key={idx}
-              className="bg-white border border-gray-200 flex justify-between rounded-2xl shadow-md hover:shadow-xl hover:border-primary transition-all flex-col relative overflow-hidden group"
-            >
-              {/* Popular Badge */}
-              <span className="absolute top-4 left-4 bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow group-hover:bg-primary transition-colors z-10">
-                Popular
-              </span>
-              <div className="w-2/3 relative rounded-xl mt-4 overflow-hidden mx-auto">
-                <Image
-                  src={product.image}
-                  alt={product.name}
-                  className="object-cover rounded-xl group-hover:scale-105 transition-transform duration-300"
-                  width={300}
-                  height={300}
-                  sizes="(max-width: 768px) 100vw, 33vw"
-                  priority={idx < 3}
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="text-xl font-semibold mb-1 text-gray-800 text-left w-full">{product.name}</h3>
-                <p className="text-gray-600 text-sm text-left w-full">{product.description}</p>
-                <div className="text-lg font-bold text-primary text-left w-full">{product.price}</div>
-                <div className="absolute -bottom-8 -right-8 w-24 h-24 bg-primary/10 rounded-full blur-2xl z-0" />
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="text-center mb-12">
+          <h1 className="text-4xl font-bold text-gray-900 mb-4">Most Selling Products</h1>
+          
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+          {products?.map((product) => (
+            <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden">
+              {product.photo_url && (
+                <div className="relative overflow-hidden">
+                  <img 
+                    src={`${serverDetails.socketPath}/files/${product.photo_url}`} 
+                    alt={product.name}
+                    className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <div className="absolute top-3 right-3">
+                    <span className="bg-red-600 text-white px-3 py-1 rounded-full text-xs font-medium">
+                      Fire Safety
+                    </span>
+                  </div>
+                </div>
+              )}
+              
+              <div className="p-6">
+                <h3 className="font-bold text-xl mb-3 text-gray-900 capitalize">
+                  {product.name}
+                </h3>
+                {product.description && (
+                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
+                    {product.description}
+                  </p>
+                )}
+                
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <IndianRupee className="w-5 h-5 text-green-600" />
+                    <span className="text-2xl font-bold text-green-600">
+                      {product.price?.toLocaleString()}
+                    </span>
+                  </div>
+                  
+                  <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                    View 
+                  </button>
+                </div>
               </div>
             </div>
           ))}
         </div>
-       
       </div>
-    </section>
+    </div>
   );
 }

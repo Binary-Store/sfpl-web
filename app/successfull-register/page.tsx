@@ -5,15 +5,25 @@ import { CheckCircle, Shield, Home, LogIn } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function SuccessfulRegisterPage() {
   const router = useRouter();
 
+  useEffect(() => {
+    const registrationTrue = localStorage.getItem('registrationTrue');
+    if (!registrationTrue) {
+      router.push('/');
+    }
+  }, []);
+
   const handleGoToHome = () => {
+    localStorage.removeItem('registrationTrue');
     router.push('/');
   };
 
   const handleGoToLogin = () => {
+    localStorage.removeItem('registrationTrue');
     router.push('/login');
   };
 
@@ -79,7 +89,6 @@ export default function SuccessfulRegisterPage() {
             </div>
           </div>
 
-          {/* Trust Indicators */}
           <div className="mt-6 flex items-center space-x-4 text-xs text-gray-500 relative z-10">
             <div className="flex items-center space-x-1">
               <CheckCircle className="h-3 w-3 text-green-500" />
@@ -89,7 +98,6 @@ export default function SuccessfulRegisterPage() {
         </div>
       </div>
 
-      {/* Right Side - Success Content */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-8">
         <div className="w-full max-w-md">
           {/* Mobile Branding for small screens */}
@@ -147,7 +155,6 @@ export default function SuccessfulRegisterPage() {
                 <Link href="/contact" className="text-red-600 hover:text-red-700 hover:underline">
                   Contact Support
                 </Link>
-           
               </div>
             </div>
           </div>

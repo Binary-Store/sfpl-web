@@ -3,12 +3,14 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '../../hooks/useAuth';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
 import { Shield, Zap, Wrench, Building2, CheckCircle, Lock, Key, ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 // Forgot Password schema
 const forgotPasswordSchema = z.object({
@@ -21,9 +23,12 @@ const forgotPasswordSchema = z.object({
 
 type ForgotPasswordFormData = z.infer<typeof forgotPasswordSchema>;
 
-export default function ForgotPasswordPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export default function ResetPasswordPage() {
   const [isSuccess, setIsSuccess] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const token = searchParams.get('token');
+  const { resetPassword, isResettingPassword, resetPasswordError } = useAuth();
   
   const {
     register,
@@ -33,13 +38,35 @@ export default function ForgotPasswordPage() {
     resolver: zodResolver(forgotPasswordSchema),
   });
 
+  useEffect(() => {
+    if (!token) {
+      router.push('/request-forgot-password');
+    }
+  }, [token, router]);
+
+  useEffect(() => {
+    if (isSuccess) {
+      const timer = setTimeout(() => {
+        router.push('/login');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess, router]);
+
   const onSubmit = async (data: ForgotPasswordFormData) => {
-    setIsSubmitting(true);
-    // Simulate API call - in real app, you would send data to your API
-    console.log('Updating password:', { newPassword: data.newPassword });
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    setIsSuccess(true);
-    setIsSubmitting(false);
+    if (!token) {
+      return;
+    }
+
+    try {
+      await resetPassword({
+        token: token,
+        new_password: data.newPassword
+      });
+      setIsSuccess(true);
+    } catch (error) {
+      console.error('Password reset error:', error);
+    }
   };
 
   if (isSuccess) {
@@ -56,9 +83,12 @@ export default function ForgotPasswordPage() {
             <p className="text-sm text-gray-600 mb-6">
               Your password has been successfully updated. You can now sign in with your new password.
             </p>
+            <p className="text-xs text-gray-500 mb-4">
+              Redirecting to login page in 3 seconds...
+            </p>
             <Link href="/login">
               <Button className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200">
-                Sign In
+                Sign In Now
               </Button>
             </Link>
           </div>
@@ -204,15 +234,22 @@ export default function ForgotPasswordPage() {
                 )}
               </div>
 
+              {/* Error Display */}
+              {Boolean(resetPasswordError) && (
+                <div className="text-red-600 text-sm text-center bg-red-50 p-3 rounded-lg border border-red-200">
+                  Failed to update password. Please try again.
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="pt-4">
                 <Button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={isResettingPassword}
                   className="w-full h-12 bg-gradient-to-r from-red-500 to-orange-600 hover:from-red-600 hover:to-orange-700 text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition-all duration-200"
                   size="lg"
                 >
-                  {isSubmitting ? (
+                  {isResettingPassword ? (
                     <div className="flex items-center space-x-2">
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
                       <span>Updating Password...</span>

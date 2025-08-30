@@ -14,3 +14,13 @@ export const verifyAccount = async (data: {token: string, otp: string}) => {
     const url = `/customers/auth/verify-account`;
     return axiosInstance({ method: 'POST', url, data });
 };
+
+export const forgotPassword = async (data: {email: string}) => {
+    const url = `/customers/auth/forget-password`;
+    return axiosInstance({ method: 'POST', url, data });
+};
+
+export const resetPassword = async (data: {token: string, new_password: string}) => {
+    const url = `/customers/auth/reset-password`;
+    return axiosInstance({ method: 'POST', url, data });
+};
