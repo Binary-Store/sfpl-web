@@ -27,76 +27,14 @@ export default function SuccessfulRegisterPage() {
     router.push('/login');
   };
 
+  const handleContactSupport = () => {
+    localStorage.removeItem('registrationTrue');
+    router.push('/contact');
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Left Side - Enhanced Aesthetic Branding */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gray-50">
-        <div className="flex flex-col justify-center items-center p-8 w-full relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-5">
-            <div className="absolute top-20 left-20 w-32 h-32 bg-gradient-to-br from-red-500 to-orange-500 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-20 right-20 w-40 h-40 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full blur-3xl"></div>
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-60 h-60 bg-gradient-to-br from-green-500 to-teal-500 rounded-full blur-3xl"></div>
-          </div>
-
-          <div className="relative z-10 text-center mb-8">
-            <Link href="/" className='cursor-pointer'>
-              <Image src="/logo-full-black.svg" alt="SFPL" width={200} height={200} className="mx-auto" />  
-            </Link>
-            <p className="text-gray-600 text-base font-medium mt-6">Your Safety, Our Priority</p>
-            <div className="w-20 h-1 bg-gradient-to-r from-red-500 to-orange-500 mx-auto mt-3 rounded-full"></div>
-          </div>
-          
-          <div className="space-y-4 max-w-sm relative z-10">
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
-              <div className="p-2 bg-green-100 rounded-lg">
-                <Shield className="h-5 w-5 text-green-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Professional Protection</h3>
-                <p className="text-xs text-gray-600">Expert fire safety solutions tailored for your needs</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Shield className="h-5 w-5 text-blue-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Certified Equipment</h3>
-                <p className="text-xs text-gray-600">ISO certified products with global standards</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
-              <div className="p-2 bg-yellow-100 rounded-lg">
-                <Shield className="h-5 w-5 text-yellow-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">24/7 Support</h3>
-                <p className="text-xs text-gray-600">Round-the-clock emergency assistance</p>
-              </div>
-            </div>
-            
-            <div className="flex items-start space-x-3 p-3 bg-gray-50 rounded-xl border border-gray-100 hover:shadow-md transition-shadow duration-200">
-              <div className="p-2 bg-purple-100 rounded-lg">
-                <Shield className="h-5 w-5 text-purple-600" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 mb-1 text-sm">Complete Services</h3>
-                <p className="text-xs text-gray-600">Installation, maintenance & system upgrades</p>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 flex items-center space-x-4 text-xs text-gray-500 relative z-10">
-            <div className="flex items-center space-x-1">
-              <CheckCircle className="h-3 w-3 text-green-500" />
-              <span>1000+ Happy Clients</span>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      
 
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 lg:p-8">
         <div className="w-full max-w-md">
@@ -142,7 +80,7 @@ export default function SuccessfulRegisterPage() {
                 className="w-full h-14 border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-red-500 hover:text-red-600 font-semibold rounded-xl transition-all duration-200 text-lg"
               >
                 <LogIn className="h-5 w-5 mr-2" />
-                Sign In to Your Account
+                Login to Your Account
               </Button>
             </div>
 
@@ -152,7 +90,7 @@ export default function SuccessfulRegisterPage() {
                 Need help? Contact our support team
               </p>
               <div className="flex justify-center space-x-4 text-xs">
-                <Link href="/contact" className="text-red-600 hover:text-red-700 hover:underline">
+                <Link href="/contact" onClick={handleContactSupport} className="text-red-600 hover:text-red-700 hover:underline">
                   Contact Support
                 </Link>
               </div>
