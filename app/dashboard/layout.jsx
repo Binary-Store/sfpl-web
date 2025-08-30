@@ -10,7 +10,8 @@ import {
   LogOut,
   Menu,
   X,
-  ChevronLeft
+  ChevronLeft,
+  User
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -83,6 +84,11 @@ export default function DashboardLayout({ children }) {
       label: 'Devices',
       icon: Smartphone
     },
+    {
+      href: '/dashboard/profile',
+      label: 'Profile',
+      icon: User
+    }
     // {
     //   href: '/dashboard/orders',
     //   label: 'Past Orders',
