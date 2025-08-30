@@ -5,41 +5,62 @@ import { ChevronRight } from 'lucide-react';
 import { useGlobal } from '@/contexts/GlobalContext';
 
 export default function Breadcrumb({ pathname }) {
-  const {  breadcrumbsEndPoint } = useGlobal();
+  const { breadcrumbsEndPoint } = useGlobal();
 
-  console.log(breadcrumbsEndPoint, "this is last id");
+  
   const getBreadcrumbs = () => {
     const paths = pathname.split('/').filter(Boolean);
     const breadcrumbs = [];
     
-    if (paths.length > 0) {
-      breadcrumbs.push({ label: 'Dashboard', href: '/dashboard' });
+    if (paths.length > 0 && paths[0] === 'dashboard') {
+      // Skip 'dashboard' and start from the next segment
+      const dashboardPaths = paths.slice(1);
       
-      if (paths.length > 1) {
-        const section = paths[1];
+      if (dashboardPaths.length > 0) {
+        // Add first section
+        const firstSection = dashboardPaths[0];
         const sectionMap = {
-          'devices': 'Device Management',
+          'devices': 'Devices',
           'orders': 'Order Management',
-          'payments': 'Payment Management'
+          'payments': 'Payment Management',
+          'profile': 'Profile'
         };
         
-        if (sectionMap[section]) {
-          if (section === 'devices' && paths.length > 2) {
+        const sectionLabel = sectionMap[firstSection] || firstSection.charAt(0).toUpperCase() + firstSection.slice(1);
+        
+        if (dashboardPaths.length === 1) {
+          // Only section, no sub-path
+          breadcrumbs.push({ 
+            label: sectionLabel, 
+            href: `/dashboard/${firstSection}`,
+            isCurrent: true
+          });
+        } else {
+          // Section with sub-path
+          breadcrumbs.push({ 
+            label: sectionLabel, 
+            href: `/dashboard/${firstSection}`,
+            isCurrent: false
+          });
+          
+          // Handle special case for devices with ID
+          if (firstSection === 'devices' && dashboardPaths.length > 1) {
+            const deviceLabel = breadcrumbsEndPoint.length > 1 ? 
+              breadcrumbsEndPoint[1]?.label : 
+              breadcrumbsEndPoint[0]?.label || 
+              `Device ${dashboardPaths[1]}`;
+              
             breadcrumbs.push({ 
-              label: sectionMap[section], 
-              href: `/dashboard/${section}`,
-              isCurrent: false
-            });
-            // Add the device ID as the final breadcrumb
-            breadcrumbs.push({ 
-              label: `Device ${breadcrumbsEndPoint.length > 1 ? breadcrumbsEndPoint[1]?.label : breadcrumbsEndPoint[0]?.label || ''}`, 
-              href: `/dashboard/${section}/${paths[2]}`,
+              label: deviceLabel, 
+              href: `/dashboard/${firstSection}/${dashboardPaths[1]}`,
               isCurrent: true
             });
           } else {
+            // Generic sub-path handling
+            const subPath = dashboardPaths[1];
             breadcrumbs.push({ 
-              label: sectionMap[section], 
-              href: `/dashboard/${section}`,
+              label: subPath.charAt(0).toUpperCase() + subPath.slice(1), 
+              href: `/dashboard/${firstSection}/${subPath}`,
               isCurrent: true
             });
           }
@@ -52,7 +73,7 @@ export default function Breadcrumb({ pathname }) {
 
   const breadcrumbs = getBreadcrumbs();
 
-    return (
+  return (
     <div className="hidden lg:flex items-center space-x-2 text-sm">
       {breadcrumbs.map((breadcrumb, index) => (
         <div key={index} className="flex items-center space-x-2">

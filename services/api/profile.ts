@@ -4,9 +4,9 @@ export interface ProfileData {
     name: string;
     phone_number: string;
     email: string;
-    address: string;
-    organization_name: string;
-    gst_number: string;
+    address: string | null;
+    organization_name: string | null;
+    gst_number: string | null;
 }
 
 export const getProfile = async () => {

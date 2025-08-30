@@ -8,26 +8,39 @@ import { Textarea } from '@/components/ui/textarea';
 import { Edit, Save, X, User, Phone, Mail, MapPin, Building, FileText } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { ProfileData } from '@/services/api/profile';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 
-interface ProfileFormData {
-  name: string;
-  phone_number: string;
-  email: string;
-  address: string;
-  organization_name: string;
-  gst_number: string;
-}
+// Zod validation schema
+const profileSchema = z.object({
+  name: z.string().min(1, 'Name is required').min(2, 'Name must be at least 2 characters'),
+  phone_number: z.string().min(1, 'Phone number is required').regex(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
+  email: z.string().min(1, 'Email is required').email('Invalid email format'),
+  address: z.string().optional(),
+  organization_name: z.string().optional(),
+  gst_number: z.string()
+    .optional()
+    .refine((val) => !val || val.length === 0 || (val.length === 15 && /^[0-9]{15}$/.test(val)), {
+      message: 'GST number must be exactly 15 digits'
+    }),
+});
+
+type ProfileFormData = z.infer<typeof profileSchema>;
 
 export default function ProfilePage() {
   const { data: profileResponse, isLoading, error, updateProfile, isUpdating, updateError } = useProfile();
   const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState<ProfileFormData>({
-    name: '',
-    phone_number: '',
-    email: '',
-    address: '',
-    organization_name: '',
-    gst_number: ''
+  
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors, isValid },
+    reset
+  } = useForm<ProfileFormData>({
+    resolver: zodResolver(profileSchema),
+    mode: 'onChange'
   });
 
   // Extract profile data from response
@@ -36,23 +49,14 @@ export default function ProfilePage() {
   // Initialize form data when profile loads
   useEffect(() => {
     if (profile) {
-      setFormData({
-        name: profile.name || '',
-        phone_number: profile.phone_number || '',
-        email: profile.email || '',
-        address: profile.address || '',
-        organization_name: profile.organization_name || '',
-        gst_number: profile.gst_number || ''
-      });
+      setValue('name', profile.name || '');
+      setValue('phone_number', profile.phone_number || '');
+      setValue('email', profile.email || '');
+      setValue('address', profile.address || '');
+      setValue('organization_name', profile.organization_name || '');
+      setValue('gst_number', profile.gst_number || '');
     }
-  }, [profile]);
-
-  const handleInputChange = (field: keyof ProfileFormData, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+  }, [profile, setValue]);
 
   const handleEdit = () => {
     setIsEditing(true);
@@ -61,21 +65,31 @@ export default function ProfilePage() {
   const handleCancel = () => {
     // Reset form data to original profile data
     if (profile) {
-      setFormData({
-        name: profile.name || '',
-        phone_number: profile.phone_number || '',
-        email: profile.email || '',
-        address: profile.address || '',
-        organization_name: profile.organization_name || '',
-        gst_number: profile.gst_number || ''
-      });
+      setValue('name', profile.name || '');
+      setValue('phone_number', profile.phone_number || '');
+      setValue('email', profile.email || '');
+      setValue('address', profile.address || '');
+      setValue('organization_name', profile.organization_name || '');
+      setValue('gst_number', profile.gst_number || '');
     }
     setIsEditing(false);
+    reset();
   };
 
-  const handleSave = async () => {
+  const onSubmit = async (data: ProfileFormData) => {
     try {
-      await updateProfile(formData);
+      // Convert optional fields to match ProfileData interface
+      const profileData: ProfileData = {
+        name: data.name,
+        phone_number: data.phone_number,
+        email: data.email,
+        address: data.address || null,
+        organization_name: data.organization_name || null,
+        gst_number: data.gst_number || null,
+      };
+      
+      await updateProfile(profileData);
+      
       setIsEditing(false);
       toast.success('Profile updated successfully!');
     } catch {
@@ -103,13 +117,9 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="h-full bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
-          <p className="text-gray-600 mt-2">Manage your account information and preferences</p>
-        </div>
+    <div className="min-h-screen bg-gray-50 py-2">
+      <div className="max-w-4xl px-4 sm:px-2 lg:px-2">
+        
 
         {/* Profile Card */}
         <div className="bg-white rounded-xl shadow-lg p-6">
@@ -134,8 +144,8 @@ export default function ProfilePage() {
                   Cancel
                 </Button>
                 <Button
-                  onClick={handleSave}
-                  disabled={isUpdating}
+                  onClick={handleSubmit(onSubmit)}
+                  disabled={isUpdating || !isValid}
                   className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg flex items-center gap-2"
                 >
                   <Save className="h-4 w-4" />
@@ -146,7 +156,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Profile Form */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Name */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
@@ -154,14 +164,18 @@ export default function ProfilePage() {
                 Full Name *
               </label>
               {isEditing ? (
-                <Input
-                  value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
-                  placeholder="Enter your full name"
-                  className="w-full"
-                />
+                <div>
+                  <Input
+                    {...register('name')}
+                    placeholder="Enter your full name"
+                    className={`w-full ${errors.name ? 'border-red-500' : ''}`}
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-xs mt-1">{errors.name.message}</p>
+                  )}
+                </div>
               ) : (
-                <p className="text-gray-900 font-medium">{profile?.name || 'Not provided'}</p>
+                <p className="text-gray-900 font-medium">{profile?.name || '-'}</p>
               )}
             </div>
 
@@ -172,14 +186,18 @@ export default function ProfilePage() {
                 Phone Number *
               </label>
               {isEditing ? (
-                <Input
-                  value={formData.phone_number}
-                  onChange={(e) => handleInputChange('phone_number', e.target.value)}
-                  placeholder="Enter your phone number"
-                  className="w-full"
-                />
+                <div>
+                  <Input
+                    {...register('phone_number')}
+                    placeholder="Enter your phone number"
+                    className={`w-full ${errors.phone_number ? 'border-red-500' : ''}`}
+                  />
+                  {errors.phone_number && (
+                    <p className="text-red-500 text-xs mt-1">{errors.phone_number.message}</p>
+                  )}
+                </div>
               ) : (
-                <p className="text-gray-900 font-medium">{profile?.phone_number || 'Not provided'}</p>
+                <p className="text-gray-900 font-medium">{profile?.phone_number || '-'}</p>
               )}
             </div>
 
@@ -190,14 +208,18 @@ export default function ProfilePage() {
                 Email Address *
               </label>
               {isEditing ? (
-                <Input
-                  value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
-                  placeholder="Enter your email address"
-                  className="w-full"
-                />
+                <div>
+                  <Input
+                    {...register('email')}
+                    placeholder="Enter your email address"
+                    className={`w-full ${errors.email ? 'border-red-500' : ''}`}
+                  />
+                  {errors.email && (
+                    <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
+                  )}
+                </div>
               ) : (
-                <p className="text-gray-900 font-medium">{profile?.email || 'Not provided'}</p>
+                <p className="text-gray-900 font-medium">{profile?.email || '-'}</p>
               )}
             </div>
 
@@ -208,14 +230,15 @@ export default function ProfilePage() {
                 Organization Name
               </label>
               {isEditing ? (
-                <Input
-                  value={formData.organization_name}
-                  onChange={(e) => handleInputChange('organization_name', e.target.value)}
-                  placeholder="Enter organization name (optional)"
-                  className="w-full"
-                />
+                <div>
+                  <Input
+                    {...register('organization_name')}
+                    placeholder="Enter organization name (optional)"
+                    className="w-full"
+                  />
+                </div>
               ) : (
-                <p className="text-gray-900 font-medium">{profile?.organization_name || 'Not provided'}</p>
+                <p className="text-gray-900 font-medium">{profile?.organization_name || '-'}</p>
               )}
             </div>
 
@@ -226,14 +249,18 @@ export default function ProfilePage() {
                 GST Number
               </label>
               {isEditing ? (
-                <Input
-                  value={formData.gst_number}
-                  onChange={(e) => handleInputChange('gst_number', e.target.value)}
-                  placeholder="Enter GST number (optional)"
-                  className="w-full"
-                />
+                <div>
+                  <Input
+                    {...register('gst_number')}
+                    placeholder="Enter GST number (optional)"
+                    className="w-full"
+                  />
+                  {errors.gst_number && (
+                    <p className="text-red-500 text-xs mt-1">{errors.gst_number.message}</p>
+                  )}
+                </div>
               ) : (
-                <p className="text-gray-900 font-medium">{profile?.gst_number || 'Not provided'}</p>
+                <p className="text-gray-900 font-medium">{profile?.gst_number || '-'}</p>
               )}
             </div>
 
@@ -244,25 +271,26 @@ export default function ProfilePage() {
                 Address
               </label>
               {isEditing ? (
-                <Textarea
-                  value={formData.address}
-                  onChange={(e) => handleInputChange('address', e.target.value)}
-                  placeholder="Enter your address (optional)"
-                  rows={3}
-                  className="w-full"
-                />
+                <div>
+                  <Textarea
+                    {...register('address')}
+                    placeholder="Enter your address (optional)"
+                    rows={3}
+                    className="w-full"
+                  />
+                </div>
               ) : (
-                <p className="text-gray-900 font-medium">{profile?.address || 'Not provided'}</p>
+                <p className="text-gray-900 font-medium">{profile?.address || '-'}</p>
               )}
             </div>
-          </div>
+          </form>
 
           {/* Error Display */}
           {updateError && (
             <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
               <p className="text-red-600 text-sm">Failed to update profile. Please try again.</p>
             </div>
-            )}
+          )}
         </div>
       </div>
     </div>
