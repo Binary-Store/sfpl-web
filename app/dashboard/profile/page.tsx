@@ -207,20 +207,8 @@ export default function ProfilePage() {
                 <Mail className="h-4 w-4 text-red-600" />
                 Email Address *
               </label>
-              {isEditing ? (
-                <div>
-                  <Input
-                    {...register('email')}
-                    placeholder="Enter your email address"
-                    className={`w-full ${errors.email ? 'border-red-500' : ''}`}
-                  />
-                  {errors.email && (
-                    <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>
-                  )}
-                </div>
-              ) : (
+              
                 <p className="text-gray-900 font-medium">{profile?.email || '-'}</p>
-              )}
             </div>
 
             {/* Organization Name */}
