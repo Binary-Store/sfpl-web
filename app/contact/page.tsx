@@ -202,10 +202,10 @@ export default function Contact() {
               <h2 className="text-2xl font-bold text-primary mb-4">Get in Touch</h2>
               <div className="space-y-3 text-gray-700">
                 <div>
-                  <span className="font-semibold">phone_number:</span> <a href="tel:+911234567890" className="text-primary hover:underline ml-1">+91 9512570090</a>
+                  <span className="font-semibold">phone_number:</span> <a href="tel:+919512570090" className="text-primary hover:underline ml-1">+91 9512570090</a>
                 </div>
                 <div>
-                  <span className="font-semibold">Email:</span> <a href="mailto:info@sfpl.com" className="text-primary hover:underline ml-1"> contact@specificfire.com</a>
+                  <span className="font-semibold">Email:</span> <a href="mailto:contact@specificfire.com" className="text-primary hover:underline ml-1"> contact@specificfire.com</a>
                 </div>
                 <div>
                   <span className="font-semibold">Address:</span>

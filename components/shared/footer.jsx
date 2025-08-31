@@ -117,14 +117,14 @@ export default function Footer() {
               <div className="space-y-3">
                 <div className="flex items-center space-x-3">
                   <Phone className="h-4 w-4 text-red-600" />
-                  <a href="tel:+919512570092" className="text-sm text-gray-600 hover:text-red-600 transition-colors">
-                    +91 9512570092
+                  <a href="tel:+919512570090" className="text-sm text-gray-600 hover:text-red-600 transition-colors">
+                    +91 9512570090
                   </a>
                 </div>
                 <div className="flex items-center space-x-3">
                   <Mail className="h-4 w-4 text-red-600" />
-                  <a href="mailto:sales@specificfire.com" className="text-sm text-gray-600 hover:text-red-600 transition-colors">
-                    sales@specificfire.com
+                  <a href="mailto:contact@specificfire.com" className="text-sm text-gray-600 hover:text-red-600 transition-colors">
+                    contact@specificfire.com
                   </a>
                 </div>
               </div>
