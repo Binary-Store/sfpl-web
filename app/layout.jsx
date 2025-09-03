@@ -24,14 +24,17 @@ export const metadata = {
 export default function RootLayout({
   children,
 }) {
+  
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+      <Providers>
         <LayoutContent>
           {children}
         </LayoutContent>
+        </Providers>
         <Toaster 
           position="top-right"
           toastOptions={{

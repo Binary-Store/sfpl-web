@@ -94,9 +94,6 @@ export const useAuth = () => {
   const resetPasswordMutation = useMutation({
     mutationFn: async (data: { token: string; new_password: string }) => {
       const response = await resetPassword(data);
-      
-     
-      
       return response;
     },
     onSuccess: (response: unknown) => {

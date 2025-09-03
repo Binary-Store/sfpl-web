@@ -4,11 +4,12 @@ import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { usePathname, useRouter } from "next/navigation";
-
+import { usePathname } from "next/navigation";
+import { ShoppingCart } from "lucide-react";
+import { useGlobal } from "@/contexts/GlobalContext";
 export default function Header() {
   const pathname = usePathname();
-  const router = useRouter();
+  const { cartItems } = useGlobal();
 
   const [token, setToken] = useState(null);
   const [customer, setCustomer] = useState(null);
@@ -51,7 +52,12 @@ export default function Header() {
     return () => document.removeEventListener('mousedown', onClickOutside);
   }, [menuOpen]);
 
-  const isActive = (path) => pathname === path;
+  const isActive = (path) => {
+    if (path === "/") {
+      return pathname === "/";
+    }
+    return pathname.includes(path);
+  };
 
   const getInitial = (name) => {
     if (!name || typeof name !== 'string') return '?';
@@ -100,6 +106,24 @@ export default function Header() {
         </nav>
         {/* Actions */}
         <div className="flex items-center gap-2">
+          {token && (
+            <Link
+              href="/cart"
+              className={`p-2 rounded-md text-sm font-medium transition-colors relative ${
+                isActive('/cart')
+                  ? 'text-primary bg-primary/10'
+                  : 'text-gray-700 hover:bg-primary/10 hover:text-primary'
+              }`}
+            >
+              <ShoppingCart className="h-5 w-5" />
+              {/* Cart badge for item count - you can add this later */}
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {cartItems.filter((item, index, self) =>
+                  index === self.findIndex((t) => t.id === item.id)
+                ).length}
+              </span>
+            </Link>
+          )}
           {token ? (
             <div className="relative" ref={menuRef}>
               <button

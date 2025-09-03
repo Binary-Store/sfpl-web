@@ -3,9 +3,21 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/shared/header";
 import Footer from "@/components/shared/footer";
+import { useGetCart } from "@/hooks/useProducts";
+import { useGlobal } from "@/contexts/GlobalContext";
 import { Providers } from "./providers";
+import { useEffect } from "react";
 
 export default function LayoutContent({ children }) {
+  const { data: cartItems } = useGetCart();
+  const { setCartItems } = useGlobal();
+  useEffect(() => {
+   
+    if (cartItems) {
+      console.log(cartItems);
+      setCartItems(cartItems);
+    }
+  }, [cartItems]);
   const pathname = usePathname();
   
   // Check if current path is an authentication page or dashboard page
@@ -14,18 +26,16 @@ export default function LayoutContent({ children }) {
   
   if (isAuthPage || isDashboardPage) {
     return (
-      <Providers>
+      <>
         {children}
-      </Providers>
+        </>
     );
   }
   
   return (
     <>
       <Header />
-      <Providers>
         {children}
-      </Providers>
       <Footer />
     </>
   );

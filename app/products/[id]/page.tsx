@@ -1,17 +1,23 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import { useProductById } from '@/hooks/useProducts';
+import { useParams, useRouter } from 'next/navigation';
+import { useProductById, useAddToCart } from '@/hooks/useProducts';
 import { serverDetails } from '@/config';
-import { IndianRupee, Star, Shield, CheckCircle, ArrowLeft, X } from 'lucide-react';
+import { IndianRupee, Shield, ArrowLeft, X, Plus, Minus, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useContact } from '@/hooks/useContact';
-
+import { toast } from 'react-hot-toast';
+import { useGlobal } from '@/contexts/GlobalContext';
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const { setCartItems } = useGlobal();
   const id = params.id as string;
   const { data: product, isLoading, error } = useProductById(id);
+  const { addToCartMutation, isLoading: isAddingToCart, error: addToCartError } = useAddToCart();
+  
+  const [quantity, setQuantity] = useState(1);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [inquiryFormData, setInquiryFormData] = useState({
     name: '',
@@ -58,6 +64,44 @@ export default function ProductDetailPage() {
 
   const closeInquiryModal = () => {
     setIsInquiryModalOpen(false);
+  };
+
+  const handleQuantityChange = (type: 'increase' | 'decrease') => {
+    if (type === 'increase') {
+      setQuantity(prev => prev + 1);
+    } else {
+      setQuantity(prev => prev > 1 ? prev - 1 : 1);
+    }
+  };
+
+  const handleAddToCart = () => {
+    if (!localStorage.getItem('token')) {
+      toast.error('Please login first to add items to cart');
+      router.push('/login');
+      return;
+    }
+
+    addToCartMutation({
+      product_id: id,
+      quantity: quantity
+    }, {
+      onSuccess: (data) => {
+        console.log(data);
+        toast.success('Product added to cart successfully!');
+        setCartItems((prev: any) => {
+         const isItemExists = prev.find((item: any) => item.id === id);
+         if(isItemExists) {
+          return [...prev, data];
+         }
+         else {
+          return prev;
+         }
+        });
+      },
+      onError: () => {
+        toast.error('Failed to add product to cart');
+      }
+    });
   };
 
   if (isLoading) {
@@ -134,10 +178,14 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Product Info */}
-          <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
             {/* Product Header */}
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-sm font-medium text-red-600 uppercase tracking-wide">Fire Safety</span>
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4 capitalize leading-tight">
                 {product.name}
               </h1>
               {product.description && (
@@ -147,58 +195,68 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Price */}
-            <div className="flex items-center gap-2">
-              <IndianRupee className="w-8 h-8 text-green-600" />
-              <span className="text-4xl font-bold text-green-600">
-                {product.price?.toLocaleString()}
-              </span>
-            </div>
-
-            {/* Rating */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star 
-                    key={star} 
-                    className={`h-5 w-5 ${
-                      star <= 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                    }`} 
-                  />
-                ))}
+            {/* Price Section */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-8 border border-green-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-green-700 mb-1">Price</p>
+                  <div className="flex items-center gap-2">
+                    <IndianRupee className="w-8 h-8 text-green-600" />
+                    <span className="text-4xl font-bold text-green-600">
+                      {product.price?.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                    In Stock
+                  </div>
+                </div>
               </div>
-              <span className="text-gray-600">(4.8/5)</span>
-              <span className="text-gray-500">• 127 reviews</span>
             </div>
 
-            {/* Features */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-900">Key Features</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>ISO Certified</span>
+            {/* Quantity Controls */}
+            <div className="mb-8">
+              <div className="flex items-center justify-between mb-4">
+                <label className="text-lg font-semibold text-gray-900">Quantity</label>
+                <span className="text-sm text-gray-500">Select quantity</span>
+              </div>
+              <div className="flex items-center justify-center gap-4">
+                <button
+                  onClick={() => handleQuantityChange('decrease')}
+                  disabled={quantity <= 1}
+                  className="w-12 h-12 rounded-xl border-2 border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <Minus className="h-5 w-5 text-gray-600" />
+                </button>
+                <div className="bg-gray-50 rounded-xl px-6 py-3 min-w-[4rem] text-center">
+                  <span className="text-2xl font-bold text-gray-900">
+                    {quantity}
+                  </span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Fire Resistant</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Easy Installation</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Low Maintenance</span>
-                </div>
+                <button
+                  onClick={() => handleQuantityChange('increase')}
+                  className="w-12 h-12 rounded-xl border-2 border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-all duration-200"
+                >
+                  <Plus className="h-5 w-5 text-gray-600" />
+                </button>
               </div>
             </div>
 
             {/* Action Buttons */}
             <div className="space-y-4">
               <button 
+                onClick={handleAddToCart}
+                disabled={isAddingToCart}
+                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+              >
+                <ShoppingCart className="h-5 w-5" />
+                {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+              </button>
+              
+              <button 
                 onClick={openInquiryModal}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
               >
                 Inquiry Now 
               </button>

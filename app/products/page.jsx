@@ -32,7 +32,8 @@ export default function Products() {
           {products?.map((product) => (
             <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" 
             onClick={() => {
-              toast.success('Coming Soon');
+              // toast.success('Coming Soon');
+              router.push(`/products/${product.id}`);
             }}>
               {product.photo_url && (
                 // blur photo for all
