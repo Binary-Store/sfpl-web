@@ -34,11 +34,10 @@ export const useAddToCart = () => {
 };
 
 export const useGetCart = () => {
-
     const { data, isLoading, error } = useQuery({
         queryKey: ['cart'],
         queryFn: getCartItems,
-        enabled: !!localStorage.getItem('token'),
+        enabled: typeof window !== 'undefined' && !!localStorage.getItem('token'),
     });
     return { data, isLoading, error };
 };

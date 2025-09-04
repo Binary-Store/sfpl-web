@@ -135,7 +135,7 @@ export default function Header() {
                 {getInitial(customer?.name)}
               </button>
               {menuOpen && (
-                <div className="absolute top-12 right-0 bg-white shadow-xl rounded-xl p-3 w-50 border border-gray-100/50 backdrop-blur-sm">
+                <div className="absolute top-12 right-0 bg-white shadow-xl rounded-xl p-3 w-50 border border-gray-100/50 backdrop-">
                   {/* User Profile Section */}
                   <div className="mb-3 pb-3 border-b border-gray-100/50">
                     <div className="flex items-center gap-2.5">

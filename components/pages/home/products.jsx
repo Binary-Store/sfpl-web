@@ -32,7 +32,7 @@ export default function Products() {
               toast.success('Coming Soon');
             }}
             >
-              <div className="relative overflow-hidden h-72 bg-gray-100 blur-sm">
+              <div className="relative overflow-hidden h-72 bg-gray-100 ">
                 {product.photo_url ? (
                   <img 
                     src={`${serverDetails.socketPath}/files/${product.photo_url}`} 
@@ -56,13 +56,13 @@ export default function Products() {
                   {product.name?.toUpperCase()}
                 </h3>
                 {product.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed blur-sm">
+                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed ">
                     {product.description}
                   </p>
                 )}
                 
                 <div className="flex items-center justify-between ">
-                  <div className="flex items-center gap-2 blur-sm">
+                  <div className="flex items-center gap-2 ">
                     <IndianRupee className="w-5 h-5 text-green-600" />
                     <span className="text-2xl font-bold text-green-600">
                       {product.price?.toLocaleString()}

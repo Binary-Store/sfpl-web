@@ -9,15 +9,17 @@ import { useState } from 'react';
 import { useContact } from '@/hooks/useContact';
 import { toast } from 'react-hot-toast';
 import { useGlobal } from '@/contexts/GlobalContext';
+import { useQueryClient } from '@tanstack/react-query';
+
 export default function ProductDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const { setCartItems } = useGlobal();
+  const queryClient = useQueryClient();
+  const {cartItems} = useGlobal();
   const id = params.id as string;
   const { data: product, isLoading, error } = useProductById(id);
   const { addToCartMutation, isLoading: isAddingToCart, error: addToCartError } = useAddToCart();
   
-  const [quantity, setQuantity] = useState(1);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [inquiryFormData, setInquiryFormData] = useState({
     name: '',
@@ -66,13 +68,7 @@ export default function ProductDetailPage() {
     setIsInquiryModalOpen(false);
   };
 
-  const handleQuantityChange = (type: 'increase' | 'decrease') => {
-    if (type === 'increase') {
-      setQuantity(prev => prev + 1);
-    } else {
-      setQuantity(prev => prev > 1 ? prev - 1 : 1);
-    }
-  };
+
 
   const handleAddToCart = () => {
     if (!localStorage.getItem('token')) {
@@ -83,20 +79,12 @@ export default function ProductDetailPage() {
 
     addToCartMutation({
       product_id: id,
-      quantity: quantity
+      quantity: 1
     }, {
       onSuccess: (data) => {
-        console.log(data);
+        queryClient.invalidateQueries({ queryKey: ['cart'] });
         toast.success('Product added to cart successfully!');
-        setCartItems((prev: any) => {
-         const isItemExists = prev.find((item: any) => item.id === id);
-         if(isItemExists) {
-          return [...prev, data];
-         }
-         else {
-          return prev;
-         }
-        });
+       
       },
       onError: () => {
         toast.error('Failed to add product to cart');
@@ -159,7 +147,7 @@ export default function ProductDetailPage() {
               {product.photo_url ? (
                 <img
                   src={`${serverDetails.socketPath}/files/${product.photo_url}`}
-                  alt={product.name}
+                  alt={product.name.toUpperCase()}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -186,7 +174,7 @@ export default function ProductDetailPage() {
                 <span className="text-sm font-medium text-red-600 uppercase tracking-wide">Fire Safety</span>
               </div>
               <h1 className="text-4xl font-bold text-gray-900 mb-4 capitalize leading-tight">
-                {product.name}
+                {product.name.toUpperCase()}
               </h1>
               {product.description && (
                 <p className="text-lg text-gray-600 leading-relaxed">
@@ -203,7 +191,7 @@ export default function ProductDetailPage() {
                   <div className="flex items-center gap-2">
                     <IndianRupee className="w-8 h-8 text-green-600" />
                     <span className="text-4xl font-bold text-green-600">
-                      {product.price?.toLocaleString()}
+                      {product.price / 100 }
                     </span>
                   </div>
                 </div>
@@ -215,44 +203,29 @@ export default function ProductDetailPage() {
               </div>
             </div>
 
-            {/* Quantity Controls */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <label className="text-lg font-semibold text-gray-900">Quantity</label>
-                <span className="text-sm text-gray-500">Select quantity</span>
-              </div>
-              <div className="flex items-center justify-center gap-4">
-                <button
-                  onClick={() => handleQuantityChange('decrease')}
-                  disabled={quantity <= 1}
-                  className="w-12 h-12 rounded-xl border-2 border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <Minus className="h-5 w-5 text-gray-600" />
-                </button>
-                <div className="bg-gray-50 rounded-xl px-6 py-3 min-w-[4rem] text-center">
-                  <span className="text-2xl font-bold text-gray-900">
-                    {quantity}
-                  </span>
-                </div>
-                <button
-                  onClick={() => handleQuantityChange('increase')}
-                  className="w-12 h-12 rounded-xl border-2 border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-all duration-200"
-                >
-                  <Plus className="h-5 w-5 text-gray-600" />
-                </button>
-              </div>
-            </div>
+         
 
             {/* Action Buttons */}
             <div className="space-y-4">
-              <button 
-                onClick={handleAddToCart}
-                disabled={isAddingToCart}
-                className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
-              >
-                <ShoppingCart className="h-5 w-5" />
-                {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
-              </button>
+              {cartItems.find((item: any) => item.product_id === id) ? (
+                <button 
+                  onClick={() => router.push('/cart')}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  View Cart
+                </button>
+              ) : (
+                <button 
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+                </button>
+              )}
+             
               
               <button 
                 onClick={openInquiryModal}

@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
-import { verifyOrder , createOrder } from "@/services/api/order";
+import { verifyOrder , createOrder , listOrders, getOrder } from "@/services/api/order";
+import { useQuery } from "@tanstack/react-query";
 
 export const useVerifyOrder = () => {
     const { mutate: verifyOrderMutation, isPending, error } = useMutation({
@@ -14,3 +15,19 @@ export const useCreateOrder = () => {
     });
     return { createOrderMutation, isLoading: isPending, error };
 }
+
+export const useListOrders = () => {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['orders'],
+        queryFn: listOrders,
+    });
+    return { data, isLoading, error };
+}
+
+export const useGetOrder = (id: string) => {
+    const { data, isLoading, error } = useQuery({
+        queryKey: ['orders', id],
+        queryFn: () => getOrder(id),
+    });
+    return { data, isLoading, error };
+    }

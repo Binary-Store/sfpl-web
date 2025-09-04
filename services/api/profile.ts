@@ -10,11 +10,11 @@ export interface ProfileData {
 }
 
 export const getProfile = async () => {
-    const url = `/customers/profile`;
+    const url = `/profile`;
     return axiosInstance({ method: 'GET', url });
 };
 
 export const updateProfile = async (data: ProfileData) => {
-    const url = `/customers/profile`;
+    const url = `/profile`;
     return axiosInstance({ method: 'PUT', url, data });
 };
