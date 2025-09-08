@@ -29,10 +29,11 @@ export default function Products() {
           {products?.slice(0,2).map((product) => (
             <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" 
             onClick={() => {
-              toast.success('Coming Soon');
+              // toast.success('Coming Soon');
+              router.push(`/products/${product.id}`);
             }}
             >
-              <div className="relative overflow-hidden h-72 bg-gray-100 blur-sm">
+              <div className="relative overflow-hidden h-72 bg-gray-100 ">
                 {product.photo_url ? (
                   <img 
                     src={`${serverDetails.socketPath}/files/${product.photo_url}`} 
@@ -56,20 +57,22 @@ export default function Products() {
                   {product.name?.toUpperCase()}
                 </h3>
                 {product.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed blur-sm">
+                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed ">
                     {product.description}
                   </p>
                 )}
                 
                 <div className="flex items-center justify-between ">
-                  <div className="flex items-center gap-2 blur-sm">
+                  <div className="flex items-center gap-2 ">
                     <IndianRupee className="w-5 h-5 text-green-600" />
                     <span className="text-2xl font-bold text-green-600">
-                      {product.price?.toLocaleString()}
+                      {product?.price/ 100}
                     </span>
                   </div>
                   
-                  <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200">
+                  <button className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                  onClick={() => router.push(`/products/${product.id}`)}
+                  >
                     View 
                   </button>
                 </div>

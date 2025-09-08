@@ -85,15 +85,15 @@ export default function DashboardLayout({ children }) {
       icon: Smartphone
     },
     {
+      href: '/dashboard/orders',
+      label: 'Past Orders',
+      icon: Package
+    },
+    {
       href: '/dashboard/profile',
       label: 'Profile',
       icon: User
-    }
-    // {
-    //   href: '/dashboard/orders',
-    //   label: 'Past Orders',
-    //   icon: Package
-    // },
+    },
     // {
     //   href: '/dashboard/payments',
     //   label: 'Payment History',

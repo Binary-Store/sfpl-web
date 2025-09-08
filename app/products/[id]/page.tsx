@@ -1,17 +1,25 @@
 'use client';
 
-import { useParams } from 'next/navigation';
-import { useProductById } from '@/hooks/useProducts';
+import { useParams, useRouter } from 'next/navigation';
+import { useProductById, useAddToCart } from '@/hooks/useProducts';
 import { serverDetails } from '@/config';
-import { IndianRupee, Star, Shield, CheckCircle, ArrowLeft, X } from 'lucide-react';
+import { IndianRupee, Shield, ArrowLeft, X, Plus, Minus, ShoppingCart } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useContact } from '@/hooks/useContact';
+import { toast } from 'react-hot-toast';
+import { useGlobal } from '@/contexts/GlobalContext';
+import { useQueryClient } from '@tanstack/react-query';
 
 export default function ProductDetailPage() {
   const params = useParams();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+  const {cartItems} = useGlobal();
   const id = params.id as string;
   const { data: product, isLoading, error } = useProductById(id);
+  const { addToCartMutation, isLoading: isAddingToCart, error: addToCartError } = useAddToCart();
+  
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [inquiryFormData, setInquiryFormData] = useState({
     name: '',
@@ -58,6 +66,30 @@ export default function ProductDetailPage() {
 
   const closeInquiryModal = () => {
     setIsInquiryModalOpen(false);
+  };
+
+
+
+  const handleAddToCart = () => {
+    if (!localStorage.getItem('token')) {
+      toast.error('Please login first to add items to cart');
+      router.push('/login');
+      return;
+    }
+
+    addToCartMutation({
+      product_id: id,
+      quantity: 1
+    }, {
+      onSuccess: (data) => {
+        queryClient.invalidateQueries({ queryKey: ['cart'] });
+        toast.success('Product added to cart successfully!');
+       
+      },
+      onError: () => {
+        toast.error('Failed to add product to cart');
+      }
+    });
   };
 
   if (isLoading) {
@@ -115,7 +147,7 @@ export default function ProductDetailPage() {
               {product.photo_url ? (
                 <img
                   src={`${serverDetails.socketPath}/files/${product.photo_url}`}
-                  alt={product.name}
+                  alt={product.name.toUpperCase()}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -134,11 +166,15 @@ export default function ProductDetailPage() {
           </div>
 
           {/* Product Info */}
-          <div className="space-y-6">
+          <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
             {/* Product Header */}
-            <div>
-              <h1 className="text-3xl font-bold text-gray-900 mb-2 capitalize">
-                {product.name}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                <span className="text-sm font-medium text-red-600 uppercase tracking-wide">Fire Safety</span>
+              </div>
+              <h1 className="text-4xl font-bold text-gray-900 mb-4 capitalize leading-tight">
+                {product.name.toUpperCase()}
               </h1>
               {product.description && (
                 <p className="text-lg text-gray-600 leading-relaxed">
@@ -147,58 +183,53 @@ export default function ProductDetailPage() {
               )}
             </div>
 
-            {/* Price */}
-            <div className="flex items-center gap-2">
-              <IndianRupee className="w-8 h-8 text-green-600" />
-              <span className="text-4xl font-bold text-green-600">
-                {product.price?.toLocaleString()}
-              </span>
-            </div>
-
-            {/* Rating */}
-            <div className="flex items-center gap-2">
-              <div className="flex items-center">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <Star 
-                    key={star} 
-                    className={`h-5 w-5 ${
-                      star <= 4 ? 'text-yellow-400 fill-current' : 'text-gray-300'
-                    }`} 
-                  />
-                ))}
-              </div>
-              <span className="text-gray-600">(4.8/5)</span>
-              <span className="text-gray-500">• 127 reviews</span>
-            </div>
-
-            {/* Features */}
-            <div className="space-y-3">
-              <h3 className="text-lg font-semibold text-gray-900">Key Features</h3>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>ISO Certified</span>
+            {/* Price Section */}
+            <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 mb-8 border border-green-100">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-sm font-medium text-green-700 mb-1">Price</p>
+                  <div className="flex items-center gap-2">
+                    <IndianRupee className="w-8 h-8 text-green-600" />
+                    <span className="text-4xl font-bold text-green-600">
+                      {product.price / 100 }
+                    </span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Fire Resistant</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Easy Installation</span>
-                </div>
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
-                  <span>Low Maintenance</span>
+                <div className="text-right">
+                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
+                    In Stock
+                  </div>
                 </div>
               </div>
             </div>
+
+         
 
             {/* Action Buttons */}
             <div className="space-y-4">
+              {cartItems.find((item: any) => item.product_id === id) ? (
+                <button 
+                  onClick={() => router.push('/cart')}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  View Cart
+                </button>
+              ) : (
+                <button 
+                  onClick={handleAddToCart}
+                  disabled={isAddingToCart}
+                  className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
+                >
+                  <ShoppingCart className="h-5 w-5" />
+                  {isAddingToCart ? 'Adding to Cart...' : 'Add to Cart'}
+                </button>
+              )}
+             
+              
               <button 
                 onClick={openInquiryModal}
-                className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-colors duration-200 shadow-lg hover:shadow-xl"
+                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
               >
                 Inquiry Now 
               </button>

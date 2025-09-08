@@ -32,11 +32,12 @@ export default function Products() {
           {products?.map((product) => (
             <div key={product.id} className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer" 
             onClick={() => {
-              toast.success('Coming Soon');
+              // toast.success('Coming Soon');
+              router.push(`/products/${product.id}`);
             }}>
               {product.photo_url && (
                 // blur photo for all
-                <div className="relative overflow-hidden blur-sm">
+                <div className="relative overflow-hidden ">
                   <img 
                     src={`${serverDetails.socketPath}/files/${product.photo_url}`} 
                     alt={product.name}
@@ -51,16 +52,16 @@ export default function Products() {
                   {product.name?.toUpperCase()}
                 </h3>
                 {product.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed blur-sm">
+                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed ">
                     {product.description}
                   </p>
                 )}
                 
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 blur-sm">
+                  <div className="flex items-center gap-2 ">
                     <IndianRupee className="w-5 h-5 text-green-600" />
                     <span className="text-2xl font-bold text-green-600">
-                      {product.price?.toLocaleString()}
+                      {product?.price/ 100}
                     </span>
                   </div>
                   

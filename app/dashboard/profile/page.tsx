@@ -5,7 +5,7 @@ import { useProfile } from '@/hooks/useProfile';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { Edit, Save, X, User, Phone, Mail, MapPin, Building, FileText } from 'lucide-react';
+import { Edit, Save, X, User, Phone, Mail, MapPin, Building, FileText, CreditCard } from 'lucide-react';
 import { toast } from 'react-hot-toast';
 import { ProfileData } from '@/services/api/profile';
 import { useForm } from 'react-hook-form';
@@ -16,13 +16,17 @@ import { z } from 'zod';
 const profileSchema = z.object({
   name: z.string().min(1, 'Name is required').min(2, 'Name must be at least 2 characters'),
   phone_number: z.string().min(1, 'Phone number is required').regex(/^[0-9]{10}$/, 'Phone number must be 10 digits'),
-  email: z.string().min(1, 'Email is required').email('Invalid email format'),
   address: z.string().optional(),
   organization_name: z.string().optional(),
   gst_number: z.string()
     .optional()
     .refine((val) => !val || val.length === 0 || (val.length === 15 && /^[0-9]{15}$/.test(val)), {
       message: 'GST number must be exactly 15 digits'
+    }),
+  pan_number: z.string()
+    .optional()
+    .refine((val) => !val || val.length === 0 || /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(val), {
+      message: 'PAN number must be in format: 5 letters + 4 digits + 1 letter (e.g., ABCDE1234F)'
     }),
 });
 
@@ -51,10 +55,10 @@ export default function ProfilePage() {
     if (profile) {
       setValue('name', profile.name || '');
       setValue('phone_number', profile.phone_number || '');
-      setValue('email', profile.email || '');
       setValue('address', profile.address || '');
       setValue('organization_name', profile.organization_name || '');
       setValue('gst_number', profile.gst_number || '');
+      setValue('pan_number', profile.pan_number || '');
     }
   }, [profile, setValue]);
 
@@ -67,10 +71,10 @@ export default function ProfilePage() {
     if (profile) {
       setValue('name', profile.name || '');
       setValue('phone_number', profile.phone_number || '');
-      setValue('email', profile.email || '');
       setValue('address', profile.address || '');
       setValue('organization_name', profile.organization_name || '');
       setValue('gst_number', profile.gst_number || '');
+      setValue('pan_number', profile.pan_number || '');
     }
     setIsEditing(false);
     reset();
@@ -82,10 +86,10 @@ export default function ProfilePage() {
       const profileData: ProfileData = {
         name: data.name,
         phone_number: data.phone_number,
-        email: data.email,
         address: data.address || null,
         organization_name: data.organization_name || null,
         gst_number: data.gst_number || null,
+        pan_number: data.pan_number || null,
       };
       
       await updateProfile(profileData);
@@ -201,14 +205,13 @@ export default function ProfilePage() {
               )}
             </div>
 
-            {/* Email */}
+            {/* Email - Read Only */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                 <Mail className="h-4 w-4 text-red-600" />
-                Email Address *
+                Email Address
               </label>
-              
-                <p className="text-gray-900 font-medium">{profile?.email || '-'}</p>
+              <p className="text-gray-900 font-medium">{profile?.email || '-'}</p>
             </div>
 
             {/* Organization Name */}
@@ -249,6 +252,36 @@ export default function ProfilePage() {
                 </div>
               ) : (
                 <p className="text-gray-900 font-medium">{profile?.gst_number || '-'}</p>
+              )}
+            </div>
+
+            {/* PAN Number */}
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <CreditCard className="h-4 w-4 text-red-600" />
+                PAN Number
+              </label>
+              {isEditing ? (
+                <div>
+                  <Input
+                    {...register('pan_number')}
+                    placeholder="Enter PAN number (optional)"
+                    className="w-full uppercase"
+                    maxLength={10}
+                    onChange={(e) => {
+                      // Convert to uppercase and limit to 10 characters
+                      const value = e.target.value.toUpperCase().slice(0, 10);
+                      e.target.value = value;
+                      // Update the form value
+                      setValue('pan_number', value);
+                    }}
+                  />
+                  {errors.pan_number && (
+                    <p className="text-red-500 text-xs mt-1">{errors.pan_number.message}</p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-gray-900 font-medium">{profile?.pan_number || '-'}</p>
               )}
             </div>
 
