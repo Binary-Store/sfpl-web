@@ -1,7 +1,8 @@
 'use client';
 
 import { useGetOrder } from '@/hooks/useOrder';
-import { useParams, useRouter } from 'next/navigation';
+import { useInvoice } from '@/hooks/useInvoice';
+import { useParams } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { 
   Package, 
@@ -11,13 +12,34 @@ import {
   Truck,
   Download,
   ArrowLeft,
-  IndianRupee,
   Calendar,
   CreditCard
 } from 'lucide-react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { serverDetails } from '@/config';
+
+interface OrderProduct {
+  name: string;
+  description: string;
+  price: number;
+  quantity: number;
+  photo_url?: string;
+}
+
+interface Order {
+  id: string;
+  customer_id: string;
+  status: string;
+  created_at: string;
+  updated_at?: string;
+  sub_total: number;
+  gst_percentage: number;
+  gst_amount: number;
+  total: number;
+  is_paid: boolean;
+  total_product_count: string;
+  products?: OrderProduct[];
+}
 
 export default function OrderDetailsPage() {
   const params = useParams();
@@ -25,6 +47,9 @@ export default function OrderDetailsPage() {
   const [isClient, setIsClient] = useState(false);
   
   const { data: order, isLoading, error } = useGetOrder(orderId);
+  const { generateInvoice, isGenerating } = useInvoice();
+  
+  const typedOrder = order as Order | undefined;
 
   useEffect(() => {
     setIsClient(true);
@@ -88,6 +113,16 @@ export default function OrderDetailsPage() {
     });
   };
 
+  const handleGenerateInvoice = async () => {
+    if (!typedOrder) return;
+    
+    try {
+      await generateInvoice(typedOrder);
+    } catch (error) {
+      console.error('Failed to generate invoice:', error);
+    }
+  };
+
   if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -99,14 +134,14 @@ export default function OrderDetailsPage() {
     );
   }
 
-  if (error || !order) {
+  if (error || !typedOrder) {
     return (
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <AlertTriangle className="w-16 h-16 text-red-400 mx-auto mb-4" />
             <h2 className="text-2xl font-bold text-gray-900 mb-4">Order Not Found</h2>
-            <p className="text-gray-600 mb-8">The order you're looking for doesn't exist or has been removed.</p>
+            <p className="text-gray-600 mb-8">The order you&apos;re looking for doesn&apos;t exist or has been removed.</p>
             <Link 
               href="/dashboard/orders"
               className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
@@ -135,16 +170,16 @@ export default function OrderDetailsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-900">Order Details</h1>
-              <p className="text-gray-600 mt-2">Order #{order.id.slice(-8)}</p>
+              <p className="text-gray-600 mt-2">Order #{typedOrder.id.slice(-8)}</p>
             </div>
             <div className="flex items-center gap-3">
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(order.status)}`}>
-                {getStatusIcon(order.status)}
-                <span className="ml-2 capitalize">{order.status}</span>
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getStatusColor(typedOrder.status)}`}>
+                {getStatusIcon(typedOrder.status)}
+                <span className="ml-2 capitalize">{typedOrder.status}</span>
               </span>
-              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getPaymentStatusColor(order.is_paid)}`}>
+              <span className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getPaymentStatusColor(typedOrder.is_paid)}`}>
                 <CreditCard className="w-4 h-4" />
-                <span className="ml-2">{order.is_paid ? 'Paid' : 'Pending'}</span>
+                <span className="ml-2">{typedOrder.is_paid ? 'Paid' : 'Pending'}</span>
               </span>
             </div>
           </div>
@@ -159,9 +194,9 @@ export default function OrderDetailsPage() {
                 <h2 className="text-xl font-semibold text-gray-900">Order Items</h2>
               </div>
               <div className="p-4">
-                {order.products && order.products.length > 0 ? (
+                {typedOrder.products && typedOrder.products.length > 0 ? (
                   <div className="space-y-2">
-                    {order.products.map((product: any, index: number) => (
+                    {typedOrder.products.map((product: OrderProduct, index: number) => (
                       <div key={index} className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl">
                         <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
                           {product.photo_url ? (
@@ -187,7 +222,6 @@ export default function OrderDetailsPage() {
                               <span className="font-semibold text-gray-900">{product.quantity}</span>
                             </div>
                             <div className="flex items-center gap-2">
-                              <IndianRupee className="w-4 h-4 text-green-600" />
                               <span className="text-lg font-bold text-green-600">
                                 {formatCurrency(product.price * product.quantity / 100)}
                               </span>
@@ -219,10 +253,10 @@ export default function OrderDetailsPage() {
                     </div>
                     <div>
                       <p className="font-medium text-gray-900">Order Placed</p>
-                      <p className="text-sm text-gray-600">{formatDate(order.created_at)}</p>
+                      <p className="text-sm text-gray-600">{formatDate(typedOrder.created_at)}</p>
                     </div>
                   </div>
-                  {order.status === 'processing' && (
+                  {typedOrder.status === 'processing' && (
                     <div className="flex items-center gap-4">
                       <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center">
                         <Clock className="w-3 h-3 text-yellow-600" />
@@ -233,7 +267,7 @@ export default function OrderDetailsPage() {
                       </div>
                     </div>
                   )}
-                  {order.status === 'in-transit' && (
+                  {typedOrder.status === 'in-transit' && (
                     <div className="flex items-center gap-4">
                       <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
                         <Truck className="w-3 h-3 text-blue-600" />
@@ -244,7 +278,7 @@ export default function OrderDetailsPage() {
                       </div>
                     </div>
                   )}
-                  {order.status === 'delivered' && (
+                  {typedOrder.status === 'delivered' && (
                     <div className="flex items-center gap-4">
                       <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
                         <CheckCircle className="w-3 h-3 text-green-600" />
@@ -268,16 +302,16 @@ export default function OrderDetailsPage() {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-gray-600">
                   <span>Sub Total</span>
-                  <span>{formatCurrency(order.sub_total / 100)}</span>
+                  <span>{formatCurrency(typedOrder.sub_total / 100)}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
-                  <span>GST ({order.gst_percentage}%)</span>
-                  <span>{formatCurrency(order.gst_amount / 100)}</span>
+                  <span>GST ({typedOrder.gst_percentage}%)</span>
+                  <span>{formatCurrency(typedOrder.gst_amount / 100)}</span>
                 </div>
                 <div className="border-t border-gray-200 pt-4">
                   <div className="flex justify-between text-lg font-bold text-gray-900">
                     <span>Total</span>
-                    <span>{formatCurrency(order.total / 100)}</span>
+                    <span>{formatCurrency(typedOrder.total / 100)}</span>
                   </div>
                 </div>
               </div>
@@ -287,17 +321,21 @@ export default function OrderDetailsPage() {
                   <Calendar className="w-4 h-4 text-gray-400" />
                   <div>
                     <p className="font-medium text-gray-900">Order Date</p>
-                    <p className="text-gray-600">{formatDate(order.created_at)}</p>
+                    <p className="text-gray-600">{formatDate(typedOrder.created_at)}</p>
                   </div>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <button className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium">
+                <button 
+                  onClick={handleGenerateInvoice}
+                  disabled={isGenerating}
+                  className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+                >
                   <Download className="w-4 h-4" />
-                  <span>Download Invoice</span>
+                  <span>{isGenerating ? 'Generating...' : 'Download Invoice'}</span>
                 </button>
-                {order.status === 'delivered' && (
+                {typedOrder.status === 'delivered' && (
                   <button className="w-full flex items-center justify-center space-x-2 px-4 py-3 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-sm font-medium">
                     <Truck className="w-4 h-4" />
                     <span>Track Package</span>

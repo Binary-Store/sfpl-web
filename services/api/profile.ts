@@ -3,10 +3,10 @@ import axiosInstance from "../httpServices";
 export interface ProfileData {
     name: string;
     phone_number: string;
-    email: string;
     address: string | null;
     organization_name: string | null;
     gst_number: string | null;
+    pan_number: string | null;
 }
 
 export const getProfile = async () => {

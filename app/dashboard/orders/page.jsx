@@ -12,6 +12,7 @@ import {
   Filter
 } from 'lucide-react';
 import { useListOrders } from '@/hooks/useOrder';
+import { useInvoice } from '@/hooks/useInvoice';
 import { useRouter } from 'next/navigation';
 
 export default function OrdersPage() {
@@ -21,6 +22,7 @@ export default function OrdersPage() {
   const router = useRouter();
 
   const { data: ordersData, isLoading, error } = useListOrders();
+  const { generateInvoice, isGenerating } = useInvoice();
 
   console.log(ordersData);
 
@@ -83,6 +85,14 @@ export default function OrdersPage() {
     }).format(amount);
   };
 
+  const handleGenerateInvoice = async (order) => {
+    try {
+      await generateInvoice(order);
+    } catch (error) {
+      console.error('Failed to generate invoice:', error);
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -125,7 +135,7 @@ export default function OrdersPage() {
               <div className="flex items-center space-x-2">
                 {getStatusIcon(order.status)}
                 <div className="text-right">
-                  <p className="text-lg font-bold text-gray-900">{formatCurrency(order.total)}</p>
+                  <p className="text-lg font-bold text-gray-900">{formatCurrency(order.total/100)}</p>
                   <p className="text-sm text-gray-600">{order.total_product_count} products</p>
                 </div>
               </div>
@@ -137,15 +147,15 @@ export default function OrdersPage() {
               <div className="space-y-2">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">Sub Total</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(order.sub_total)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(order.sub_total/100)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-gray-600">GST ({order.gst_percentage}%)</span>
-                  <span className="font-medium text-gray-900">{formatCurrency(order.gst_amount)}</span>
+                  <span className="font-medium text-gray-900">{formatCurrency(order.gst_amount/100)}</span>
                 </div>
                 <div className="flex items-center justify-between text-sm border-t border-gray-100 pt-2">
                   <span className="font-semibold text-gray-900">Total</span>
-                  <span className="font-bold text-gray-900">{formatCurrency(order.total)}</span>
+                  <span className="font-bold text-gray-900">{formatCurrency(order.total/100)}</span>
                 </div>
               </div>
             </div>
@@ -159,10 +169,7 @@ export default function OrdersPage() {
                 <Eye className="w-4 h-4" />
                 <span>View Details</span>
               </button>
-              <button className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium">
-                <Download className="w-4 h-4" />
-                <span>Download Invoice</span>
-              </button>
+              
               {order.status === 'delivered' && (
                 <button className="flex-1 sm:flex-none flex items-center justify-center space-x-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors text-sm font-medium">
                   <CheckCircle className="w-4 h-4" />

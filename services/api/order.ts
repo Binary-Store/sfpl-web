@@ -1,7 +1,6 @@
 import axiosInstance from "../httpServices";
 
 export const verifyOrder = async (data: { 
-    order_id: string;
     razorpay_order_id: string;
     razorpay_payment_id: string;
     razorpay_signature: string;

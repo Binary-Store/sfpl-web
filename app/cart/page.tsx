@@ -7,28 +7,46 @@ import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { serverDetails } from "@/config";
+import PromoModal from "@/components/ui/promo-modal";
+
+interface CartItem {
+    id: string;
+    product_id: string;
+    name: string;
+    description: string;
+    price: number;
+    quantity: number;
+    photo_url: string;
+}
+
+interface RazorpayResponse {
+    razorpay_order_id: string;
+    razorpay_payment_id: string;
+    razorpay_signature: string;
+}
+
 
 export default function CartPage() {
     const { data: cartItems, isLoading, error } = useGetCart();
-    const { addToCartMutation, isLoading: isAddingToCart } = useAddToCart();
-    const { removeFromCartMutation, isLoading: isRemovingFromCart } = useRemoveFromCart();
+    const { addToCartMutation } = useAddToCart();
+    const { removeFromCartMutation } = useRemoveFromCart();
     const [updatingItems, setUpdatingItems] = useState(new Set());
     const [quantityInputs, setQuantityInputs] = useState<{ [key: string]: number }>({});
     const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
     const [isClient, setIsClient] = useState(false);
+    const [showPromoModal, setShowPromoModal] = useState(false);
     const queryClient = useQueryClient();
     const router = useRouter();
     const { createOrderMutation, isLoading: isCreatingOrder } = useCreateOrder();
-    const { verifyOrderMutation, isLoading: isVerifyingOrder } = useVerifyOrder();
+    const { verifyOrderMutation } = useVerifyOrder();
 
     // Initialize quantity inputs when cart data loads
     useEffect(() => {
         if (cartItems && Array.isArray(cartItems)) {
             const initialQuantities: { [key: string]: number } = {};
-            cartItems.forEach((item: any) => {
-                initialQuantities[item.id] = item.quantity;
+            cartItems.forEach((item: CartItem) => {
+                initialQuantities[item.product_id] = item.quantity;
             });
             setQuantityInputs(initialQuantities);
         }
@@ -56,7 +74,8 @@ export default function CartPage() {
     }, [isClient]);
 
     const handleQuantityChange = async (itemId: string, type: 'increase' | 'decrease') => {
-        const currentItem = cartItems?.find(item => item.product_id === itemId);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const currentItem = (cartItems as any)?.find((item: CartItem) => item.product_id === itemId);
         if (!currentItem) return;
 
         let newQuantity = currentItem.quantity;
@@ -87,8 +106,8 @@ export default function CartPage() {
                     return newSet;
                 });
             },
-            onError: () => {
-                toast.error('Failed to update quantity');
+            onError: (error: { message: string }) => {
+                toast.error(  error.message);
                 setUpdatingItems(prev => {
                     const newSet = new Set(prev);
                     newSet.delete(itemId);
@@ -142,16 +161,22 @@ export default function CartPage() {
         });
     };
 
-    const handleCheckout = async () => {
-        if (!cartItems || cartItems.length === 0) {
+    const handleCheckout = () => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        if (!cartItems || (cartItems as any).length === 0) {
             toast.error('Cart is empty');
             return;
         }
+        setShowPromoModal(true);
+    };
 
+    const handleProceedWithPromo = async (promoCode?: string) => {
         setIsCheckoutLoading(true);
 
         try {
-            createOrderMutation({}, {
+            const orderData = promoCode ? { promo_code: promoCode } : {  };
+            createOrderMutation(orderData as { order_id: string }, {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 onSuccess: (response: any) => {
                     const orderId = response.id;
                     
@@ -162,12 +187,12 @@ export default function CartPage() {
                     }
                     const options = {
                         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || 'rzp_test_YOUR_KEY',
-                        amount: (calculateTotal() * 1.18 * 100), // Convert to paise and add tax
+                        amount: (calculateTotal() * 100), // Convert to paise (price already includes GST)
                         currency: 'INR',
                         name: 'SFPL Fire Safety',
                         description: 'Fire Safety Products',
                         order_id: orderId,
-                        handler: function (response: any) {
+                        handler: function (response: RazorpayResponse) {
                             verifyOrderMutation({
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_payment_id: response.razorpay_payment_id,
@@ -193,18 +218,22 @@ export default function CartPage() {
                         }
                     };
 
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
                     const razorpay = new (window as any).Razorpay(options);
                     razorpay.open();
                     setIsCheckoutLoading(false);
+                    setShowPromoModal(false);
+
                 },
-                onError: () => {
-                    toast.error('Failed to create order');
+                onError: (error: { message: string }) => {
+                    toast.error(error.message);
                     setIsCheckoutLoading(false);
                 }
             });
-        } catch (error) {
+        } catch {
             toast.error('Checkout failed');
             setIsCheckoutLoading(false);
+            setShowPromoModal(false);
         }
     };
 
@@ -225,7 +254,8 @@ export default function CartPage() {
         );
     }
 
-    if (error || !cartItems || cartItems.length === 0) {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    if (error || !cartItems || (cartItems as any).length === 0) {
         return (
             <div className="min-h-screen bg-gray-50">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -234,7 +264,7 @@ export default function CartPage() {
                             <ShoppingCart className="h-12 w-12 text-gray-400" />
                         </div>
                         <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-                        <p className="text-gray-600 mb-8">Looks like you haven't added any products to your cart yet.</p>
+                        <p className="text-gray-600 mb-8">Looks like you haven&apos;t added any products to your cart yet.</p>
                         <Link 
                             href="/products"
                             className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
@@ -261,7 +291,8 @@ export default function CartPage() {
                         Back to Services
                     </Link>
                     <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
-                    <p className="text-gray-600 mt-2">You have {cartItems?.length || 0} item{(cartItems?.length || 0) !== 1 ? 's' : ''} in your cart</p>
+                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                    <p className="text-gray-600 mt-2">You have {(cartItems as any)?.length || 0} item{((cartItems as any)?.length || 0) !== 1 ? 's' : ''} in your cart</p>
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -272,9 +303,11 @@ export default function CartPage() {
                                 <h2 className="text-xl font-semibold text-gray-900">Cart Items</h2>
                             </div>
                             <div className="p-4">
-                                {cartItems && cartItems.length > 0 ? (
+                                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                {cartItems && (cartItems as any).length > 0 ? (
                                     <div className="space-y-2">
-                                        {cartItems?.map((item) => (
+                                        {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                        {(cartItems as any)?.map((item: CartItem) => (
                                             <div key={item.id} className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl">
                                                 <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
                                                     <img 
@@ -310,7 +343,7 @@ export default function CartPage() {
                                                         <div className="flex items-center gap-2">
                                                             <button
                                                                 onClick={() => handleQuantityChange(item.product_id, 'decrease')}
-                                                                disabled={updatingItems.has(item.id) || item.quantity <= 1}
+                                                                disabled={updatingItems.has(item.product_id) || item.quantity <= 1}
                                                                 className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                                                             >
                                                                 <Minus className="h-4 w-4 text-gray-600" />
@@ -319,12 +352,12 @@ export default function CartPage() {
                                                             <input
                                                                 type="number"
                                                                 min="1"
-                                                                value={quantityInputs[item.id] !== undefined ? quantityInputs[item.product_id] : item.quantity}
+                                                                value={quantityInputs[item.product_id] !== undefined ? quantityInputs[item.product_id] : item.quantity}
                                                                 onChange={(e) => {
                                                                     const newQty = parseInt(e.target.value) || 1;
                                                                     setQuantityInputs(prev => ({
                                                                         ...prev,
-                                                                        [item.id]: newQty
+                                                                        [item.product_id]: newQty
                                                                     }));
                                                                 }}
                                                                 onBlur={(e) => {
@@ -343,12 +376,12 @@ export default function CartPage() {
                                                                     }
                                                                 }}
                                                                 className="w-16 h-8 text-center border border-gray-200 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 text-lg font-semibold text-gray-900"
-                                                                disabled={updatingItems.has(item.id)}
+                                                                disabled={updatingItems.has(item.product_id)}
                                                             />
                                                             
                                                             <button
                                                                 onClick={() => handleQuantityChange(item.product_id, 'increase')}
-                                                                disabled={updatingItems.has(item.id)}
+                                                                disabled={updatingItems.has(item.product_id)}
                                                                 className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors"
                                                             >
                                                                 <Plus className="h-4 w-4 text-gray-600" />
@@ -357,7 +390,7 @@ export default function CartPage() {
 
                                                         {/* Delete Button */}
                                                         <button
-                                                            onClick={() => handleDeleteItem(item.id)}
+                                                            onClick={() => handleDeleteItem(item.product_id)}
                                                             className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors"
                                                         >
                                                             <Trash2 className="h-4 w-4 text-red-600" />
@@ -384,28 +417,26 @@ export default function CartPage() {
                             
                             <div className="space-y-2 mb-4">
                                 <div className="flex justify-between text-gray-600">
-                                    <span>Subtotal ({cartItems?.length || 0} items)</span>
+                                    {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                                    <span>Subtotal ({(cartItems as any)?.length || 0} items)</span>
                                     <span>₹{calculateTotal() / 100}</span>
                                 </div>
                                 <div className="flex justify-between text-gray-600">
                                     <span>Shipping</span>
                                     <span className="text-green-600">Free</span>
                                 </div>
-                                <div className="flex justify-between text-gray-600">
-                                    <span>Tax</span>
-                                    <span>₹{(calculateTotal() * 0.18 / 100)}</span>
-                                </div>
                                 <div className="border-t border-gray-200 pt-4">
                                     <div className="flex justify-between text-lg font-bold text-gray-900">
                                         <span>Total</span>
-                                        <span>₹{(calculateTotal() * 1.18 / 100)}</span>
+                                        <span>₹{calculateTotal() / 100}</span>
                                     </div>
                                 </div>
                             </div>
 
                             <button 
                                 onClick={handleCheckout}
-                                disabled={isCheckoutLoading || isCreatingOrder || !cartItems || cartItems.length === 0}
+                                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                                disabled={isCheckoutLoading || isCreatingOrder || !cartItems || (cartItems as any).length === 0}
                                 className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {isCheckoutLoading || isCreatingOrder ? (
@@ -424,6 +455,14 @@ export default function CartPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Promo Code Modal */}
+            <PromoModal
+                isOpen={showPromoModal}
+                onClose={() => setShowPromoModal(false)}
+                onProceed={handleProceedWithPromo}
+                isProcessing={isCheckoutLoading || isCreatingOrder}
+            />
         </div>
     );
 }
