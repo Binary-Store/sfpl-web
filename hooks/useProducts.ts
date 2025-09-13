@@ -5,7 +5,7 @@ export const useProducts = () => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['products'],
         queryFn: () => getProducts(),
-    });
+    }) as any;
 
     return { data, isLoading, error };
 };
@@ -14,7 +14,7 @@ export const useProductById = (id: string) => {
     const { data, isLoading, error } = useQuery({
         queryKey: ['product', id],
         queryFn: () => getProductById(id),
-    });
+    }) as any;
 
     return { data, isLoading, error };
 };
@@ -38,7 +38,7 @@ export const useGetCart = () => {
         queryKey: ['cart'],
         queryFn: getCartItems,
         enabled: typeof window !== 'undefined' && !!localStorage.getItem('token'),
-    });
+    }) as any;
     return { data, isLoading, error };
 };
 

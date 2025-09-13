@@ -4,11 +4,11 @@ import toast from "react-hot-toast";
 
 export const useProfile = () => {
     const queryClient = useQueryClient();
-    
+
     const { data, isLoading, error } = useQuery({
         queryKey: ['profile'],
         queryFn: () => getProfile(),
-    });
+    }) as any;
 
     const updateProfileMutation = useMutation({
         mutationFn: updateProfile,
@@ -21,10 +21,10 @@ export const useProfile = () => {
         }
     });
 
-    return { 
-        data, 
-        isLoading, 
-        error, 
+    return {
+        data,
+        isLoading,
+        error,
         updateProfile: updateProfileMutation.mutate,
         isUpdating: updateProfileMutation.isPending,
         updateError: updateProfileMutation.error
