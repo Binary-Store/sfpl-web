@@ -31,15 +31,15 @@ export default function Products() {
               key={product.id}
               className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer"
               onClick={() => {
-                toast.success("Coming Soon");
-                // router.push(`/products/${product.id}`);
+                // toast.success("Coming Soon");
+                router.push(`/products/${product.id}`);
               }}>
               <div className="relative overflow-hidden h-72 bg-gray-100 ">
                 {product.photo_url ? (
                   <img
                     src={`${serverDetails.socketPath}/files/${product.photo_url}`}
                     alt={product.name}
-                    className="w-full h-full object-contain hover:scale-105 blur-sm transition-transform duration-300"
+                    className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
                       e.currentTarget.nextElementSibling.style.display = "flex";
@@ -57,19 +57,18 @@ export default function Products() {
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-3 text-gray-900 capitalize">{product.name?.toUpperCase()}</h3>
                 {product.description && (
-                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed blur-sm">{product.description}</p>
+                  <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">{product.description}</p>
                 )}
 
                 <div className="flex items-center justify-between ">
-                  <div className="flex items-center gap-2 blur-sm">
+                  <div className="flex items-center gap-2">
                     <IndianRupee className="w-5 h-5 text-green-600 " />
                     <span className="text-2xl font-bold text-green-600">{product?.price / 100}</span>
                   </div>
 
                   <button
-                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium blur-sm transition-colors duration-200"
-                    // onClick={() => router.push(`/products/${product.id}`)}
-                  >
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
+                    onClick={() => router.push(`/products/${product.id}`)}>
                     View
                   </button>
                 </div>
