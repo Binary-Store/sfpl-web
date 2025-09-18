@@ -26,8 +26,8 @@ export default function DashboardPage() {
   });
 
   useEffect(()=>{
-    // redirect to devices page
-    router.push('/dashboard/devices');
+    // redirect to projects page
+    router.push('/dashboard/projects');
   },[])
 
   useEffect(() => {

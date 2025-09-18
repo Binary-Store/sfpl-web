@@ -159,7 +159,7 @@ export default function Header() {
                       <span className="text-sm font-medium">Profile</span>
                     </Link>
                     <Link 
-                      href="/dashboard/devices" 
+                      href="/dashboard/projects" 
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
                     >
                       <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-red-500 transition-colors duration-200"></div>

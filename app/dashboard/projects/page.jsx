@@ -26,7 +26,7 @@ export default function DevicesPage() {
   });
 
   const handleDeviceClick = (deviceId) => {
-    router.push(`/dashboard/devices/${deviceId}`);
+    router.push(`/dashboard/projects/${deviceId}`);
   };
 
   const getSimCardBadge = (simStatus) => {
@@ -58,62 +58,44 @@ export default function DevicesPage() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             type="text"
-            placeholder="Search devices... (Press / or space to focus)"
+            placeholder="Search projects... (Press / or space to focus)"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent text-sm"
           />
         </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-500 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead >
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Device
-                </th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  IMEI
-                </th>
-                
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                  Ward
-                </th>
-               
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {filteredDevices?.map((device) => (
-                <tr 
-                  key={device.id} 
-                  className="hover:bg-gray-50 cursor-pointer transition-colors"
-                  onClick={() => handleDeviceClick(device.id)}
-                >
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">
-                      {device.name}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900 font-mono">
-                      {device.imei}
-                    </div>
-                  </td>
-                 
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="flex items-center space-x-2">
-                      <MapPin className="w-4 h-4 text-gray-400" />
-                      <span className="text-sm text-gray-900">{device.ward_name}</span>
-                    </div>
-                  </td>
-                  
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-       
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredDevices?.map((device) => (
+          <div 
+            key={device.id} 
+            className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md hover:border-gray-300 cursor-pointer transition-all duration-200 p-6"
+            onClick={() => handleDeviceClick(device.id)}
+          >
+            <div className="flex items-start justify-between mb-4">
+              <div className="flex items-center space-x-3">
+                <div className="p-2 bg-blue-100 rounded-lg">
+                  <Smartphone className="w-5 h-5 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900">
+                    {device.name}
+                  </h3>
+                  <p className="text-sm text-gray-500 font-mono">
+                    {device.imei}
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-3">
+              <div className="flex items-center space-x-2">
+                <MapPin className="w-4 h-4 text-gray-400" />
+                <span className="text-sm text-gray-700">{device.ward_name}</span>
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       {/* Empty State */}

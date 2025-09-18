@@ -20,7 +20,7 @@ export default function Breadcrumb({ pathname }) {
         // Add first section
         const firstSection = dashboardPaths[0];
         const sectionMap = {
-          'devices': 'Devices',
+          'projects': 'projects',
           'orders': 'Order Management',
           'payments': 'Payment Management',
           'profile': 'Profile'
@@ -43,8 +43,8 @@ export default function Breadcrumb({ pathname }) {
             isCurrent: false
           });
           
-          // Handle special case for devices with ID
-          if (firstSection === 'devices' && dashboardPaths.length > 1) {
+          // Handle special case for projects with ID
+          if (firstSection === 'projects' && dashboardPaths.length > 1) {
             const deviceLabel = breadcrumbsEndPoint.length > 1 ? 
               breadcrumbsEndPoint[1]?.label : 
               breadcrumbsEndPoint[0]?.label || 

@@ -62,7 +62,7 @@ export default function AlarmPanel() {
         {
           id: device?.id,
           label: device?.name ? device?.name.slice(0, 1).toUpperCase() + device?.name.slice(1) : "",
-          href: `/dashboard/devices/${device.id}`,
+          href: `/dashboard/projects/${device.id}`,
         },
       ]);
       setAlarmData(device.last_record);
