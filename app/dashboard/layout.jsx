@@ -80,13 +80,13 @@ export default function DashboardLayout({ children }) {
     //   isMain: true
     // },
     {
-      href: '/dashboard/devices',
-      label: 'Devices',
+      href: '/dashboard/projects',
+      label: 'projects',
       icon: Smartphone
     },
     {
       href: '/dashboard/orders',
-      label: 'Past Orders',
+      label: 'Orders',
       icon: Package
     },
     {

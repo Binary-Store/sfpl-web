@@ -1,10 +1,10 @@
-// get all devices getDevices from api
+// get all projects getDevices from api
 import { getDeviceById, getDevices } from "@/services/api/devices";
 import { useQuery } from "@tanstack/react-query";
 
 export const useDevices = () => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['devices'],
+        queryKey: ['projects'],
         queryFn: () => getDevices({ page: 1, limit: 100, search: '' }),
     });
 

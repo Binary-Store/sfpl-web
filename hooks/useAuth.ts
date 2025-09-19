@@ -15,7 +15,7 @@ export const useAuth = () => {
     onSuccess: (response: unknown) => {
       const data = response as { token?: string; message?: string };
       if (data?.token) {
-        localStorage.setItem('token', data?.token);
+        // localStorage.setItem('token', data?.token);
         localStorage.setItem('registrationTrue' , 'true');
         router.push('/verify?token=' + data?.token);
       } else if (data?.message) {
