@@ -26,7 +26,7 @@ export default function Footer() {
     <footer className="w-full bg-white border-t border-gray-100 py-12">
       <div className="container mx-auto px-6">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           {/* Company Info */}
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
@@ -121,6 +121,51 @@ export default function Footer() {
                 }`}
               >
                 Contact
+              </Link>
+            </div>
+          </div>
+          <div className="space-y-4">
+            <h3 className="font-semibold text-gray-900">Quick links</h3>
+            <div className="space-y-2">
+              <Link
+                href="/terms-conditions"
+                className={`block text-sm transition-colors ${
+                  isActive("/terms-conditions")
+                    ? "text-primary font-semibold"
+                    : "text-gray-600 hover:text-red-600"
+                }`}
+              >
+                Terms & Conditions
+              </Link>
+              <Link
+                href="/privacy"
+                className={`block text-sm transition-colors ${
+                  isActive("/privacy")
+                    ? "text-primary font-semibold"
+                    : "text-gray-600 hover:text-red-600"
+                }`}
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/return-refund"
+                className={`block text-sm transition-colors ${
+                  isActive("/return-refund")
+                    ? "text-primary font-semibold"
+                    : "text-gray-600 hover:text-red-600"
+                }`}
+              >
+                Return & Refund
+              </Link>
+              <Link
+                href="/order-shipping"
+                className={`block text-sm transition-colors ${
+                  isActive("/order-shipping")
+                    ? "text-primary font-semibold"
+                    : "text-gray-600 hover:text-red-600"
+                }`}
+              >
+                Order & Shipping
               </Link>
             </div>
           </div>
