@@ -26,9 +26,9 @@ export default function Footer() {
     <footer className="w-full bg-white border-t border-gray-100 py-12">
       <div className="container mx-auto px-6">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-8">
           {/* Company Info */}
-          <div className="space-y-4">
+          <div className="space-y-4 col-span-2">
             <div className="flex items-center space-x-2">
               <Image
                 src="/logo-full-black.svg"
@@ -38,8 +38,8 @@ export default function Footer() {
               />
             </div>
             <p className="text-sm text-gray-600 leading-relaxed">
-              Specific Fire Protection Limited - Your trusted partner for fire
-              safety solutions.
+              Specific Fire Protection Limited - Your trusted partner <br /> for
+              fire safety solutions.
             </p>
             <div className="flex space-x-3">
               <Link
@@ -79,53 +79,52 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900">Pages</h3>
+            <h3 className="font-semibold text-gray-900">Quick links</h3>
             <div className="space-y-2">
               <Link
-                href="/"
+                href="/#"
                 className={`block text-sm transition-colors ${
-                  isActive("/")
+                  isActive("/pricing")
                     ? "text-primary font-semibold"
                     : "text-gray-600 hover:text-red-600"
                 }`}
               >
-                Home
-              </Link>
-
-              <Link
-                href="/products"
-                className={`block text-sm transition-colors ${
-                  isActive("/products")
-                    ? "text-primary font-semibold"
-                    : "text-gray-600 hover:text-red-600"
-                }`}
-              >
-                Services
+                Pricing
               </Link>
               <Link
-                href="/about"
+                href="/#"
                 className={`block text-sm transition-colors ${
-                  isActive("/about")
+                  isActive("/downloads")
                     ? "text-primary font-semibold"
                     : "text-gray-600 hover:text-red-600"
                 }`}
               >
-                About Us
+                Downloads
               </Link>
               <Link
-                href="/contact"
+                href="/#"
                 className={`block text-sm transition-colors ${
-                  isActive("/contact")
+                  isActive("/brochure")
                     ? "text-primary font-semibold"
                     : "text-gray-600 hover:text-red-600"
                 }`}
               >
-                Contact
+                Brochar
+              </Link>
+              <Link
+                href="/#"
+                className={`block text-sm transition-colors ${
+                  isActive("/careers")
+                    ? "text-primary font-semibold"
+                    : "text-gray-600 hover:text-red-600"
+                }`}
+              >
+                Careers
               </Link>
             </div>
           </div>
           <div className="space-y-4">
-            <h3 className="font-semibold text-gray-900">Quick links</h3>
+            <h3 className="font-semibold text-gray-900">Policies</h3>
             <div className="space-y-2">
               <Link
                 href="/terms-conditions"
