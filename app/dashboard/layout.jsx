@@ -73,12 +73,12 @@ export default function DashboardLayout({ children }) {
   };
 
   const sidebarItems = [
-    // {
-    //   href: '/dashboard',
-    //   label: 'Dashboard',
-    //   icon: LayoutDashboard,
-    //   isMain: true
-    // },
+    {
+      href: '/dashboard',
+      label: 'Dashboard',
+      icon: LayoutDashboard,
+      isMain: true
+    },
     {
       href: "/dashboard/projects",
       label: "projects",
@@ -176,14 +176,14 @@ export default function DashboardLayout({ children }) {
                   }
                   ${
                     isSidebarCollapsed
-                      ? "justify-center px-2 py-2"
+                      ? "justify-center px-1 py-2"
                       : "px-4 py-3 space-x-3"
                   }
                 `}
                 title={isSidebarCollapsed ? item.label : ""}
               >
                 <Icon
-                  className={`w-5 h-5 ${isSidebarCollapsed ? "mx-auto" : ""}`}
+                  className={`w-5 h-5`}
                 />
                 {!isSidebarCollapsed && <span>{item.label}</span>}
               </Link>
@@ -212,7 +212,7 @@ export default function DashboardLayout({ children }) {
       </div>
 
       <div className="flex-1 flex flex-col lg:ml-0 overflow-hidden">
-        <div className="bg-white border-b h-14 border-gray-200 px-4 py-4 flex-shrink-0">
+        <div className="bg-white border-b h-[57px] border-gray-200 px-4 py-4 flex-shrink-0">
           <div className="flex items-center justify-between">
             <button
               onClick={() => setIsSidebarOpen(true)}
