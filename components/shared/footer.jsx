@@ -109,7 +109,7 @@ export default function Footer() {
                     : "text-gray-600 hover:text-red-600"
                 }`}
               >
-                Brochure
+                Brochures
               </Link>
               <Link
                 href="/#"

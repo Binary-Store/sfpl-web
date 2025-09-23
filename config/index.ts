@@ -4,4 +4,5 @@ export const serverDetails = {
     fileProxyURL: process.env.NEXT_PUBLIC_FILE_PROXY_URL,
     staging: process.env.NEXT_PUBLIC_STAGING,
     socketPath: process.env.NEXT_PUBLIC_SOCKET_SERVER_URL,
+    googleMapAPIKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
   };

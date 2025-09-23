@@ -9,3 +9,8 @@ export const getDeviceById = async (id: string) => {
     const url = `/devices/${id}`;
     return axiosInstance({ method: 'GET', url });
 };
+
+export const listAllDevicesForMap = async () => {
+    const url = `/devices/list-all-devices-for-map`;
+    return axiosInstance({ method: 'GET', url });
+};
