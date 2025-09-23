@@ -1,19 +1,17 @@
-'use client';
+"use client";
 
 import { useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Smartphone,
-  Loader2,
-  AlertCircle,
-  Building2,
-  AlarmCheck,
-} from "lucide-react";
+import { Smartphone, Loader2, AlertCircle, Building2, AlarmCheck } from "lucide-react";
 import { useDeviceById } from "@/hooks/useDevices";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { Badge } from "@/components/ui/badge";
+import { DeviceHeader } from "@/components/devices/DeviceHeader";
+import { FireAlarmPanel } from "@/components/devices/FireAlarmPanel";
+import { FirePumpPanel } from "@/components/devices/FirePumpPanel";
+import { LiquidLevelPanel } from "@/components/devices/LiquidLevelPanel";
 
 export default function DeviceDetails() {
   const params = useParams();
@@ -35,7 +33,6 @@ export default function DeviceDetails() {
     }
   }, [id, device, setBreadcrumbsEndPoint]);
 
-
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -48,127 +45,14 @@ export default function DeviceDetails() {
   }
 
   return (
-    <div className="space-y-2 md:space-y-4">
-      {/* Header with Actions */}
-      <div className="flex items-center justify-start">
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" size="sm" onClick={() => router.push(`/dashboard/projects/${id}/alarm-panel`)}>
-            <AlertCircle className="h-4 w-4 mr-2" />
-            Alarm Panel
-          </Button>
-        </div>
+    <div className="h-full bg-black overflow-auto rounded-lg text-white p-6">
+      <DeviceHeader device={device} alarmData={device.alarmData} />
+
+      <div className="flex flex-col gap-4">
+        <FireAlarmPanel alarmData={device.alarmData} />
+        <FirePumpPanel alarmData={device.alarmData} />
+        <LiquidLevelPanel alarmData={device.alarmData} />
       </div>
-
-      {/* Device Information Grid */}
-      <Card className="h-fit !gap-1 p-4">
-        <CardHeader className="pb-0 px-0">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <Smartphone className="h-5 w-5 text-blue-600" />
-            <span>
-              Basic Information
-              <Badge variant="outline" className="ml-2">
-                {device?.serial || "Unnamed Device"}
-              </Badge>
-            </span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 px-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Device Name</label>
-              <p className="text-sm font-medium text-gray-900">{device?.name || "Unnamed Device"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">IMEI</label>
-              <p className="text-sm font-mono text-gray-900 rounded">{device?.imei || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Sim Card Number</label>
-              <p className="text-sm font-mono text-gray-900 rounded">{device?.sim_card?.number || "N/A"}</p>
-            </div>
-
-            <div className="space-y-1 ">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Description</label>
-              <p className="text-sm text-gray-900">{device?.description || "No description provided"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Customer</label>
-              <p className="text-sm text-gray-900">
-                {device?.customer_name || "No customer assigned"}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Alarm Information */}
-      <Card className="h-fit !gap-1 p-4">
-        <CardHeader className="pb-0 px-0">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <AlarmCheck className="h-5 w-5 text-green-600" />
-            <span>Alarm Information</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 px-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Brand</label>
-              <p className="text-sm font-medium text-gray-900">{device?.brand || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Model Number</label>
-              <p className="text-sm font-medium text-gray-900">{device?.model_number || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">System Type</label>
-              <p className="text-sm font-medium text-gray-900">{device?.system_type || "N/A"}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Building Information */}
-      <Card className="h-fit !gap-1 p-4">
-        <CardHeader className="pb-0 px-0">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <Building2 className="h-5 w-5 text-green-600" />
-            <span>Building Information</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="pt-0 px-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Number of Floors</label>
-              <p className="text-sm font-medium text-gray-900">{device?.number_of_floors || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Number of Blocks</label>
-              <p className="text-sm font-medium text-gray-900">{device?.number_of_blocks || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Latitude</label>
-              <p className="text-sm font-mono text-gray-900">{device?.latitude || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Longitude</label>
-              <p className="text-sm font-mono text-gray-900">{device?.longitude || "N/A"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Ward</label>
-              <p className="text-sm font-medium text-gray-900">{device?.ward_name || "No Ward Assigned"}</p>
-            </div>
-            <div className="space-y-1">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Occupancy Type</label>
-              <p className="text-sm font-medium text-gray-900">{device?.occupancy_type || "N/A"}</p>
-            </div>
-            <div className="space-y-1 md:col-span-2 lg:col-span-3 xl:col-span-2">
-              <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">Address</label>
-              <p className="text-sm text-gray-900">{device?.address || "No address provided"}</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
     </div>
   );
 }
