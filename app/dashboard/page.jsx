@@ -1,7 +1,12 @@
-'use client';
+"use client";
 
 import { useState, useCallback, useRef, useEffect } from "react";
-import { GoogleMap, useJsApiLoader, Marker, InfoWindow } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -23,61 +28,6 @@ const mapContainerStyle = {
 const defaultCenter = {
   lat: 22.3039, // Rajkot, Gujarat, India
   lng: 70.8022,
-};
-
-// Helper function to group devices by location and offset overlapping markers
-const groupAndOffsetDevices = (devices) => {
-  console.log(devices, "devices");
-  const locationGroups = {};
-  const offsetDistance = 0.0001; // Small offset in degrees (approximately 10-15 meters)
-
-  // Group devices by their coordinates
-  devices?.forEach((device) => {
-    const lat = device.latitude || defaultCenter.lat;
-    const lng = device.longitude || defaultCenter.lng;
-    const key = `${lat.toFixed(6)},${lng.toFixed(6)}`;
-
-    if (!locationGroups[key]) {
-      locationGroups[key] = [];
-    }
-    locationGroups[key].push(device);
-  });
-
-  // Create offset positions for devices in the same location
-  const processedDevices = [];
-
-  Object.entries(locationGroups).forEach(([locationKey, deviceGroup]) => {
-    const [baseLat, baseLng] = locationKey.split(",").map(Number);
-
-    if (deviceGroup.length === 1) {
-      // Single device - no offset needed
-      processedDevices.push({
-        ...deviceGroup[0],
-        displayLat: baseLat,
-        displayLng: baseLng,
-        deviceCount: 1,
-        groupedDevices: [deviceGroup[0]],
-      });
-    } else {
-      // Multiple devices - create offset positions in a circle pattern
-      deviceGroup.forEach((device, index) => {
-        const angle = (2 * Math.PI * index) / deviceGroup.length;
-        const offsetLat = baseLat + offsetDistance * Math.cos(angle);
-        const offsetLng = baseLng + offsetDistance * Math.sin(angle);
-
-        processedDevices.push({
-          ...device,
-          displayLat: offsetLat,
-          displayLng: offsetLng,
-          deviceCount: deviceGroup.length,
-          groupedDevices: deviceGroup,
-          isGrouped: true,
-        });
-      });
-    }
-  });
-
-  return processedDevices;
 };
 
 // Device status colors based on system_status
@@ -117,13 +67,12 @@ export default function DashboardPage() {
   const queryClient = useQueryClient();
 
   // Process devices to handle overlapping coordinates
-  const processedDevices = devices ? groupAndOffsetDevices(devices) : [];
+  const processedDevices = devices;
 
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: serverDetails.googleMapAPIKey || "",
     id: "google-map-script",
   });
-
 
   const onLoad = useCallback((map) => {
     mapRef.current = map;
@@ -145,7 +94,7 @@ export default function DashboardPage() {
     if (socket) {
       socket.on("record:change", (data) => {
         // Update the cache with new data
-        queryClient.setQueryData(['listAllDevicesForMap'], (oldData) => {
+        queryClient.setQueryData(["listAllDevicesForMap"], (oldData) => {
           return oldData.map((device) => {
             if (device?.imei === data?.imei) {
               return {
@@ -158,7 +107,7 @@ export default function DashboardPage() {
         });
 
         // Force a re-render by invalidating the query
-        queryClient.invalidateQueries({ queryKey: ['listAllDevicesForMap'] });
+        queryClient.invalidateQueries({ queryKey: ["listAllDevicesForMap"] });
 
         // Update selected device if it matches
         if (selectedDevice && data?.imei === selectedDevice.imei) {
@@ -191,7 +140,8 @@ export default function DashboardPage() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              Failed to load Google Maps. Please check your API key configuration.
+              Failed to load Google Maps. Please check your API key
+              configuration.
             </p>
           </CardContent>
         </Card>
@@ -239,14 +189,15 @@ export default function DashboardPage() {
                 stylers: [{ visibility: "off" }],
               },
             ],
-          }}>
+          }}
+        >
           {/* Device Markers */}
           {processedDevices?.map((device) => (
             <Marker
               key={device.id}
               position={{
-                lat: device.displayLat,
-                lng: device.displayLng,
+                lat: device.latitude,
+                lng: device.longitude,
               }}
               onClick={() => handleMarkerClick(device)}
               icon={{
@@ -261,7 +212,9 @@ export default function DashboardPage() {
                       <circle cx="12" cy="9" r="3" fill="white"/>
                       
                       <!-- Status indicator dot -->
-                      <circle cx="12" cy="9" r="1.5" fill="${getStatusHexColor(device.system_status)}"/>
+                      <circle cx="12" cy="9" r="1.5" fill="${getStatusHexColor(
+                        device.system_status
+                      )}"/>
                     </svg>
                   `)}`,
                 scaledSize: new google.maps.Size(32, 32),
@@ -277,24 +230,32 @@ export default function DashboardPage() {
                 lat: selectedDevice.displayLat || selectedDevice.latitude,
                 lng: selectedDevice.displayLng || selectedDevice.longitude,
               }}
-              onCloseClick={handleInfoWindowClose}>
+              onCloseClick={handleInfoWindowClose}
+            >
               <div className="p-4 min-w-[320px] bg-white rounded-lg shadow-lg border border-gray-200">
                 {/* Header with device icon and status */}
                 <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                   <div className="flex items-center space-x-3">
                     <div
-                      className={`w-3 h-3 rounded-full ${getStatusColor(selectedDevice?.system_status)} animate-pulse`}
+                      className={`w-3 h-3 rounded-full ${getStatusColor(
+                        selectedDevice?.system_status
+                      )} animate-pulse`}
                     />
                     <div>
-                      <h3 className="font-bold text-gray-900 text-base">{selectedDevice?.name}</h3>
-                      <p className="text-sm text-gray-500 capitalize">{selectedDevice?.system_status}</p>
+                      <h3 className="font-bold text-gray-900 text-base">
+                        {selectedDevice?.name}
+                      </h3>
+                      <p className="text-sm text-gray-500 capitalize">
+                        {selectedDevice?.system_status}
+                      </p>
                     </div>
                   </div>
                   <Badge
                     variant="secondary"
                     className={`${getStatusColor(
                       selectedDevice?.system_status
-                    )} text-white font-semibold px-3 py-1 rounded-full text-xs uppercase tracking-wide`}>
+                    )} text-white font-semibold px-3 py-1 rounded-full text-xs uppercase tracking-wide`}
+                  >
                     {selectedDevice?.system_status}
                   </Badge>
                 </div>
@@ -304,23 +265,41 @@ export default function DashboardPage() {
                   <div className="bg-gray-50 rounded-lg p-3">
                     <div className="flex items-center space-x-2 mb-1">
                       <Cpu className="h-4 w-4 text-gray-500" />
-                      <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">IMEI</span>
+                      <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        IMEI
+                      </span>
                     </div>
-                    <p className="text-sm text-gray-900 font-mono">{selectedDevice?.imei || "N/A"}</p>
+                    <p className="text-sm text-gray-900 font-mono">
+                      {selectedDevice?.imei || "N/A"}
+                    </p>
                   </div>
 
                   <div className="bg-gray-50 rounded-lg p-3">
                     <div className="flex items-center space-x-2 mb-1">
                       <Navigation className="h-4 w-4 text-gray-500" />
-                      <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">Address</span>
+                      <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                        Address
+                      </span>
                     </div>
-                    <p className="text-sm text-gray-900">{selectedDevice?.address || "No address"}</p>
+                    <p className="text-sm text-gray-900">
+                      {selectedDevice?.address || "No address"}
+                    </p>
                   </div>
                 </div>
 
                 {/* Action buttons */}
                 <div className="mt-4 pt-3 border-t border-gray-100 flex space-x-2">
-                  <Button size="sm" variant="outline" className="flex-1 text-xs" onClick={() => router.push(`/dashboard/projects/${selectedDevice?.id}`)}>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="flex-1 text-xs"
+                    onClick={() =>
+                      window.open(
+                        `https://www.google.com/maps?q=${selectedDevice?.latitude},${selectedDevice?.longitude}`,
+                        "_blank"
+                      )
+                    }
+                  >
                     <Navigation className="h-3 w-3 mr-1" />
                     Navigate
                   </Button>
@@ -328,7 +307,12 @@ export default function DashboardPage() {
                     size="sm"
                     variant="outline"
                     className="flex-1 text-xs"
-                    onClick={() => router.push(`/dashboard/projects/${selectedDevice?.id}/alarm-panel`)}>
+                    onClick={() =>
+                      router.push(
+                        `/dashboard/projects/${selectedDevice?.id}/alarm-panel`
+                      )
+                    }
+                  >
                     <Cpu className="h-3 w-3 mr-1" />
                     Alarm Panel
                   </Button>
