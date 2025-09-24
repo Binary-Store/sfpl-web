@@ -1,12 +1,23 @@
 "use client";
-import { useGetCart, useAddToCart, useRemoveFromCart } from "@/hooks/useProducts";
-import { IndianRupee, Trash2, Plus, Minus, ShoppingCart, ArrowLeft, CreditCard } from "lucide-react";
+import {
+  useGetCart,
+  useAddToCart,
+  useRemoveFromCart,
+} from "@/hooks/useProducts";
+import {
+  IndianRupee,
+  Trash2,
+  Plus,
+  Minus,
+  ShoppingCart,
+  ArrowLeft,
+  CreditCard,
+} from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { serverDetails } from "@/config";
 
 interface CartItem {
   id: string;
@@ -15,7 +26,10 @@ interface CartItem {
   description: string;
   price: number;
   quantity: number;
-  photo_url: string;
+
+  images: {
+    url: string;
+  }[];
 }
 
 export default function CartPage() {
@@ -23,7 +37,9 @@ export default function CartPage() {
   const { addToCartMutation } = useAddToCart();
   const { removeFromCartMutation } = useRemoveFromCart();
   const [updatingItems, setUpdatingItems] = useState(new Set());
-  const [quantityInputs, setQuantityInputs] = useState<{ [key: string]: number }>({});
+  const [quantityInputs, setQuantityInputs] = useState<{
+    [key: string]: number;
+  }>({});
   const [isClient, setIsClient] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
@@ -44,9 +60,14 @@ export default function CartPage() {
     setIsClient(true);
   }, []);
 
-  const handleQuantityChange = async (itemId: string, type: "increase" | "decrease") => {
+  const handleQuantityChange = async (
+    itemId: string,
+    type: "increase" | "decrease"
+  ) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const currentItem = (cartItems as any)?.find((item: CartItem) => item.product_id === itemId);
+    const currentItem = (cartItems as any)?.find(
+      (item: CartItem) => item.product_id === itemId
+    );
     if (!currentItem) return;
 
     let newQuantity = currentItem.quantity;
@@ -91,7 +112,10 @@ export default function CartPage() {
     );
   };
 
-  const handleDirectQuantityUpdate = async (itemId: string, newQuantity: number) => {
+  const handleDirectQuantityUpdate = async (
+    itemId: string,
+    newQuantity: number
+  ) => {
     if (newQuantity < 1) return;
 
     setUpdatingItems((prev) => new Set(prev).add(itemId));
@@ -152,7 +176,10 @@ export default function CartPage() {
 
   const calculateTotal = () => {
     if (!cartItems || !Array.isArray(cartItems)) return 0;
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
 
   // Show loading state only on client side to prevent hydration mismatch
@@ -176,11 +203,16 @@ export default function CartPage() {
             <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
               <ShoppingCart className="h-12 w-12 text-gray-400" />
             </div>
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">Your cart is empty</h2>
-            <p className="text-gray-600 mb-8">Looks like you haven&apos;t added any products to your cart yet.</p>
+            <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              Your cart is empty
+            </h2>
+            <p className="text-gray-600 mb-8">
+              Looks like you haven&apos;t added any products to your cart yet.
+            </p>
             <Link
               href="/products"
-              className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+              className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+            >
               <ArrowLeft className="h-4 w-4 mr-2" />
               Continue Shopping
             </Link>
@@ -197,15 +229,16 @@ export default function CartPage() {
         <div className="mb-4">
           <Link
             href="/products"
-            className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors mb-4">
+            className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors mb-4"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Services
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Shopping Cart</h1>
           {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
           <p className="text-gray-600 mt-2">
-            You have {(cartItems as any)?.length || 0} item{((cartItems as any)?.length || 0) !== 1 ? "s" : ""} in your
-            cart
+            You have {(cartItems as any)?.length || 0} item
+            {((cartItems as any)?.length || 0) !== 1 ? "s" : ""} in your cart
           </p>
         </div>
 
@@ -214,7 +247,9 @@ export default function CartPage() {
           <div className="lg:col-span-2">
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
               <div className="p-4 border-b border-gray-100">
-                <h2 className="text-xl font-semibold text-gray-900">Cart Items</h2>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  Cart Items
+                </h2>
               </div>
               <div className="p-4">
                 {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
@@ -222,28 +257,42 @@ export default function CartPage() {
                   <div className="space-y-2">
                     {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
                     {(cartItems as any)?.map((item: CartItem) => (
-                      <div key={item.id} className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl">
+                      <div
+                        key={item.id}
+                        className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl"
+                      >
                         <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
                           <img
-                            src={`${serverDetails.socketPath}/files/${item?.photo_url}`}
+                            src={item.images[0].url}
                             alt={item?.name}
                             className="w-full h-16 object-cover rounded-xl"
                           />
                         </div>
 
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2 capitalize">{item.name}</h3>
-                          <p className="text-gray-600 text-sm mb-3 line-clamp-2">{item.description}</p>
+                          <h3 className="text-lg font-semibold text-gray-900 mb-2 capitalize">
+                            {item.name}
+                          </h3>
+                          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                            {item.description}
+                          </p>
 
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <span className="text-sm text-gray-500">Quantity:</span>
-                              <span className="font-semibold text-gray-900">{item.quantity}</span>
+                              <span className="text-sm text-gray-500">
+                                Quantity:
+                              </span>
+                              <span className="font-semibold text-gray-900">
+                                {item.quantity}
+                              </span>
                             </div>
                             <div className="flex items-center gap-2">
                               <IndianRupee className="w-4 h-4 text-green-600" />
                               <span className="text-lg font-bold text-green-600">
-                                {((item.price * item.quantity) / 100).toLocaleString()}
+                                {(
+                                  (item.price * item.quantity) /
+                                  100
+                                ).toLocaleString()}
                               </span>
                             </div>
                           </div>
@@ -252,9 +301,18 @@ export default function CartPage() {
                           <div className="flex items-center gap-3 mt-3">
                             <div className="flex items-center gap-2">
                               <button
-                                onClick={() => handleQuantityChange(item.product_id, "decrease")}
-                                disabled={updatingItems.has(item.product_id) || item.quantity <= 1}
-                                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    item.product_id,
+                                    "decrease"
+                                  )
+                                }
+                                disabled={
+                                  updatingItems.has(item.product_id) ||
+                                  item.quantity <= 1
+                                }
+                                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                              >
                                 <Minus className="h-4 w-4 text-gray-600" />
                               </button>
 
@@ -276,14 +334,24 @@ export default function CartPage() {
                                 onBlur={(e) => {
                                   const newQty = parseInt(e.target.value) || 1;
                                   if (newQty >= 1 && newQty !== item.quantity) {
-                                    handleDirectQuantityUpdate(item.product_id, newQty);
+                                    handleDirectQuantityUpdate(
+                                      item.product_id,
+                                      newQty
+                                    );
                                   }
                                 }}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") {
-                                    const newQty = parseInt(e.currentTarget.value) || 1;
-                                    if (newQty >= 1 && newQty !== item.quantity) {
-                                      handleDirectQuantityUpdate(item.product_id, newQty);
+                                    const newQty =
+                                      parseInt(e.currentTarget.value) || 1;
+                                    if (
+                                      newQty >= 1 &&
+                                      newQty !== item.quantity
+                                    ) {
+                                      handleDirectQuantityUpdate(
+                                        item.product_id,
+                                        newQty
+                                      );
                                     }
                                     e.currentTarget.blur();
                                   }
@@ -293,9 +361,15 @@ export default function CartPage() {
                               />
 
                               <button
-                                onClick={() => handleQuantityChange(item.product_id, "increase")}
+                                onClick={() =>
+                                  handleQuantityChange(
+                                    item.product_id,
+                                    "increase"
+                                  )
+                                }
                                 disabled={updatingItems.has(item.product_id)}
-                                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors">
+                                className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors"
+                              >
                                 <Plus className="h-4 w-4 text-gray-600" />
                               </button>
                             </div>
@@ -303,7 +377,8 @@ export default function CartPage() {
                             {/* Delete Button */}
                             <button
                               onClick={() => handleDeleteItem(item.product_id)}
-                              className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors">
+                              className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors"
+                            >
                               <Trash2 className="h-4 w-4 text-red-600" />
                             </button>
                           </div>
@@ -324,12 +399,16 @@ export default function CartPage() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sticky top-4">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Order Summary
+              </h2>
 
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-gray-600">
                   {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                  <span>Subtotal ({(cartItems as any)?.length || 0} items)</span>
+                  <span>
+                    Subtotal ({(cartItems as any)?.length || 0} items)
+                  </span>
                   <span>₹{calculateTotal() / 100}</span>
                 </div>
                 <div className="flex justify-between text-gray-600">
@@ -348,7 +427,8 @@ export default function CartPage() {
                 onClick={handleCheckout}
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 disabled={!cartItems || (cartItems as any).length === 0}
-                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
                 <CreditCard className="h-5 w-5" />
                 Proceed to Checkout
               </button>

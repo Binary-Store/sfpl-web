@@ -19,14 +19,14 @@ interface DeviceHeaderProps {
 
 export function DeviceHeader({ device, alarmData }: DeviceHeaderProps) {
   return (
-    <div className="flex justify-between items-center mb-6">
+    <div className="flex justify-between items-center mb-6 flex-wrap">
       <div>
         <h1 className="text-2xl font-bold text-white">{device.name}</h1>
         <p className="text-gray-400 text-sm">IMEI: {device.imei}</p>
       </div>
 
       {/* Status Bar - Right Corner */}
-      <div className="flex items-center gap-4 bg-white text-black px-4 py-2 rounded-lg">
+      <div className="flex items-center gap-4 bg-white text-black px-4 py-2 rounded-lg flex-wrap">
         {/* Battery Health */}
         <div className="flex items-center gap-2">
           🔋

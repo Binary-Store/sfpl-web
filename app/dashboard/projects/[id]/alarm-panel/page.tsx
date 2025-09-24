@@ -106,7 +106,7 @@ export default function AlarmPanel() {
   }
 
   return (
-    <div className="h-full bg-black rounded-lg text-white p-6">
+    <div className="h-full overflow-auto bg-black rounded-lg text-white p-6">
     <DeviceHeader device={device} alarmData={alarmData} />
 
     <div className="flex flex-col gap-4">
