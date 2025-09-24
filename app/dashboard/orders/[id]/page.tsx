@@ -13,10 +13,8 @@ import {
   Download,
   ArrowLeft,
   Calendar,
-  CreditCard,
 } from "lucide-react";
 import Link from "next/link";
-import { serverDetails } from "@/config";
 
 interface OrderProduct {
   name: string;
@@ -42,6 +40,12 @@ interface Order {
   total_product_count: string;
   products?: OrderProduct[];
   serial: string;
+  order_status_logs?: {
+    id: string;
+    status: string;
+    remark?: string | null;
+    created_at: string;
+  }[];
 }
 
 export default function OrderDetailsPage() {
@@ -62,6 +66,10 @@ export default function OrderDetailsPage() {
     switch (status) {
       case "delivered":
         return <CheckCircle className="w-6 h-6 text-green-500" />;
+      case "installed":
+        return <CheckCircle className="w-6 h-6 text-green-500" />;
+      case "shipped":
+        return <Truck className="w-6 h-6 text-blue-500" />;
       case "in-transit":
         return <Truck className="w-6 h-6 text-blue-500" />;
       case "processing":
@@ -79,6 +87,10 @@ export default function OrderDetailsPage() {
     switch (status) {
       case "delivered":
         return "text-green-600 bg-green-50 border-green-200";
+      case "installed":
+        return "text-green-600 bg-green-50 border-green-200";
+      case "shipped":
+        return "text-blue-600 bg-blue-50 border-blue-200";
       case "in-transit":
         return "text-blue-600 bg-blue-50 border-blue-200";
       case "processing":
@@ -90,12 +102,6 @@ export default function OrderDetailsPage() {
       default:
         return "text-gray-600 bg-gray-50 border-gray-200";
     }
-  };
-
-  const getPaymentStatusColor = (isPaid: boolean) => {
-    return isPaid
-      ? "text-green-600 bg-green-50 border-green-200"
-      : "text-yellow-600 bg-yellow-50 border-yellow-200";
   };
 
   const formatCurrency = (amount: number) => {
@@ -273,57 +279,83 @@ export default function OrderDetailsPage() {
               </h2>
             </div>
             <div className="p-4">
-              <div className="space-y-2">
-                <div className="flex items-center gap-4">
-                  <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
-                    <CheckCircle className="w-3 h-3 text-green-600" />
-                  </div>
-                  <div>
-                    <p className="font-medium text-gray-900">Order Placed</p>
-                    <p className="text-sm text-gray-600">
-                      {formatDate(typedOrder?.created_at)}
-                    </p>
-                  </div>
-                </div>
-                {typedOrder?.status === "processing" && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-6 h-6 bg-yellow-100 rounded-full flex items-center justify-center">
-                      <Clock className="w-3 h-3 text-yellow-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">Processing</p>
-                      <p className="text-sm text-gray-600">
-                        Your order is being prepared
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {typedOrder?.status === "in-transit" && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center">
-                      <Truck className="w-3 h-3 text-blue-600" />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">Shipped</p>
-                      <p className="text-sm text-gray-600">
-                        Your order is on the way
-                      </p>
-                    </div>
-                  </div>
-                )}
-                {typedOrder?.status === "delivered" && (
-                  <div className="flex items-center gap-4">
-                    <div className="w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
+              <div className="relative">
+                <div className="absolute left-3 top-0 bottom-0 w-px bg-gray-200"></div>
+                <div className="space-y-4">
+                  {/* Always show order placed */}
+                  <div className="relative pl-10">
+                    <div className="absolute left-0 top-1 w-6 h-6 bg-green-100 rounded-full flex items-center justify-center">
                       <CheckCircle className="w-3 h-3 text-green-600" />
                     </div>
                     <div>
-                      <p className="font-medium text-gray-900">Delivered</p>
+                      <p className="font-medium text-gray-900">Order Placed</p>
                       <p className="text-sm text-gray-600">
-                        Order has been delivered
+                        {formatDate(typedOrder?.created_at)}
                       </p>
                     </div>
                   </div>
-                )}
+
+                  {/* Dynamic logs */}
+                  {typedOrder?.order_status_logs
+                    ?.slice()
+                    .sort(
+                      (a, b) =>
+                        new Date(a.created_at).getTime() -
+                        new Date(b.created_at).getTime()
+                    )
+                    .map((log) => {
+                      const status = log.status?.toLowerCase();
+                      const isProcessing = status === "processing";
+                      const isShipped =
+                        status === "shipped" || status === "in-transit";
+                      const isDelivered = status === "delivered";
+                      const isInstalled = status === "installed";
+                      return (
+                        <div key={log.id} className="relative pl-10">
+                          <div
+                            className={`absolute left-0 top-1 w-6 h-6 rounded-full flex items-center justify-center ${
+                              isProcessing
+                                ? "bg-yellow-100"
+                                : isShipped
+                                ? "bg-blue-100"
+                                : isDelivered || isInstalled
+                                ? "bg-green-100"
+                                : "bg-gray-100"
+                            }`}
+                          >
+                            {isProcessing && (
+                              <Clock className="w-3 h-3 text-yellow-600" />
+                            )}
+                            {isShipped && (
+                              <Truck className="w-3 h-3 text-blue-600" />
+                            )}
+                            {(isDelivered || isInstalled) && (
+                              <CheckCircle className="w-3 h-3 text-green-600" />
+                            )}
+                            {!isProcessing &&
+                              !isShipped &&
+                              !isDelivered &&
+                              !isInstalled && (
+                                <Package className="w-3 h-3 text-gray-600" />
+                              )}
+                          </div>
+                          <div>
+                            <p className="font-medium text-gray-900 capitalize">
+                              {status}
+                            </p>
+                            <p className="text-sm text-gray-600">
+                              {formatDate(log.created_at)}
+                            </p>
+                            {log.remark ? (
+                              <p className="text-sm text-gray-700">
+                                {log.remark}
+                              </p>
+                            ) : null}
+                          </div>
+                        </div>
+                      );
+                    })}
+                </div>
               </div>
             </div>
           </div>
