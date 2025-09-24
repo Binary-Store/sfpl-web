@@ -3,7 +3,7 @@ import { getDeviceById, getDevices, listAllDevicesForMap } from "@/services/api/
 import { useQuery } from "@tanstack/react-query";
 
 export const useDevices = () => {
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error } = useQuery<any>({
         queryKey: ['projects'],
         queryFn: () => getDevices({ page: 1, limit: 100, search: '' }),
     });
@@ -12,7 +12,7 @@ export const useDevices = () => {
 };
 
 export const useDeviceById = (id: string) => {
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error } = useQuery<any>({
         queryKey: ['device', id],
         queryFn: () => getDeviceById(id),
     });
@@ -21,7 +21,7 @@ export const useDeviceById = (id: string) => {
 };
 
 export const useGetAllDeviceForMonitoring = () => {
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading, error } = useQuery<any>({
         queryKey: ['listAllDevicesForMap'],
         queryFn: () => listAllDevicesForMap(),
     });

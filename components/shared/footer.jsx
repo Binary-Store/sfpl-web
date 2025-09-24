@@ -112,7 +112,7 @@ export default function Footer() {
                 Brochures
               </Link>
               <Link
-                href="/#"
+                href="/careers"
                 className={`block text-sm transition-colors ${
                   isActive("/careers")
                     ? "text-primary font-semibold"
