@@ -224,11 +224,6 @@ export default function ProductDetailPage() {
                     </span>
                   </div>
                 </div>
-                <div className="text-right">
-                  <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-xs font-medium">
-                    In Stock
-                  </div>
-                </div>
               </div>
             </div>
 
