@@ -3,7 +3,7 @@ import {
   useGetCart,
   useAddToCart,
   useRemoveFromCart,
-} from "@/hooks/useProducts";
+} from "@/hooks/useServices";
 import {
   IndianRupee,
   Trash2,
@@ -21,7 +21,7 @@ import { useRouter } from "next/navigation";
 
 interface CartItem {
   id: string;
-  product_id: string;
+  service_id: string;
   name: string;
   description: string;
   price: number;
@@ -49,7 +49,7 @@ export default function CartPage() {
     if (cartItems && Array.isArray(cartItems)) {
       const initialQuantities: { [key: string]: number } = {};
       cartItems.forEach((item: CartItem) => {
-        initialQuantities[item.product_id] = item.quantity;
+        initialQuantities[item.service_id] = item.quantity;
       });
       setQuantityInputs(initialQuantities);
     }
@@ -66,7 +66,7 @@ export default function CartPage() {
   ) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const currentItem = (cartItems as any)?.find(
-      (item: CartItem) => item.product_id === itemId
+      (item: CartItem) => item.service_id === itemId
     );
     if (!currentItem) return;
 
@@ -83,7 +83,7 @@ export default function CartPage() {
 
     // Call API to update quantity
     addToCartMutation(
-      { product_id: itemId, quantity: newQuantity },
+      { service_id: itemId, quantity: newQuantity },
       {
         onSuccess: () => {
           toast.success("Quantity updated successfully!");
@@ -121,7 +121,7 @@ export default function CartPage() {
     setUpdatingItems((prev) => new Set(prev).add(itemId));
 
     addToCartMutation(
-      { product_id: itemId, quantity: newQuantity },
+      { service_id: itemId, quantity: newQuantity },
       {
         onSuccess: () => {
           toast.success("Quantity updated successfully!");
@@ -149,9 +149,9 @@ export default function CartPage() {
     );
   };
 
-  const handleDeleteItem = async (productId: string) => {
+  const handleDeleteItem = async (service_id: string) => {
     removeFromCartMutation(
-      { product_id: productId },
+      { service_id: service_id },
       {
         onSuccess: () => {
           toast.success("Item removed from cart successfully!");
@@ -207,10 +207,10 @@ export default function CartPage() {
               Your cart is empty
             </h2>
             <p className="text-gray-600 mb-8">
-              Looks like you haven&apos;t added any products to your cart yet.
+              Looks like you haven&apos;t added any Services to your cart yet.
             </p>
             <Link
-              href="/products"
+              href="/services"
               className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
             >
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -228,7 +228,7 @@ export default function CartPage() {
         {/* Header */}
         <div className="mb-4">
           <Link
-            href="/products"
+            href="/services"
             className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors mb-4"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -303,12 +303,12 @@ export default function CartPage() {
                               <button
                                 onClick={() =>
                                   handleQuantityChange(
-                                    item.product_id,
+                                    item.service_id,
                                     "decrease"
                                   )
                                 }
                                 disabled={
-                                  updatingItems.has(item.product_id) ||
+                                  updatingItems.has(item.service_id) ||
                                   item.quantity <= 1
                                 }
                                 className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -320,22 +320,22 @@ export default function CartPage() {
                                 type="number"
                                 min="1"
                                 value={
-                                  quantityInputs[item.product_id] !== undefined
-                                    ? quantityInputs[item.product_id]
+                                  quantityInputs[item.service_id] !== undefined
+                                    ? quantityInputs[item.service_id]
                                     : item.quantity
                                 }
                                 onChange={(e) => {
                                   const newQty = parseInt(e.target.value) || 1;
                                   setQuantityInputs((prev) => ({
                                     ...prev,
-                                    [item.product_id]: newQty,
+                                    [item.service_id]: newQty,
                                   }));
                                 }}
                                 onBlur={(e) => {
                                   const newQty = parseInt(e.target.value) || 1;
                                   if (newQty >= 1 && newQty !== item.quantity) {
                                     handleDirectQuantityUpdate(
-                                      item.product_id,
+                                      item.service_id,
                                       newQty
                                     );
                                   }
@@ -349,7 +349,7 @@ export default function CartPage() {
                                       newQty !== item.quantity
                                     ) {
                                       handleDirectQuantityUpdate(
-                                        item.product_id,
+                                        item.service_id,
                                         newQty
                                       );
                                     }
@@ -357,17 +357,17 @@ export default function CartPage() {
                                   }
                                 }}
                                 className="w-16 h-8 text-center border border-gray-200 rounded-lg focus:border-red-500 focus:ring-1 focus:ring-red-500 text-lg font-semibold text-gray-900"
-                                disabled={updatingItems.has(item.product_id)}
+                                disabled={updatingItems.has(item.service_id)}
                               />
 
                               <button
                                 onClick={() =>
                                   handleQuantityChange(
-                                    item.product_id,
+                                    item.service_id,
                                     "increase"
                                   )
                                 }
-                                disabled={updatingItems.has(item.product_id)}
+                                disabled={updatingItems.has(item.service_id)}
                                 className="w-8 h-8 rounded-lg border border-gray-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors"
                               >
                                 <Plus className="h-4 w-4 text-gray-600" />
@@ -376,7 +376,7 @@ export default function CartPage() {
 
                             {/* Delete Button */}
                             <button
-                              onClick={() => handleDeleteItem(item.product_id)}
+                              onClick={() => handleDeleteItem(item.service_id)}
                               className="w-8 h-8 rounded-lg border border-red-200 flex items-center justify-center hover:border-red-500 hover:bg-red-50 transition-colors"
                             >
                               <Trash2 className="h-4 w-4 text-red-600" />

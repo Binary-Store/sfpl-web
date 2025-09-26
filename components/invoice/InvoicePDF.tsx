@@ -314,19 +314,19 @@ const InvoicePDF: React.FC<InvoicePDFProps> = ({ order }) => {
             <Text style={[styles.col4, styles.headerText]}>Total</Text>
           </View>
 
-          {order.products &&
-            order.products.map((product: any, index: number) => (
+          {order.items &&
+            order.items.map((items: any, index: number) => (
               <View key={index} style={styles.tableRow}>
                 <View style={styles.col1}>
-                  <Text style={styles.productName}>{product.name}</Text>
+                  <Text style={styles.productName}>{items.name}</Text>
                   <Text style={styles.productDescription}>
-                    {product.description}
+                    {items.description}
                   </Text>
                 </View>
-                <Text style={styles.col2}>{product.quantity}</Text>
-                <Text style={styles.col3}>{formatCurrency(product.price)}</Text>
+                <Text style={styles.col2}>{items.quantity}</Text>
+                <Text style={styles.col3}>{formatCurrency(items.price)}</Text>
                 <Text style={styles.col4}>
-                  {formatCurrency(product.price * product.quantity)}
+                  {formatCurrency(items.price * items.quantity)}
                 </Text>
               </View>
             ))}

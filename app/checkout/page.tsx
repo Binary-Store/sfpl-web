@@ -1,9 +1,19 @@
 "use client";
 
 import { useProfile } from "@/hooks/useProfile";
-import { useGetCart } from "@/hooks/useProducts";
+import { useGetCart } from "@/hooks/useServices";
 import { useCreateOrder, useVerifyOrder } from "@/hooks/useOrder";
-import { ArrowLeft, CreditCard, Edit3, User, Phone, MapPin, Building, FileText, Hash } from "lucide-react";
+import {
+  ArrowLeft,
+  CreditCard,
+  Edit3,
+  User,
+  Phone,
+  MapPin,
+  Building,
+  FileText,
+  Hash,
+} from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
@@ -17,7 +27,12 @@ interface RazorpayResponse {
 }
 
 export default function CheckoutPage() {
-  const { data: profile, isLoading: profileLoading, updateProfile, isUpdating } = useProfile();
+  const {
+    data: profile,
+    isLoading: profileLoading,
+    updateProfile,
+    isUpdating,
+  } = useProfile();
   const { data: cartItems, isLoading: cartLoading } = useGetCart();
   const [isEditing, setIsEditing] = useState(false);
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
@@ -73,7 +88,9 @@ export default function CheckoutPage() {
     }
   }, [isClient]);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -124,7 +141,7 @@ export default function CheckoutPage() {
             amount: calculateTotal() * 100, // Convert to paise
             currency: "INR",
             name: "SFPL Fire Safety",
-            description: "Fire Safety Products",
+            description: "Fire Safety Services",
             order_id: orderId,
             handler: function (response: RazorpayResponse) {
               verifyOrderMutation(
@@ -173,7 +190,10 @@ export default function CheckoutPage() {
 
   const calculateTotal = () => {
     if (!cartItems || !Array.isArray(cartItems)) return 0;
-    return cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.price * item.quantity,
+      0
+    );
   };
 
   // Show loading state only on client side to prevent hydration mismatch
@@ -192,11 +212,16 @@ export default function CheckoutPage() {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Profile not found</h2>
-          <p className="text-gray-600 mb-8">Please complete your profile to proceed with checkout.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+            Profile not found
+          </h2>
+          <p className="text-gray-600 mb-8">
+            Please complete your profile to proceed with checkout.
+          </p>
           <Link
             href="/dashboard/profile"
-            className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+            className="inline-flex items-center bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
+          >
             Complete Profile
           </Link>
         </div>
@@ -211,12 +236,15 @@ export default function CheckoutPage() {
         <div className="mb-6">
           <Link
             href="/cart"
-            className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors mb-4">
+            className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors mb-4"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Cart
           </Link>
           <h1 className="text-3xl font-bold text-gray-900">Checkout</h1>
-          <p className="text-gray-600 mt-2">Review your details and complete your purchase</p>
+          <p className="text-gray-600 mt-2">
+            Review your details and complete your purchase
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -225,11 +253,14 @@ export default function CheckoutPage() {
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
               <div className="p-6 border-b border-gray-100">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold text-gray-900">Profile Details</h2>
+                  <h2 className="text-xl font-semibold text-gray-900">
+                    Profile Details
+                  </h2>
                   {!isEditing && (
                     <button
                       onClick={() => setIsEditing(true)}
-                      className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium transition-colors">
+                      className="inline-flex items-center gap-2 text-red-600 hover:text-red-700 font-medium transition-colors"
+                    >
                       <Edit3 className="h-4 w-4" />
                       Edit
                     </button>
@@ -254,7 +285,9 @@ export default function CheckoutPage() {
                       placeholder="Enter your full name"
                     />
                   ) : (
-                    <p className="text-gray-900 font-medium">{profile.name || "Not provided"}</p>
+                    <p className="text-gray-900 font-medium">
+                      {profile.name || "Not provided"}
+                    </p>
                   )}
                 </div>
 
@@ -274,7 +307,9 @@ export default function CheckoutPage() {
                       placeholder="Enter your phone number"
                     />
                   ) : (
-                    <p className="text-gray-900 font-medium">{profile.phone_number || "Not provided"}</p>
+                    <p className="text-gray-900 font-medium">
+                      {profile.phone_number || "Not provided"}
+                    </p>
                   )}
                 </div>
 
@@ -294,7 +329,9 @@ export default function CheckoutPage() {
                       placeholder="Enter your address"
                     />
                   ) : (
-                    <p className="text-gray-900 font-medium">{profile.address || "Not provided"}</p>
+                    <p className="text-gray-900 font-medium">
+                      {profile.address || "Not provided"}
+                    </p>
                   )}
                 </div>
 
@@ -314,7 +351,9 @@ export default function CheckoutPage() {
                       placeholder="Enter your organization name"
                     />
                   ) : (
-                    <p className="text-gray-900 font-medium">{profile.organization_name || "Not provided"}</p>
+                    <p className="text-gray-900 font-medium">
+                      {profile.organization_name || "Not provided"}
+                    </p>
                   )}
                 </div>
 
@@ -334,7 +373,9 @@ export default function CheckoutPage() {
                       placeholder="Enter your GST number"
                     />
                   ) : (
-                    <p className="text-gray-900 font-medium">{profile.gst_number || "Not provided"}</p>
+                    <p className="text-gray-900 font-medium">
+                      {profile.gst_number || "Not provided"}
+                    </p>
                   )}
                 </div>
 
@@ -354,7 +395,9 @@ export default function CheckoutPage() {
                       placeholder="Enter your PAN number"
                     />
                   ) : (
-                    <p className="text-gray-900 font-medium">{profile.pan_number || "Not provided"}</p>
+                    <p className="text-gray-900 font-medium">
+                      {profile.pan_number || "Not provided"}
+                    </p>
                   )}
                 </div>
 
@@ -364,13 +407,15 @@ export default function CheckoutPage() {
                     <button
                       onClick={handleSaveProfile}
                       disabled={isUpdating}
-                      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+                      className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
                       {isUpdating ? "Saving..." : "Save Changes"}
                     </button>
                     <button
                       onClick={handleCancelEdit}
                       disabled={isUpdating}
-                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded-lg transition-colors disabled:opacity-50">
+                      className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-6 rounded-lg transition-colors disabled:opacity-50"
+                    >
                       Cancel
                     </button>
                   </div>
@@ -382,7 +427,9 @@ export default function CheckoutPage() {
           {/* Order Summary & Actions */}
           <div className="lg:col-span-1">
             <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 sticky top-4">
-              <h2 className="text-xl font-semibold text-gray-900 mb-4">Order Summary</h2>
+              <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                Order Summary
+              </h2>
 
               <div className="space-y-2 mb-6">
                 <div className="flex justify-between text-gray-600">
@@ -403,7 +450,9 @@ export default function CheckoutPage() {
 
               {/* Promo Code */}
               <div className="mb-6">
-                <label className="block text-sm font-medium text-gray-700 mb-2">Promo Code (Optional)</label>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Promo Code (Optional)
+                </label>
                 <input
                   type="text"
                   value={promoCode}
@@ -418,7 +467,8 @@ export default function CheckoutPage() {
                 <button
                   onClick={handleProceedToPayment}
                   disabled={isCheckoutLoading || isCreatingOrder}
-                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                  className="w-full bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                >
                   {isCheckoutLoading || isCreatingOrder ? (
                     <>
                       <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
@@ -434,7 +484,8 @@ export default function CheckoutPage() {
 
                 <Link
                   href="/cart"
-                  className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-6 rounded-xl transition-colors text-center block">
+                  className="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-3 px-6 rounded-xl transition-colors text-center block"
+                >
                   Cancel
                 </Link>
               </div>

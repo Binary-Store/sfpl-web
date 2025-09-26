@@ -1,19 +1,19 @@
-import { getProductById, getProducts, addToCart, getCartItems, removeFromCart } from "@/services/api/products";
+import { getServiceById, getServices, addToCart, getCartItems, removeFromCart } from "@/services/api/service";
 import { useQuery, useMutation } from "@tanstack/react-query";
 
-export const useProducts = () => {
+export const useServices = () => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['products'],
-        queryFn: () => getProducts(),
+        queryKey: ['services'],
+        queryFn: () => getServices(),
     }) as any;
 
     return { data, isLoading, error };
 };
 
-export const useProductById = (id: string) => {
+export const useServiceById = (id: string) => {
     const { data, isLoading, error } = useQuery({
-        queryKey: ['product', id],
-        queryFn: () => getProductById(id),
+        queryKey: ['service', id],
+        queryFn: () => getServiceById(id),
     }) as any;
 
     return { data, isLoading, error };
@@ -24,10 +24,10 @@ export const useAddToCart = () => {
         mutationFn: addToCart,
         onSuccess: () => {
 
-            // toast.success('Product added to cart successfully!');
+            // toast.success('Service added to cart successfully!');
         },
         onError: () => {
-            // toast.error('Failed to add product to cart');
+            // toast.error('Failed to add service to cart');
         }
     });
     return { addToCartMutation, isLoading: isPending, error };

@@ -152,7 +152,7 @@ export default function OrdersPage() {
                     {formatCurrency(order.total / 100)}
                   </p>
                   <p className="text-sm text-gray-600">
-                    {order.total_product_count} products
+                    {order.total_item_count} Services
                   </p>
                 </div>
               </div>

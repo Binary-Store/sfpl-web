@@ -1,21 +1,21 @@
 "use client";
 
-import { useProducts } from "@/hooks/useProducts";
+import { useServices } from "@/hooks/useServices";
 import { IndianRupee, ArrowRight, Shield } from "lucide-react";
 import { serverDetails } from "@/config";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
-export default function Products() {
-  const { data: products, isLoading, error } = useProducts();
+export default function Services() {
+  const { data: services, isLoading, error } = useServices();
   const router = useRouter();
 
   if (isLoading) {
-    return <div className="p-6">Loading products...</div>;
+    return <div className="p-6">Loading services...</div>;
   }
 
   if (error) {
-    return <div className="p-6 text-red-600">Error loading products</div>;
+    return <div className="p-6 text-red-600">Error loading services</div>;
   }
 
   return (
@@ -28,20 +28,20 @@ export default function Products() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12 max-w-5xl mx-auto">
-          {products?.slice(0, 2)?.map((product) => (
+          {services?.slice(0, 2)?.map((service) => (
             <div
-              key={product.id}
+              key={service.id}
               className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer"
               onClick={() => {
                 // toast.success("Coming Soon");
-                router.push(`/products/${product.id}`);
+                router.push(`/services/${service.id}`);
               }}
             >
               <div className="relative overflow-hidden h-72 bg-gray-100 ">
-                {product.images?.length > 0 ? (
+                {service.images?.length > 0 ? (
                   <img
-                    src={product.images[0].url}
-                    alt={product.name}
+                    src={service.images[0].url}
+                    alt={service.name}
                     className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
@@ -53,7 +53,7 @@ export default function Products() {
                 {/* Fallback icon when no image or image fails to load */}
                 <div
                   className={`w-full h-full flex items-center justify-center ${
-                    product.photo_url ? "hidden" : "flex"
+                    service.photo_url ? "hidden" : "flex"
                   }`}
                 >
                   <Shield className="h-24 w-24 text-gray-400" />
@@ -62,11 +62,11 @@ export default function Products() {
 
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-3 text-gray-900 capitalize">
-                  {product.name?.toUpperCase()}
+                  {service.name?.toUpperCase()}
                 </h3>
-                {product.description && (
+                {service.description && (
                   <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
-                    {product.description}
+                    {service.description}
                   </p>
                 )}
 
@@ -74,13 +74,13 @@ export default function Products() {
                   <div className="flex items-center gap-2">
                     <IndianRupee className="w-5 h-5 text-green-600 " />
                     <span className="text-2xl font-bold text-green-600">
-                      {product?.price / 100}
+                      {service?.price / 100}
                     </span>
                   </div>
 
                   <button
                     className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition-colors duration-200"
-                    onClick={() => router.push(`/products/${product.id}`)}
+                    onClick={() => router.push(`/services/${service.id}`)}
                   >
                     View
                   </button>
@@ -93,7 +93,7 @@ export default function Products() {
         {/* More Services Button */}
         <div className="text-center">
           <button
-            onClick={() => router.push("/products")}
+            onClick={() => router.push("/services")}
             className="inline-flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
           >
             View More Services

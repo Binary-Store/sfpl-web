@@ -1,20 +1,20 @@
 "use client";
 
-import { useProducts } from "@/hooks/useProducts";
+import { useServices } from "@/hooks/useServices";
 import { IndianRupee } from "lucide-react";
 import { serverDetails } from "@/config";
 import { useRouter } from "next/navigation";
 
-export default function Products() {
+export default function Services() {
   const router = useRouter();
-  const { data: products, isLoading, error } = useProducts();
+  const { data: services, isLoading, error } = useServices();
 
   if (isLoading) {
-    return <div className="p-6">Loading products...</div>;
+    return <div className="p-6">Loading services...</div>;
   }
 
   if (error) {
-    return <div className="p-6 text-red-600">Error loading products</div>;
+    return <div className="p-6 text-red-600">Error loading services</div>;
   }
 
   return (
@@ -31,21 +31,21 @@ export default function Products() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {products?.map((product) => (
+          {services?.map((service) => (
             <div
-              key={product.id}
+              key={service.id}
               className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100 overflow-hidden cursor-pointer"
               onClick={() => {
                 // toast.success("Coming Soon");
-                router.push(`/products/${product.id}`);
+                router.push(`/services/${service.id}`);
               }}
             >
-              {product.images?.length > 0 && (
+              {service.images?.length > 0 && (
                 // blur photo for all
                 <div className="relative overflow-hidden ">
                   <img
-                    src={product.images[0]?.url}
-                    alt={product.name}
+                    src={service.images[0]?.url}
+                    alt={service.name}
                     className="w-full h-56 object-cover hover:scale-105 transition-transform duration-300"
                   />
                 </div>
@@ -53,11 +53,11 @@ export default function Products() {
 
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-3 text-gray-900 capitalize">
-                  {product.name?.toUpperCase()}
+                  {service.name?.toUpperCase()}
                 </h3>
-                {product.description && (
+                {service.description && (
                   <p className="text-gray-600 mb-4 line-clamp-2 leading-relaxed">
-                    {product.description}
+                    {service.description}
                   </p>
                 )}
 
@@ -65,7 +65,7 @@ export default function Products() {
                   <div className="flex items-center gap-2">
                     <IndianRupee className="w-5 h-5 text-green-600" />
                     <span className="text-2xl font-bold text-green-600">
-                      {product?.price / 100}
+                      {service?.price / 100}
                     </span>
                   </div>
                 </div>
