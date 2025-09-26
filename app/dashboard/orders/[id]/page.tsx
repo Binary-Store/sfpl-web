@@ -16,7 +16,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 
-interface OrderProduct {
+interface Items {
   name: string;
   description: string;
   price: number;
@@ -37,10 +37,10 @@ interface Order {
   gst_amount: number;
   total: number;
   is_paid: boolean;
-  total_product_count: string;
-  products?: OrderProduct[];
+  total_item_count: string;
+  items?: Items[];
   serial: string;
-  order_status_logs?: {
+  status_logs?: {
     id: string;
     status: string;
     remark?: string | null;
@@ -211,60 +211,57 @@ export default function OrderDetailsPage() {
               </h2>
             </div>
             <div className="p-4">
-              {typedOrder?.products && typedOrder?.products.length > 0 ? (
+              {typedOrder?.items && typedOrder?.items.length > 0 ? (
                 <div className="space-y-2">
-                  {typedOrder?.products.map(
-                    (product: OrderProduct, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl"
-                      >
-                        <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
-                          {product.images?.length &&
-                          product.images.length > 0 ? (
-                            <img
-                              src={product.images[0].url}
-                              alt={product.name || "Product"}
-                              className="w-full h-20 object-cover rounded-xl"
-                            />
-                          ) : (
-                            <Package className="h-6 w-6 text-gray-400" />
-                          )}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2 capitalize">
-                            {product.name}
-                          </h3>
-                          <p className="text-gray-600 text-sm mb-3 line-clamp-2">
-                            {product.description}
-                          </p>
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2">
-                              <span className="text-sm text-gray-500">
-                                Quantity:
-                              </span>
-                              <span className="font-semibold text-gray-900">
-                                {product.quantity}
-                              </span>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-lg font-bold text-green-600">
-                                {formatCurrency(
-                                  (product.price * product.quantity) / 100
-                                )}
-                              </span>
-                            </div>
+                  {typedOrder?.items.map((item: Items, index: number) => (
+                    <div
+                      key={index}
+                      className="flex items-start gap-4 p-4 border border-gray-100 rounded-xl"
+                    >
+                      <div className="w-16 h-16 bg-gray-100 rounded-xl flex items-center justify-center flex-shrink-0">
+                        {item.images?.length && item.images.length > 0 ? (
+                          <img
+                            src={item.images[0].url}
+                            alt={item.name || "Service"}
+                            className="w-full h-20 object-cover rounded-xl"
+                          />
+                        ) : (
+                          <Package className="h-6 w-6 text-gray-400" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-2 capitalize">
+                          {item.name}
+                        </h3>
+                        <p className="text-gray-600 text-sm mb-3 line-clamp-2">
+                          {item.description}
+                        </p>
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-gray-500">
+                              Quantity:
+                            </span>
+                            <span className="font-semibold text-gray-900">
+                              {item.quantity}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg font-bold text-green-600">
+                              {formatCurrency(
+                                (item.price * item.quantity) / 100
+                              )}
+                            </span>
                           </div>
                         </div>
                       </div>
-                    )
-                  )}
+                    </div>
+                  ))}
                 </div>
               ) : (
                 <div className="text-center py-4">
                   <Package className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-600">
-                    No products found in this order
+                    No services found in this order
                   </p>
                 </div>
               )}
@@ -296,7 +293,7 @@ export default function OrderDetailsPage() {
                   </div>
 
                   {/* Dynamic logs */}
-                  {typedOrder?.order_status_logs
+                  {typedOrder?.status_logs
                     ?.slice()
                     .sort(
                       (a, b) =>

@@ -21,40 +21,35 @@ export const metadata = {
   description: "SFPL - Specific Fire Protection Limited",
 };
 
-export default function RootLayout({
-  children,
-}) {
-  
+export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-      <Providers>
-        <LayoutContent>
-          {children}
-        </LayoutContent>
+        <Providers>
+          <LayoutContent>{children}</LayoutContent>
         </Providers>
-        <Toaster 
-          position="top-right"
+        <Toaster
+          position="top-center"
           toastOptions={{
             duration: 4000,
             style: {
-              background: '#363636',
-              color: '#fff',
+              background: "#363636",
+              color: "#fff",
             },
             success: {
               duration: 3000,
               iconTheme: {
-                primary: '#10b981',
-                secondary: '#fff',
+                primary: "#10b981",
+                secondary: "#fff",
               },
             },
             error: {
               duration: 5000,
               iconTheme: {
-                primary: '#ef4444',
-                secondary: '#fff',
+                primary: "#ef4444",
+                secondary: "#fff",
               },
             },
           }}

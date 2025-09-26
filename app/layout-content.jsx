@@ -2,7 +2,7 @@
 import { usePathname } from "next/navigation";
 import Header from "@/components/shared/header";
 import Footer from "@/components/shared/footer";
-import { useGetCart } from "@/hooks/useProducts";
+import { useGetCart } from "@/hooks/useServices";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { Providers } from "./providers";
 import { useEffect } from "react";

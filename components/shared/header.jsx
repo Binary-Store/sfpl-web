@@ -18,10 +18,12 @@ export default function Header() {
 
   useEffect(() => {
     try {
-      const storedToken = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+      const storedToken =
+        typeof window !== "undefined" ? localStorage.getItem("token") : null;
       setToken(storedToken);
 
-      const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+      const storedUser =
+        typeof window !== "undefined" ? localStorage.getItem("user") : null;
       if (storedUser) {
         const parsed = JSON.parse(storedUser);
         // Accept either the whole object as the customer, or nested under `customer`
@@ -29,7 +31,10 @@ export default function Header() {
         setCustomer(c ?? null);
       } else {
         // Sometimes APIs store just `customer` key
-        const storedCustomer = typeof window !== 'undefined' ? localStorage.getItem('customer') : null;
+        const storedCustomer =
+          typeof window !== "undefined"
+            ? localStorage.getItem("customer")
+            : null;
         if (storedCustomer) {
           setCustomer(JSON.parse(storedCustomer));
         }
@@ -47,9 +52,9 @@ export default function Header() {
       }
     };
     if (menuOpen) {
-      document.addEventListener('mousedown', onClickOutside);
+      document.addEventListener("mousedown", onClickOutside);
     }
-    return () => document.removeEventListener('mousedown', onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, [menuOpen]);
 
   const isActive = (path) => {
@@ -60,34 +65,40 @@ export default function Header() {
   };
 
   const getInitial = (name) => {
-    if (!name || typeof name !== 'string') return '?';
+    if (!name || typeof name !== "string") return "?";
     const ch = name.trim().charAt(0);
-    return ch ? ch.toUpperCase() : '?';
+    return ch ? ch.toUpperCase() : "?";
   };
 
   const handleLogout = () => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      localStorage.removeItem('customer');
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      localStorage.removeItem("customer");
     } catch {}
     setMenuOpen(false);
     setToken(null);
     setCustomer(null);
   };
-  
+
   return (
     <header className="w-full border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60 sticky top-0 z-50">
       <div className="container mx-auto flex h-20 items-center justify-between px-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo-full-black.svg" alt="SFPL Logo" width={170} height={42} priority />
+          <Image
+            src="/logo-full-black.svg"
+            alt="SFPL Logo"
+            width={170}
+            height={42}
+            priority
+          />
         </Link>
         {/* Navigation */}
         <nav className="hidden md:flex gap-2 lg:gap-4 xl:gap-6">
           {[
             { href: "/", label: "Home" },
-            { href: "/products", label: "Services" },
+            { href: "/services", label: "Services" },
             { href: "/about", label: "About Us" },
             { href: "/contact", label: "Contact us" },
           ].map((item) => (
@@ -96,8 +107,8 @@ export default function Header() {
               href={item.href}
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                 isActive(item.href)
-                  ? ' text-primary font-semibold'
-                  : 'text-gray-700 hover:bg-primary/10 hover:text-primary'
+                  ? " text-primary font-semibold"
+                  : "text-gray-700 hover:bg-primary/10 hover:text-primary"
               }`}
             >
               {item.label}
@@ -110,17 +121,20 @@ export default function Header() {
             <Link
               href="/cart"
               className={`p-2 rounded-md text-sm font-medium transition-colors relative ${
-                isActive('/cart')
-                  ? 'text-primary bg-primary/10'
-                  : 'text-gray-700 hover:bg-primary/10 hover:text-primary'
+                isActive("/cart")
+                  ? "text-primary bg-primary/10"
+                  : "text-gray-700 hover:bg-primary/10 hover:text-primary"
               }`}
             >
               <ShoppingCart className="h-5 w-5" />
               {/* Cart badge for item count - you can add this later */}
               <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {cartItems.filter((item, index, self) =>
-                  index === self.findIndex((t) => t.id === item.id)
-                ).length}
+                {
+                  cartItems.filter(
+                    (item, index, self) =>
+                      index === self.findIndex((t) => t.id === item.id)
+                  ).length
+                }
               </span>
             </Link>
           )}
@@ -144,29 +158,31 @@ export default function Header() {
                       </div>
                       <div className="min-w-0">
                         <p className="text-xs text-gray-500">Welcome back</p>
-                        <p className="text-sm font-semibold text-gray-900 truncate">{customer?.name.split(' ')[0] || 'Customer'}</p>
+                        <p className="text-sm font-semibold text-gray-900 truncate">
+                          {customer?.name.split(" ")[0] || "Customer"}
+                        </p>
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Navigation Links */}
                   <div className="space-y-0.5 mb-3">
-                    <Link 
-                      href="/dashboard/profile" 
+                    <Link
+                      href="/dashboard/profile"
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
                     >
                       <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-red-500 transition-colors duration-200"></div>
                       <span className="text-sm font-medium">Profile</span>
                     </Link>
-                    <Link 
-                      href="/dashboard/projects" 
+                    <Link
+                      href="/dashboard/projects"
                       className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-gray-900 transition-all duration-200 group"
                     >
                       <div className="w-1.5 h-1.5 rounded-full bg-gray-300 group-hover:bg-red-500 transition-colors duration-200"></div>
                       <span className="text-sm font-medium">Dashboard</span>
                     </Link>
                   </div>
-                  
+
                   {/* Logout Section */}
                   <div className="pt-2 border-t border-gray-100/50">
                     <button

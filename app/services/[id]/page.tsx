@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useProductById, useAddToCart } from "@/hooks/useProducts";
+import { useServiceById, useAddToCart } from "@/hooks/useServices";
 import { serverDetails } from "@/config";
 import {
   IndianRupee,
@@ -19,13 +19,13 @@ import { toast } from "react-hot-toast";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { useQueryClient } from "@tanstack/react-query";
 
-export default function ProductDetailPage() {
+export default function ServiceDetailPage() {
   const params = useParams();
   const router = useRouter();
   const queryClient = useQueryClient();
   const { cartItems } = useGlobal();
   const id = params.id as string;
-  const { data: product, isLoading, error } = useProductById(id);
+  const { data: service, isLoading, error } = useServiceById(id);
   const {
     addToCartMutation,
     isLoading: isAddingToCart,
@@ -62,7 +62,7 @@ export default function ProductDetailPage() {
       {
         name: inquiryFormData.name,
         email: inquiryFormData.email,
-        message: "inquiry for product " + product?.name,
+        message: "inquiry for Service " + service?.name,
         phone_number: inquiryFormData.phone_number,
       },
       {
@@ -98,16 +98,16 @@ export default function ProductDetailPage() {
 
     addToCartMutation(
       {
-        product_id: id,
+        service_id: id,
         quantity: 1,
       },
       {
         onSuccess: (data) => {
           queryClient.invalidateQueries({ queryKey: ["cart"] });
-          toast.success("Product added to cart successfully!");
+          toast.success("Service added to cart successfully!");
         },
         onError: () => {
-          toast.error("Failed to add product to cart");
+          toast.error("Failed to add service to cart");
         },
       }
     );
@@ -118,13 +118,13 @@ export default function ProductDetailPage() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-4 border-red-500 border-t-transparent mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading product...</p>
+          <p className="text-gray-600">Loading service...</p>
         </div>
       </div>
     );
   }
 
-  if (error || !product) {
+  if (error || !service) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -132,13 +132,13 @@ export default function ProductDetailPage() {
             <Shield className="h-8 w-8 text-red-600" />
           </div>
           <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Product Not Found
+            Service Not Found
           </h2>
           <p className="text-gray-600 mb-6">
-            The product you&apos;re looking for doesn&apos;t exist.
+            The service you&apos;re looking for doesn&apos;t exist.
           </p>
           <Link
-            href="/products"
+            href="/services"
             className="inline-flex items-center text-red-600 hover:text-red-700 font-medium"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -155,7 +155,7 @@ export default function ProductDetailPage() {
         {/* Breadcrumb */}
         <div className="mb-8">
           <Link
-            href="/products"
+            href="/services"
             className="inline-flex items-center text-gray-600 hover:text-red-600 transition-colors"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
@@ -163,16 +163,16 @@ export default function ProductDetailPage() {
           </Link>
         </div>
 
-        {/* Product Details Grid */}
+        {/* Service Details Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Product Images */}
+          {/* Service Images */}
           <div className="space-y-4">
             {/* Main Image */}
             <div className="aspect-square bg-white rounded-2xl overflow-hidden shadow-lg">
-              {product.images?.length > 0 ? (
+              {service.images?.length > 0 ? (
                 <img
-                  src={product.images[0]?.url}
-                  alt={product.name.toUpperCase()}
+                  src={service.images[0]?.url}
+                  alt={service.name.toUpperCase()}
                   className="w-full h-full object-cover"
                 />
               ) : (
@@ -190,9 +190,9 @@ export default function ProductDetailPage() {
             </div>
           </div>
 
-          {/* Product Info */}
+          {/* Service Info */}
           <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-            {/* Product Header */}
+            {/* Service Header */}
             <div className="mb-8">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-3 h-3 bg-red-500 rounded-full"></div>
@@ -201,11 +201,11 @@ export default function ProductDetailPage() {
                 </span>
               </div>
               <h1 className="text-4xl font-bold text-gray-900 mb-4 capitalize leading-tight">
-                {product.name.toUpperCase()}
+                {service.name.toUpperCase()}
               </h1>
-              {product.description && (
+              {service.description && (
                 <p className="text-lg text-gray-600 leading-relaxed">
-                  {product.description}
+                  {service.description}
                 </p>
               )}
             </div>
@@ -220,7 +220,7 @@ export default function ProductDetailPage() {
                   <div className="flex items-center gap-2">
                     <IndianRupee className="w-8 h-8 text-green-600" />
                     <span className="text-4xl font-bold text-green-600">
-                      {product.price / 100}
+                      {service.price / 100}
                     </span>
                   </div>
                 </div>
@@ -229,7 +229,7 @@ export default function ProductDetailPage() {
 
             {/* Action Buttons */}
             <div className="space-y-4">
-              {cartItems.find((item: any) => item.product_id === id) ? (
+              {cartItems.find((item: any) => item.service_id === id) ? (
                 <button
                   onClick={() => router.push("/cart")}
                   className="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-4 px-6 rounded-xl text-lg transition-all duration-200 shadow-lg hover:shadow-xl flex items-center justify-center gap-3 disabled:bg-gray-400 disabled:cursor-not-allowed transform hover:scale-[1.02]"
@@ -258,7 +258,7 @@ export default function ProductDetailPage() {
           </div>
         </div>
 
-        {/* Product Details Tabs */}
+        {/* Service Details Tabs */}
         <div className="mt-16">
           <div className="border-b border-gray-200">
             <nav className="-mb-px flex space-x-8">
@@ -317,7 +317,7 @@ export default function ProductDetailPage() {
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h2 className="text-2xl font-bold text-gray-900">
-                Product Inquiry
+                Service Inquiry
               </h2>
               <button
                 onClick={closeInquiryModal}
