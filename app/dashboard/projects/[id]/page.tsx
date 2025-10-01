@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Smartphone,
   Loader2,
@@ -12,10 +13,16 @@ import {
   LayoutDashboard,
   Wrench,
   Phone,
+  Edit3,
+  Save,
+  X,
+  Plus,
+  Trash2,
 } from "lucide-react";
 import { useDeviceById } from "@/hooks/useDevices";
 import { useGlobal } from "@/contexts/GlobalContext";
 import { Badge } from "@/components/ui/badge";
+import { updateAlternativeContacts } from "@/services/api/devices";
 
 export default function DeviceDetails() {
   const params = useParams();
@@ -23,7 +30,12 @@ export default function DeviceDetails() {
   const { setBreadcrumbsEndPoint } = useGlobal();
   const router = useRouter();
 
-  const { data: device, isLoading } = useDeviceById(id || "");
+  const { data: device, isLoading, refetch } = useDeviceById(id || "");
+
+  // State for editing alternative contacts
+  const [isEditingContacts, setIsEditingContacts] = useState(false);
+  const [editingContacts, setEditingContacts] = useState<any[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (device && id) {
@@ -37,6 +49,76 @@ export default function DeviceDetails() {
       ]);
     }
   }, [id, device, setBreadcrumbsEndPoint]);
+
+  // Initialize editing contacts when device data loads
+  useEffect(() => {
+    if (device?.alternative_contacts) {
+      setEditingContacts([...device.alternative_contacts]);
+    }
+  }, [device?.alternative_contacts]);
+
+  // Helper functions for managing alternative contacts
+  const handleEditContacts = () => {
+    setIsEditingContacts(true);
+    setEditingContacts([...(device?.alternative_contacts || [])]);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingContacts(false);
+    setEditingContacts([...(device?.alternative_contacts || [])]);
+  };
+
+  const handleAddContact = () => {
+    setEditingContacts([
+      ...editingContacts,
+      { name: "", designation: "", phone_number: "" },
+    ]);
+  };
+
+  const handleRemoveContact = (index: number) => {
+    if (editingContacts.length > 1) {
+      const newContacts = editingContacts.filter((_, i) => i !== index);
+      setEditingContacts(newContacts);
+    }
+  };
+
+  const handleContactChange = (index: number, field: string, value: string) => {
+    const newContacts = [...editingContacts];
+    newContacts[index] = { ...newContacts[index], [field]: value };
+    setEditingContacts(newContacts);
+  };
+
+  const handleSaveContacts = async () => {
+    if (editingContacts.length < 3) {
+      alert("Minimum 3 alternative contacts are required");
+      return;
+    }
+
+    // Validate that all contacts have required fields
+    const hasEmptyFields = editingContacts.some(
+      (contact) =>
+        !contact.name.trim() ||
+        !contact.designation.trim() ||
+        !contact.phone_number.trim()
+    );
+
+    if (hasEmptyFields) {
+      alert("All contact fields are required");
+      return;
+    }
+
+    setIsSaving(true);
+    try {
+      await updateAlternativeContacts(id, editingContacts);
+      setIsEditingContacts(false);
+      refetch(); // Refresh device data
+    } catch (error) {
+      console.error("Error updating alternative contacts:", error);
+      alert("Failed to update alternative contacts. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -280,50 +362,190 @@ export default function DeviceDetails() {
       {/* Alternative Contacts */}
       <Card className="h-fit !gap-1 p-4">
         <CardHeader className="pb-0 px-0">
-          <CardTitle className="flex items-center space-x-2 text-lg">
-            <Phone className="h-5 w-5 text-blue-600" />
-            <span>Alternative Contacts</span>
+          <CardTitle className="flex items-center justify-between text-lg">
+            <div className="flex items-center space-x-2">
+              <Phone className="h-5 w-5 text-blue-600" />
+              <span>Alternative Contacts</span>
+            </div>
+            {!isEditingContacts ? (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleEditContacts}
+                className="flex items-center space-x-2"
+              >
+                <Edit3 className="h-4 w-4" />
+                <span>Edit</span>
+              </Button>
+            ) : (
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleCancelEdit}
+                  disabled={isSaving}
+                  className="flex items-center space-x-2"
+                >
+                  <X className="h-4 w-4" />
+                  <span>Cancel</span>
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={handleSaveContacts}
+                  disabled={isSaving || editingContacts.length < 3}
+                  className="flex items-center space-x-2"
+                >
+                  {isSaving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  <span>{isSaving ? "Saving..." : "Save"}</span>
+                </Button>
+              </div>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0 px-0">
-          {device?.alternative_contacts &&
-          device.alternative_contacts.length > 0 ? (
-            <div className="overflow-x-auto rounded-md border">
-              <table className="min-w-full text-sm">
-                <thead className="bg-gray-50 text-gray-700">
-                  <tr>
-                    <th className="text-left font-medium px-3 py-2">#</th>
-                    <th className="text-left font-medium px-3 py-2">Name</th>
-                    <th className="text-left font-medium px-3 py-2">
-                      Designation
-                    </th>
-                    <th className="text-left font-medium px-3 py-2">
-                      Phone Number
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y">
-                  {device.alternative_contacts.map(
-                    (contact: any, index: number) => (
-                      <tr key={index} className="odd:bg-white even:bg-gray-50">
-                        <td className="px-3 py-2">{index + 1}</td>
-                        <td className="px-3 py-2">{contact?.name || "N/A"}</td>
-                        <td className="px-3 py-2">
-                          {contact?.designation || "N/A"}
-                        </td>
-                        <td className="px-3 py-2 font-mono">
-                          {contact?.phone_number || "N/A"}
-                        </td>
-                      </tr>
-                    )
-                  )}
-                </tbody>
-              </table>
+          {isEditingContacts ? (
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <p className="text-sm text-gray-600">
+                  Minimum 3 contacts required. All fields are mandatory.
+                </p>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleAddContact}
+                  className="flex items-center space-x-2"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Contact</span>
+                </Button>
+              </div>
+              <div className="space-y-3">
+                {editingContacts.map((contact: any, index: number) => (
+                  <div
+                    key={index}
+                    className="grid grid-cols-1 md:grid-cols-4 gap-3 p-3 border rounded-lg bg-gray-50"
+                  >
+                    <div className="flex items-center justify-center">
+                      <span className="text-sm font-medium text-gray-600">
+                        #{index + 1}
+                      </span>
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        Name
+                      </label>
+                      <Input
+                        value={contact.name || ""}
+                        onChange={(e) =>
+                          handleContactChange(index, "name", e.target.value)
+                        }
+                        placeholder="Enter name"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                        Designation
+                      </label>
+                      <Input
+                        value={contact.designation || ""}
+                        onChange={(e) =>
+                          handleContactChange(
+                            index,
+                            "designation",
+                            e.target.value
+                          )
+                        }
+                        placeholder="Enter designation"
+                        className="mt-1"
+                      />
+                    </div>
+                    <div className="flex items-end space-x-2">
+                      <div className="flex-1">
+                        <label className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+                          Phone Number
+                        </label>
+                        <Input
+                          value={contact.phone_number || ""}
+                          onChange={(e) =>
+                            handleContactChange(
+                              index,
+                              "phone_number",
+                              e.target.value
+                            )
+                          }
+                          placeholder="Enter phone number"
+                          className="mt-1 font-mono"
+                        />
+                      </div>
+                      {editingContacts.length > 1 && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRemoveContact(index)}
+                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           ) : (
-            <div className="text-sm text-gray-900">
-              No alternative contacts available
-            </div>
+            <>
+              {device?.alternative_contacts &&
+              device.alternative_contacts.length > 0 ? (
+                <div className="overflow-x-auto rounded-md border">
+                  <table className="min-w-full text-sm">
+                    <thead className="bg-gray-50 text-gray-700">
+                      <tr>
+                        <th className="text-left font-medium px-3 py-2">#</th>
+                        <th className="text-left font-medium px-3 py-2">
+                          Name
+                        </th>
+                        <th className="text-left font-medium px-3 py-2">
+                          Designation
+                        </th>
+                        <th className="text-left font-medium px-3 py-2">
+                          Phone Number
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y">
+                      {device.alternative_contacts.map(
+                        (contact: any, index: number) => (
+                          <tr
+                            key={index}
+                            className="odd:bg-white even:bg-gray-50"
+                          >
+                            <td className="px-3 py-2">{index + 1}</td>
+                            <td className="px-3 py-2">
+                              {contact?.name || "N/A"}
+                            </td>
+                            <td className="px-3 py-2">
+                              {contact?.designation || "N/A"}
+                            </td>
+                            <td className="px-3 py-2 font-mono">
+                              {contact?.phone_number || "N/A"}
+                            </td>
+                          </tr>
+                        )
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+              ) : (
+                <div className="text-sm text-gray-900">
+                  No alternative contacts available
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>

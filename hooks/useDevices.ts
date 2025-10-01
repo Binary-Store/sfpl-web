@@ -12,12 +12,12 @@ export const useDevices = () => {
 };
 
 export const useDeviceById = (id: string) => {
-    const { data, isLoading, error } = useQuery<any>({
+    const { data, isLoading, error, refetch } = useQuery<any>({
         queryKey: ['device', id],
         queryFn: () => getDeviceById(id),
     });
 
-    return { data, isLoading, error };
+    return { data, isLoading, error, refetch };
 };
 
 export const useGetAllDeviceForMonitoring = () => {

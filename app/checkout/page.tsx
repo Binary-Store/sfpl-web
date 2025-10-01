@@ -13,6 +13,8 @@ import {
   Building,
   FileText,
   Hash,
+  CheckCircle,
+  X,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
@@ -38,6 +40,9 @@ export default function CheckoutPage() {
   const [isCheckoutLoading, setIsCheckoutLoading] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const [promoCode, setPromoCode] = useState("");
+  const [shippingAddress, setShippingAddress] = useState("");
+  const [showTermsModal, setShowTermsModal] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
   const queryClient = useQueryClient();
   const router = useRouter();
   const { createOrderMutation, isLoading: isCreatingOrder } = useCreateOrder();
@@ -69,6 +74,8 @@ export default function CheckoutPage() {
         gst_number: profile.gst_number || "",
         pan_number: profile.pan_number || "",
       });
+      // Set shipping address to customer address by default
+      setShippingAddress(profile.address || "");
     }
   }, [profile]);
 
@@ -122,12 +129,45 @@ export default function CheckoutPage() {
   };
 
   const handleProceedToPayment = () => {
+    // Validate shipping address
+    if (!shippingAddress.trim()) {
+      toast.error("Please enter a shipping address");
+      return;
+    }
+
+    if (shippingAddress.trim().length < 5) {
+      toast.error("Shipping address must be at least 5 characters long");
+      return;
+    }
+
+    if (shippingAddress.trim().length > 1000) {
+      toast.error("Shipping address must be less than 1000 characters");
+      return;
+    }
+
+    // Show terms and conditions modal
+    setShowTermsModal(true);
+  };
+
+  const handleAgreeToTerms = () => {
+    setAgreedToTerms(true);
+    setShowTermsModal(false);
+    processPayment();
+  };
+
+  const processPayment = () => {
     setIsCheckoutLoading(true);
 
     try {
-      const orderData = promoCode ? { promo_code: promoCode } : {};
-      createOrderMutation(orderData as { order_id: string }, {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const orderData: { promo_code?: string; shipping_address: string } = {
+        shipping_address: shippingAddress.trim(),
+      };
+
+      if (promoCode) {
+        orderData.promo_code = promoCode;
+      }
+
+      createOrderMutation(orderData, {
         onSuccess: (response: any) => {
           const orderId = response.id;
 
@@ -172,7 +212,6 @@ export default function CheckoutPage() {
             },
           };
 
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const razorpay = new (window as any).Razorpay(options);
           razorpay.open();
           setIsCheckoutLoading(false);
@@ -448,6 +487,25 @@ export default function CheckoutPage() {
                 </div>
               </div>
 
+              {/* Shipping Address */}
+              <div className="mb-6">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <MapPin className="h-4 w-4 inline mr-2" />
+                  Shipping Address
+                </label>
+                <textarea
+                  value={shippingAddress}
+                  onChange={(e) => setShippingAddress(e.target.value)}
+                  rows={3}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors resize-none"
+                  placeholder="Enter shipping address"
+                  required
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  Address must be between 5-1000 characters
+                </p>
+              </div>
+
               {/* Promo Code */}
               <div className="mb-6">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -493,6 +551,118 @@ export default function CheckoutPage() {
           </div>
         </div>
       </div>
+
+      {/* Terms and Conditions Modal */}
+      {showTermsModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[80vh] overflow-hidden">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Terms and Conditions
+                </h3>
+                <button
+                  onClick={() => setShowTermsModal(false)}
+                  className="text-gray-400 hover:text-gray-600 transition-colors"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+            </div>
+
+            <div className="p-6 overflow-y-auto max-h-96">
+              <div className="space-y-4 text-sm text-gray-700">
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    1. Order Processing
+                  </h4>
+                  <p>
+                    By proceeding with this order, you agree to our terms of
+                    service and confirm that all information provided is
+                    accurate.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    2. Payment Terms
+                  </h4>
+                  <p>
+                    Payment will be processed immediately upon confirmation. All
+                    transactions are secure and encrypted.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    3. Shipping and Delivery
+                  </h4>
+                  <p>
+                    Delivery will be made to the shipping address provided.
+                    Please ensure the address is complete and accurate.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    4. Returns and Refunds
+                  </h4>
+                  <p>
+                    Returns and refunds are subject to our return policy. Please
+                    review our return policy before placing your order.
+                  </p>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    5. Liability
+                  </h4>
+                  <p>
+                    SFPL Fire Safety is not liable for any damages arising from
+                    the use of our products beyond the scope of our warranty.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    type="checkbox"
+                    id="agree-terms"
+                    checked={agreedToTerms}
+                    onChange={(e) => setAgreedToTerms(e.target.checked)}
+                    className="h-4 w-4 text-red-600 focus:ring-red-500 border-gray-300 rounded"
+                  />
+                  <label
+                    htmlFor="agree-terms"
+                    className="ml-2 text-sm text-gray-700"
+                  >
+                    I agree to the terms and conditions
+                  </label>
+                </div>
+
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setShowTermsModal(false)}
+                    className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleAgreeToTerms}
+                    disabled={!agreedToTerms}
+                    className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-6 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                  >
+                    <CheckCircle className="h-4 w-4" />I Agree & Proceed
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

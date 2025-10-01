@@ -9,7 +9,10 @@ export const verifyOrder = async (data: {
     return axiosInstance({ method: 'POST', url, data });
 };
 
-export const createOrder = async (data: { order_id: string }) => {
+export const createOrder = async (data: { 
+    promo_code?: string;
+    shipping_address: string;
+}) => {
     const url = `/orders`;
     return axiosInstance({ method: 'POST', url, data });
 };
