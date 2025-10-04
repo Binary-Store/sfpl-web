@@ -69,6 +69,55 @@ export default function DashboardPage() {
   // Process devices to handle overlapping coordinates
   const processedDevices = devices;
 
+  // Calculate optimal center and zoom for initial map load
+  const getMapCenterAndZoom = useCallback(() => {
+    if (!processedDevices || processedDevices.length === 0) {
+      return { center: defaultCenter, zoom: 15 };
+    }
+
+    const validDevices = processedDevices.filter(
+      (device) =>
+        device.latitude &&
+        device.longitude &&
+        !isNaN(device.latitude) &&
+        !isNaN(device.longitude)
+    );
+
+    if (validDevices.length === 0) {
+      return { center: defaultCenter, zoom: 15 };
+    }
+
+    if (validDevices.length === 1) {
+      return {
+        center: {
+          lat: validDevices[0].latitude,
+          lng: validDevices[0].longitude,
+        },
+        zoom: 15,
+      };
+    }
+
+    // Calculate center point for multiple devices
+    const latSum = validDevices.reduce(
+      (sum, device) => sum + device.latitude,
+      0
+    );
+    const lngSum = validDevices.reduce(
+      (sum, device) => sum + device.longitude,
+      0
+    );
+
+    return {
+      center: {
+        lat: latSum / validDevices.length,
+        lng: lngSum / validDevices.length,
+      },
+      zoom: 12, // Default zoom for multiple markers
+    };
+  }, [processedDevices]);
+
+  const mapConfig = getMapCenterAndZoom();
+
   const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: serverDetails.googleMapAPIKey || "",
     id: "google-map-script",
@@ -82,6 +131,58 @@ export default function DashboardPage() {
     mapRef.current = null;
   }, []);
 
+  // Function to fit map bounds to show all markers
+  const fitMapToMarkers = useCallback(() => {
+    if (!mapRef.current || !processedDevices || processedDevices.length === 0) {
+      return;
+    }
+
+    const validDevices = processedDevices.filter(
+      (device) =>
+        device.latitude &&
+        device.longitude &&
+        !isNaN(device.latitude) &&
+        !isNaN(device.longitude)
+    );
+
+    if (validDevices.length === 0) {
+      return;
+    }
+
+    const bounds = new google.maps.LatLngBounds();
+
+    // Add all device positions to bounds
+    validDevices.forEach((device) => {
+      bounds.extend(new google.maps.LatLng(device.latitude, device.longitude));
+    });
+
+    // If we have valid bounds, fit the map to show all markers
+    if (!bounds.isEmpty()) {
+      if (validDevices.length === 1) {
+        // For single marker, center on it with a reasonable zoom level
+        mapRef.current.setCenter(
+          new google.maps.LatLng(
+            validDevices[0].latitude,
+            validDevices[0].longitude
+          )
+        );
+        mapRef.current.setZoom(15);
+      } else {
+        // For multiple markers, fit bounds with padding
+        mapRef.current.fitBounds(bounds);
+
+        // Add some padding around the markers
+        const padding = 50;
+        mapRef.current.padding = {
+          top: padding,
+          right: padding,
+          bottom: padding,
+          left: padding,
+        };
+      }
+    }
+  }, [processedDevices]);
+
   const handleMarkerClick = (device) => {
     setSelectedDevice(device);
   };
@@ -89,6 +190,18 @@ export default function DashboardPage() {
   const handleInfoWindowClose = () => {
     setSelectedDevice(null);
   };
+
+  // Effect to fit map bounds when devices data loads
+  useEffect(() => {
+    if (isLoaded && processedDevices && processedDevices.length > 0) {
+      // Small delay to ensure map is fully rendered
+      const timer = setTimeout(() => {
+        fitMapToMarkers();
+      }, 200);
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoaded, processedDevices, fitMapToMarkers]);
 
   useEffect(() => {
     if (socket) {
@@ -173,8 +286,8 @@ export default function DashboardPage() {
       <div className="p-0 rounded-lg">
         <GoogleMap
           mapContainerStyle={mapContainerStyle}
-          center={defaultCenter}
-          zoom={15}
+          center={mapConfig.center}
+          zoom={mapConfig.zoom}
           onLoad={onLoad}
           onUnmount={onUnmount}
           options={{
@@ -277,11 +390,11 @@ export default function DashboardPage() {
                   <div className="bg-gray-50 rounded-lg p-3">
                     <div className="flex items-center space-x-2 mb-1">
                       <Navigation className="h-4 w-4 text-gray-500" />
-                      <span className="text-xs font-medium text-gray-600 uppercase tracking-wide">
+                      <span className="text-xs font-medium text-gray-600 uppercase tracking-wide ">
                         Address
                       </span>
                     </div>
-                    <p className="text-sm text-gray-900">
+                    <p className="text-sm text-gray-900 max-w-[250px]">
                       {selectedDevice?.address || "No address"}
                     </p>
                   </div>
